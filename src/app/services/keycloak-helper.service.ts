@@ -15,11 +15,14 @@ export class KeycloakHelperService {
     });
   }
 
-  init(): Promise<boolean> {
-    return this.keycloak.init({
-      onLoad: 'login-required',
-      checkLoginIframe: false
-    }).then(authenticated => {
+  async init(): Promise<boolean> {
+    try {
+      const authenticated = await this.keycloak.init({
+        onLoad: 'check-sso', 
+        checkLoginIframe: true, // Opcional ponerlo en true
+        // opcional, esta puesto para q use SSO silencioso
+        silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html' 
+      });
       if (authenticated) {
         console.log('Usuario autenticado');
         console.log('Token:', this.keycloak.token);
@@ -29,11 +32,12 @@ export class KeycloakHelperService {
         console.warn('Usuario no autenticado');
       }
       return authenticated;
-    }).catch(err => {
+    } catch (err) {
       console.error('Error al inicializar Keycloak:', err);
       return false;
-    });
+    }
   }
+  
 
   login() {
     this.keycloak.login();
@@ -59,16 +63,18 @@ export class KeycloakHelperService {
     return !!this.keycloak.token;
   }
 
-  refreshToken(): Promise<void> {
-    return this.keycloak.updateToken(60).then(refreshed => {
+  //# llamarlo desde un setInterval, asi se mantiene activa la sesion
+  async refreshToken(): Promise<void> {
+    try {
+      const refreshed = await this.keycloak.updateToken(60);
       if (refreshed) {
         console.log('Token actualizado');
       } else {
         console.log('Token todavía válido');
       }
-    }).catch(() => {
+    } catch {
       console.warn('No se pudo refrescar el token, forzando logout');
       this.logout();
-    });
+    }
   }
 }
