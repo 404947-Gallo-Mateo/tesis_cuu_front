@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import Keycloak from 'keycloak-js';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,26 +17,32 @@ export class KeycloakHelperService {
   }
 
   async init(): Promise<boolean> {
-    try {
-      const authenticated = await this.keycloak.init({
-        onLoad: 'check-sso', 
-        checkLoginIframe: true, // Opcional ponerlo en true
-        // opcional, esta puesto para q use SSO silencioso
-        silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html' 
-      });
-      if (authenticated) {
-        console.log('Usuario autenticado');
-        console.log('Token:', this.keycloak.token);
-        console.log('Usuario:', this.keycloak.tokenParsed?.['preferred_username']);
-        console.log('Roles:', this.keycloak.tokenParsed?.realm_access?.roles);
-      } else {
-        console.warn('Usuario no autenticado');
+    //if(this.isLoggedIn() == false){
+      try {
+        const authenticated = await this.keycloak.init({
+          onLoad: 'check-sso', 
+          checkLoginIframe: true, // Opcional ponerlo en true
+          // opcional, esta puesto para q use SSO silencioso
+          silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html' 
+        });
+
+        if (authenticated) {
+          console.log('Usuario autenticado');
+          //console.log('Token:', this.keycloak.token);
+          console.log('Usuario:', this.keycloak.tokenParsed?.['preferred_username']);
+          console.log('Roles:', this.keycloak.tokenParsed?.realm_access?.roles);
+        } else {
+          console.warn('Usuario no autenticado');
+        }
+        return authenticated;
+      } catch (err) {
+        console.error('Error al inicializar Keycloak:', err);
+        return false;
       }
-      return authenticated;
-    } catch (err) {
-      console.error('Error al inicializar Keycloak:', err);
-      return false;
-    }
+    // }
+    // else {
+    //   return this.isLoggedIn();
+    // }
   }
   
 
@@ -60,8 +67,9 @@ export class KeycloakHelperService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.keycloak.token;
+    return this.keycloak.authenticated || false;
   }
+
 
   //# llamarlo desde un setInterval, asi se mantiene activa la sesion
   async refreshToken(): Promise<void> {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { KeycloakHelperService } from '../../../services/keycloak-helper.service';
 import { CommonModule } from '@angular/common';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-cuu-navbar',
@@ -10,15 +11,20 @@ import { CommonModule } from '@angular/common';
   styleUrl: './cuu-navbar.component.css'
 })
 export class CuuNavbarComponent implements OnInit{
+
+  isLoaded = false; // indica si se cargo el estado del login
+
+
   constructor(private keycloakHelper: KeycloakHelperService) {}
 
   async ngOnInit() {
     await this.keycloakHelper.init();
-    
+    this.isLoaded = true; // marcamos que se cargo el estado de login
+
     if (this.keycloakHelper.isLoggedIn()) {
-      console.log('Token:', this.keycloakHelper.getToken());
-      console.log('Username:', this.keycloakHelper.getUsername());
-      console.log('Roles:', this.keycloakHelper.getRoles());
+      // console.log('Token:', this.keycloakHelper.getToken());
+       console.log('Navbar component username:', this.keycloakHelper.getUsername());
+      // console.log('Roles:', this.keycloakHelper.getRoles());
     }
   }
 
@@ -35,6 +41,7 @@ export class CuuNavbarComponent implements OnInit{
   }
 
   isLoggedIn() {
+    //console.log("esta logueado?", this.keycloakHelper.isLoggedIn())
     return this.keycloakHelper.isLoggedIn();  
   }
 
