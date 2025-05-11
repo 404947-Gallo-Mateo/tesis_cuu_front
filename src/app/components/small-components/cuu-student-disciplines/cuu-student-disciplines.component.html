@@ -1,0 +1,8 @@
+<p>cuu-student-disciplines works!</p>
+
+@if (currentUser) {
+    @for (category of currentUser.studentCategories; track $index) {
+        <h5>{{category.name}}</h5>
+        <p>{{category.description}}</p>
+    }
+}

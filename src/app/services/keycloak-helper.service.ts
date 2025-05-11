@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class KeycloakHelperService {
   private keycloak: Keycloak;
+  private isInitialized = false;
 
   constructor() {
     this.keycloak = new Keycloak({
@@ -17,7 +18,6 @@ export class KeycloakHelperService {
   }
 
   async init(): Promise<boolean> {
-    //if(this.isLoggedIn() == false){
       try {
         const authenticated = await this.keycloak.init({
           onLoad: 'check-sso', 
@@ -29,22 +29,22 @@ export class KeycloakHelperService {
         if (authenticated) {
           console.log('Usuario autenticado');
           //console.log('Token:', this.keycloak.token);
-          console.log('Usuario:', this.keycloak.tokenParsed?.['preferred_username']);
-          console.log('Roles:', this.keycloak.tokenParsed?.realm_access?.roles);
+          // console.log('Usuario:', this.keycloak.tokenParsed?.['preferred_username']);
+          // console.log('Roles:', this.keycloak.tokenParsed?.realm_access?.roles);
         } else {
           console.warn('Usuario no autenticado');
         }
+        this.isInitialized = true;
         return authenticated;
       } catch (err) {
         console.error('Error al inicializar Keycloak:', err);
         return false;
       }
-    // }
-    // else {
-    //   return this.isLoggedIn();
-    // }
   }
   
+  isReady(): boolean {
+    return this.isInitialized;
+  }
 
   login() {
     this.keycloak.login();
@@ -54,7 +54,7 @@ export class KeycloakHelperService {
     this.keycloak.logout({ redirectUri: window.location.origin });
   }
 
-  getToken(): string | undefined {
+  async getToken(): Promise<string | undefined> {
     return this.keycloak.token;
   }
 

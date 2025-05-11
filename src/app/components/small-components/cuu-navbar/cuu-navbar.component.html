@@ -9,12 +9,18 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/principal">Principal</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="aaaa">futura pagina</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="bbbb">futura pagina</a>
-          </li>
+          
+          @if(isLoaded){
+            @if(isLoggedIn()){
+              <li class="nav-item">
+                <a class="nav-link" href="/mis-disciplinas">Mis Disciplinas</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="bbbb">futura pagina</a>
+              </li>
+            }
+          }
+          
             @if(isLoaded){
               @if(!isLoggedIn()){
                 <li> <button class="btn btn-success" (click)="login()">Iniciar sesión</button> </li>

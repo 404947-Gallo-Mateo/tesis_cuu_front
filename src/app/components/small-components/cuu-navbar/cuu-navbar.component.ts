@@ -14,7 +14,6 @@ export class CuuNavbarComponent implements OnInit{
 
   isLoaded = false; // indica si se cargo el estado del login
 
-
   constructor(private keycloakHelper: KeycloakHelperService) {}
 
   async ngOnInit() {
@@ -23,7 +22,7 @@ export class CuuNavbarComponent implements OnInit{
 
     if (this.keycloakHelper.isLoggedIn()) {
       // console.log('Token:', this.keycloakHelper.getToken());
-       console.log('Navbar component username:', this.keycloakHelper.getUsername());
+       //console.log('Navbar component username:', this.keycloakHelper.getUsername());
       // console.log('Roles:', this.keycloakHelper.getRoles());
     }
   }
@@ -44,8 +43,5 @@ export class CuuNavbarComponent implements OnInit{
     //console.log("esta logueado?", this.keycloakHelper.isLoggedIn())
     return this.keycloakHelper.isLoggedIn();  
   }
-
-
-  
 
 }
