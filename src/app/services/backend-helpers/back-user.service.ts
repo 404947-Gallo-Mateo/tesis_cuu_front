@@ -26,7 +26,7 @@ export class BackUserService {
       Authorization: `Bearer ${token}`
     };
 
-    console.log("header de la solicitud: ", headers);
+    //console.log("header de la solicitud: ", headers);
     //console.log("token", token);
 
     return await firstValueFrom(

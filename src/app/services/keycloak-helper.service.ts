@@ -27,7 +27,7 @@ export class KeycloakHelperService {
         });
 
         if (authenticated) {
-          console.log('Usuario autenticado');
+          console.log('Usuario autenticado: ', this.keycloak);
           //console.log('Token:', this.keycloak.token);
           // console.log('Usuario:', this.keycloak.tokenParsed?.['preferred_username']);
           // console.log('Roles:', this.keycloak.tokenParsed?.realm_access?.roles);
