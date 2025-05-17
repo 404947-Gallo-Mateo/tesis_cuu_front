@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, Input, SimpleChanges, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Role } from '../../../models/backend/embeddables/Role';
 import { Genre } from '../../../models/backend/embeddables/Genre';
@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BackUserService } from '../../../services/backend-helpers/back-user.service';
 import Swal from 'sweetalert2';
+import { ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
 
 @Component({
   selector: 'app-user-dto-form',
@@ -18,15 +19,22 @@ import Swal from 'sweetalert2';
 })
 export class UserDTOFormComponent {
 
+  form: FormGroup;
+  @Input() userData!: ExpandedUserDTO;
+
+  roles = Object.values(Role);
+  genres = Object.values(Genre);
+
   private subscriptions = new Subscription();
   private readonly router = inject(Router)
   private readonly activatedRouter = inject(ActivatedRoute)
   private backUserService = inject(BackUserService);
 
-  form: FormGroup;
-
-  roles = Object.values(Role);
-  genres = Object.values(Genre);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['userData'] && this.userData) {
+      this.form.patchValue(this.userData);
+    }
+  }
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
@@ -49,29 +57,29 @@ export class UserDTOFormComponent {
     }
   }
 
-async deleteKeycloakUser() {
-  const userDTO = this.form.value;
+  async deleteKeycloakUser() {
+    const userDTO = this.form.value;
 
-  const result = await Swal.fire({
-    title: '¿Estás seguro?',
-    text: 'Esta acción eliminará el Usuario permanentemente.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Sí, eliminar',
-    cancelButtonText: 'Cancelar'
-  });
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción eliminará el Usuario permanentemente.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    });
 
-  if (result.isConfirmed) {
-    try {
-      await this.backUserService.deleteKeycloakUser(userDTO.keycloakId);
-      Swal.fire('Eliminado', 'El usuario fue eliminado correctamente.', 'success');
-    } catch (err) {
-      console.error('Error eliminando usuario:', err);
-      Swal.fire('Error', 'Hubo un problema al eliminar el usuario.', 'error');
+    if (result.isConfirmed) {
+      try {
+        await this.backUserService.deleteKeycloakUser(userDTO.keycloakId);
+        Swal.fire('Eliminado', 'El usuario fue eliminado correctamente.', 'success');
+      } catch (err) {
+        console.error('Error eliminando usuario:', err);
+        Swal.fire('Error', 'Hubo un problema al eliminar el usuario.', 'error');
+      }
     }
   }
-}
 
 }

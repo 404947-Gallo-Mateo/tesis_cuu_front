@@ -3,6 +3,8 @@ import { KeycloakHelperService } from '../../../services/keycloak-helper.service
 import { CommonModule } from '@angular/common';
 import { inject } from '@angular/core';
 import { UserDTOFormComponent } from "../../forms/user-dto-form/user-dto-form.component";
+import { ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
+import { BackUserService } from '../../../services/backend-helpers/back-user.service';
 
 @Component({
   selector: 'app-cuu-navbar',
@@ -14,11 +16,14 @@ import { UserDTOFormComponent } from "../../forms/user-dto-form/user-dto-form.co
 export class CuuNavbarComponent implements OnInit{
 
   isLoaded = false; // indica si se cargo el estado del login
-
+  currentUser!: ExpandedUserDTO;
+  
+  private userService = inject(BackUserService);
   private keycloakHelper = inject(KeycloakHelperService);
   
   constructor() {}
 
+  //async ngOnInit()Promise<void> {
   async ngOnInit() {
     await this.keycloakHelper.init();
     this.isLoaded = true; // marcamos que se cargo el estado de login
@@ -28,6 +33,18 @@ export class CuuNavbarComponent implements OnInit{
     //    console.log('Navbar component username:', this.keycloakHelper.getUsername());
     //    console.log('Roles:', this.keycloakHelper.getRoles());
     // }
+
+    const waitForKeycloak = async () => {
+        while (!this.keycloakHelper.isReady()) {
+          await new Promise(resolve => setTimeout(resolve, 100)); // esperar 100ms
+        }
+      };
+    
+      await waitForKeycloak();
+    
+      // ahora sí el token está disponible
+      this.currentUser = await this.userService.getCurrentUser();
+      console.log("Expanded Current User: ", this.currentUser);
   }
 
   login() {
