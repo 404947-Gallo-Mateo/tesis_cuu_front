@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
 import { BackUserService } from '../../../services/backend-helpers/back-user.service';
 import { KeycloakHelperService } from '../../../services/keycloak-helper.service';
+import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-cuu-student-disciplines',
@@ -14,7 +15,10 @@ export class CuuStudentDisciplinesComponent {
 
   currentUser!: ExpandedUserDTO;
 
-  constructor(private userService: BackUserService, private keycloakHelper: KeycloakHelperService) {}
+  private userService = inject(BackUserService);
+  private keycloakHelper = inject(KeycloakHelperService);
+
+  constructor() {}
 
   async ngOnInit(): Promise<void> {
     // Esperar hasta que Keycloak esté listo
@@ -27,7 +31,7 @@ export class CuuStudentDisciplinesComponent {
     await waitForKeycloak();
   
     // ahora sí el token está disponible
-    this.currentUser = await this.userService.getLatestInfoFromCurrentUser();
+    this.currentUser = await this.userService.getCurrentUser();
     console.log("Expanded Current User: ", this.currentUser);
   }
 

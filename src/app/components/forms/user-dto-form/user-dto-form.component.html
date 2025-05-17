@@ -1,0 +1,62 @@
+
+
+<!-- userDTO-form.component.html -->
+<div class="modal fade" id="userFormModal" tabindex="-1" aria-labelledby="userFormModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg"> <!-- o modal-md -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="userFormModalLabel">Editar Usuario</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Tu formulario original -->
+        <div class="container">
+            <button class="btn btn-danger" (click)="deleteKeycloakUser()">Eliminar mi Usuario</button>
+
+            <form [formGroup]="form" (ngSubmit)="submitUpdatedKeycloakUser()">
+                <div class="mb-3">
+                    <label>Email:</label>
+                    <input type="email" formControlName="email" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label>Username:</label>
+                    <input type="text" formControlName="username" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label>Nombre:</label>
+                    <input type="text" formControlName="firstName" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label>Apellido:</label>
+                    <input type="text" formControlName="lastName" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label>Fecha de nacimiento:</label>
+                    <input type="date" formControlName="birthDate" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label>Género:</label>
+                    <select formControlName="genre" class="form-select">
+                    <option *ngFor="let g of genres" [value]="g">{{ g }}</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label>Rol:</label>
+                    <select formControlName="role" class="form-select">
+                    <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

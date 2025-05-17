@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import Keycloak from 'keycloak-js';
-import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +14,7 @@ export class KeycloakHelperService {
       realm: 'Club_Union_Unquillo',
       clientId: 'cuu-front'
     });
+
   }
 
   async init(): Promise<boolean> {
@@ -28,9 +28,7 @@ export class KeycloakHelperService {
 
         if (authenticated) {
           console.log('Usuario autenticado: ', this.keycloak);
-          //console.log('Token:', this.keycloak.token);
-          // console.log('Usuario:', this.keycloak.tokenParsed?.['preferred_username']);
-          // console.log('Roles:', this.keycloak.tokenParsed?.realm_access?.roles);
+
         } else {
           console.warn('Usuario no autenticado');
         }
