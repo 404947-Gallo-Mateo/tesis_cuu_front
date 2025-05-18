@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { KeycloakHelperService } from '../../../services/keycloak-helper.service';
 import { CommonModule } from '@angular/common';
 import { inject } from '@angular/core';
@@ -9,19 +9,32 @@ import { BackUserService } from '../../../services/backend-helpers/back-user.ser
 @Component({
   selector: 'app-cuu-navbar',
   standalone: true,
-  imports: [CommonModule, UserDTOFormComponent],
+  imports: [CommonModule, UserDTOFormComponent, UserDTOFormComponent],
   templateUrl: './cuu-navbar.component.html',
   styleUrl: './cuu-navbar.component.css'
 })
 export class CuuNavbarComponent implements OnInit{
 
   isLoaded = false; // indica si se cargo el estado del login
-  currentUser!: ExpandedUserDTO;
   
   private userService = inject(BackUserService);
   private keycloakHelper = inject(KeycloakHelperService);
   
   constructor() {}
+
+  private modal = inject(NgModal);
+  currentUser!: ExpandedUserDTO;
+
+  openUserFormModal() {
+    this.modal.open(UserDTOFormComponent, {
+      data: this.currentUser,
+      // Opcional: config del modal
+      width: '600px',
+      height: 'auto',
+      closeOnNavigation: true,
+      backdropClose: true
+    });
+  }
 
   //async ngOnInit()Promise<void> {
   async ngOnInit() {

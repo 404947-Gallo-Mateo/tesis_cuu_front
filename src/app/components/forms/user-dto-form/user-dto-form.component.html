@@ -44,12 +44,15 @@
                     </select>
                 </div>
 
-                <div class="mb-3">
+                <!-- @if (userData.role === "SUPER_ADMIN_CUU") {
+                <div class="mb-3" style="display: none;">
                     <label>Rol:</label>
                     <select formControlName="role" class="form-select">
                     <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
                     </select>
                 </div>
+                } -->
+                
 
                 <button type="submit" class="btn btn-primary">Enviar</button>
             </form>

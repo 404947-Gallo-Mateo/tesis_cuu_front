@@ -60,6 +60,8 @@ export class UserDTOFormComponent {
   async deleteKeycloakUser() {
     const userDTO = this.form.value;
 
+    console.log("borrando user keycloak id: ", userDTO.keycloakId);
+
     const result = await Swal.fire({
       title: '¿Estás seguro?',
       text: 'Esta acción eliminará el Usuario permanentemente.',

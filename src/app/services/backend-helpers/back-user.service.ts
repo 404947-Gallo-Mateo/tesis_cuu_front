@@ -69,7 +69,7 @@ export class BackUserService {
     };
 
     const resp: any = await firstValueFrom(
-      this.http.delete(`${this.API_URL}/${keycloakId}`, { headers })
+      this.http.delete(`${this.API_URL}/delete/${keycloakId}`, { headers })
         .pipe(
           retryWhen(errors =>
             errors.pipe(
@@ -98,7 +98,7 @@ export class BackUserService {
     };
 
     const resp: any = await firstValueFrom(
-      this.http.put(`${this.API_URL}/${keycloakId}`, userDTO, { headers })
+      this.http.put(`${this.API_URL}/update/${keycloakId}`, userDTO, { headers })
         .pipe(
           retryWhen(errors =>
             errors.pipe(
