@@ -6,10 +6,12 @@ import { UserDTOFormComponent } from "../../forms/user-dto-form/user-dto-form.co
 import { ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
 import { BackUserService } from '../../../services/backend-helpers/back-user.service';
 
+declare var bootstrap: any;
+
 @Component({
   selector: 'app-cuu-navbar',
   standalone: true,
-  imports: [CommonModule, UserDTOFormComponent, UserDTOFormComponent],
+  imports: [CommonModule, UserDTOFormComponent],
   templateUrl: './cuu-navbar.component.html',
   styleUrl: './cuu-navbar.component.css'
 })
@@ -22,18 +24,14 @@ export class CuuNavbarComponent implements OnInit{
   
   constructor() {}
 
-  private modal = inject(NgModal);
   currentUser!: ExpandedUserDTO;
 
   openUserFormModal() {
-    this.modal.open(UserDTOFormComponent, {
-      data: this.currentUser,
-      // Opcional: config del modal
-      width: '600px',
-      height: 'auto',
-      closeOnNavigation: true,
-      backdropClose: true
-    });
+    const modalElement = document.getElementById('userFormModal');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    }
   }
 
   //async ngOnInit()Promise<void> {

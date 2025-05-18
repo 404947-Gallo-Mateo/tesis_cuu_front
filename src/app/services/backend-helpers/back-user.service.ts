@@ -17,6 +17,8 @@ export class BackUserService {
   private keycloakHelper = inject(KeycloakHelperService);
   private readonly API_URL = 'http://localhost:8090/user'; 
 
+  //http://localhost:8090/user/update/412d79db-c95f-4290-94b3-ddd40f5d52cb
+
   private currentUser: ExpandedUserDTO | null = null; 
 
     // Devuelve el usuario si existe aca, caso contrario lo solicita al back
@@ -96,6 +98,8 @@ export class BackUserService {
     const headers = {
       Authorization: `Bearer ${token}`
     };
+
+    console.log(`${this.API_URL}/update/${keycloakId}`);
 
     const resp: any = await firstValueFrom(
       this.http.put(`${this.API_URL}/update/${keycloakId}`, userDTO, { headers })

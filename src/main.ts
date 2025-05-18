@@ -11,6 +11,7 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes),
     KeycloakHelperService,
     provideClientHydration(),
-    provideHttpClient()
+    provideHttpClient(),
+    
   ]
 }).catch(err => console.error(err));

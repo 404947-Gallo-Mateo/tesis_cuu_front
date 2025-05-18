@@ -3,7 +3,7 @@ import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Va
 import { Role } from '../../../models/backend/embeddables/Role';
 import { Genre } from '../../../models/backend/embeddables/Genre';
 import { DisciplineSummaryDTO } from '../../../models/backend/DisciplineSummaryDTO';
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BackUserService } from '../../../services/backend-helpers/back-user.service';
@@ -49,18 +49,66 @@ export class UserDTOFormComponent {
     });
   }
 
-  submitUpdatedKeycloakUser() {
+  async submitUpdatedKeycloakUser() {
     if (this.form.valid) {
-      const userDTO = this.form.value;
-      console.log('Enviando datos del usuario:', userDTO);
-      this.backUserService.updateInfoOfKeycloakUser(userDTO.keycloakId, userDTO);
+      const form = this.form.value;
+
+      const expandedUserDTO: ExpandedUserDTO = {
+        keycloakId: form.keycloakId,
+        role: form.role,
+        username: form.username,
+        email: form.email,
+        firstName: form.firstName,
+        lastName: form.lastName,
+        birthDate: formatDate(form.birthDate, 'dd-MM-yyyy', 'en-US').toString(), // <-- aquí        
+        genre: form.genre,
+        teacherDisciplines: (form.teacherDisciplines || []).map((d: any) => ({
+          id: d.id,
+          name: d.name
+        })),
+        studentCategories: (form.studentCategories || []).map((c: any) => ({
+          id: c.id,
+          name: c.name,
+          disciplineId: c.disciplineId
+        }))
+      };
+
+      console.log("PUT expandedUserDTO: ", expandedUserDTO);
+
+      const result = await Swal.fire({
+        title: '¿Confirmar actualización?',
+        text: 'Se actualizarán los datos del usuario en Keycloak.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#aaa',
+        confirmButtonText: 'Sí, actualizar',
+        cancelButtonText: 'Cancelar'
+      });
+
+      if (result.isConfirmed) {
+        try {
+          let resp = await this.backUserService.updateInfoOfKeycloakUser(
+            expandedUserDTO.keycloakId,
+            expandedUserDTO
+          );
+          console.log("resp de submitUpdatedKeycloakUser(): ", resp);
+
+          Swal.fire('Actualizado', 'El usuario fue actualizado correctamente.', 'success');
+        } catch (err) {
+          console.error('Error actualizando usuario:', err);
+          Swal.fire('Error', 'Hubo un problema en Keycloak al actualizar el usuario.', 'error');
+        }
+      }
     }
   }
 
+
   async deleteKeycloakUser() {
     const userDTO = this.form.value;
+    const userKeycloakId = userDTO.keycloakId;
 
-    console.log("borrando user keycloak id: ", userDTO.keycloakId);
+    //console.log("borrando user keycloak id: ", userDTO.keycloakId);
 
     const result = await Swal.fire({
       title: '¿Estás seguro?',
@@ -75,11 +123,20 @@ export class UserDTOFormComponent {
 
     if (result.isConfirmed) {
       try {
-        await this.backUserService.deleteKeycloakUser(userDTO.keycloakId);
-        Swal.fire('Eliminado', 'El usuario fue eliminado correctamente.', 'success');
+        let resp: Boolean = await this.backUserService.deleteKeycloakUser(userKeycloakId);
+
+        console.log("resp deleteKeycloakUser(): ", resp);
+
+       // if(resp){
+          Swal.fire('Eliminado', 'El usuario fue eliminado correctamente.', 'success');
+        //} else {
+          //Swal.fire('Error', 'Hubo un problema en la Base de Datos al eliminar el usuario.', 'error');
+        //}
+
+
       } catch (err) {
         console.error('Error eliminando usuario:', err);
-        Swal.fire('Error', 'Hubo un problema al eliminar el usuario.', 'error');
+        Swal.fire('Error', 'Hubo un problema en Keycloak al eliminar el usuario.', 'error');
       }
     }
   }
