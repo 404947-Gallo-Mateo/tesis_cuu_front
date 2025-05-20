@@ -29,6 +29,10 @@ export class BackUserService {
     return await this.getUpdatedInfoOfCurrentUser();
   }
 
+  setCurrentUser(newCurrentUser: ExpandedUserDTO){
+    this.currentUser = newCurrentUser;
+  }
+
    clearCachedUser(): void {
     this.currentUser = null;
   }

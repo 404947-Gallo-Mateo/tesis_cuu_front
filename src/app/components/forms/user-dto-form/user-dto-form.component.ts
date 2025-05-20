@@ -9,6 +9,8 @@ import { Subscription } from 'rxjs';
 import { BackUserService } from '../../../services/backend-helpers/back-user.service';
 import Swal from 'sweetalert2';
 import { ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
+import { KeycloakHelperService } from '../../../services/keycloak-helper.service';
+import { UserGenre } from '../../../models/backend/embeddables/UserGenre';
 
 @Component({
   selector: 'app-user-dto-form',
@@ -23,20 +25,28 @@ export class UserDTOFormComponent {
   @Input() userData!: ExpandedUserDTO;
 
   roles = Object.values(Role);
-  genres = Object.values(Genre);
-
+  genres = [
+    { value: UserGenre.MALE, label: 'Masculino' },
+    { value: UserGenre.FEMALE, label: 'Femenino' }
+  ];
+  
   private subscriptions = new Subscription();
   private readonly router = inject(Router)
   private readonly activatedRouter = inject(ActivatedRoute)
   private backUserService = inject(BackUserService);
+  private keycloakHelper = inject(KeycloakHelperService);
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['userData'] && this.userData) {
-      this.form.patchValue(this.userData);
-    }
+ngOnChanges(changes: SimpleChanges): void {
+  if (changes['userData'] && this.userData) {
+    const birthDateObj = this.parseDateString(this.userData.birthDate);
+    this.form.patchValue({
+      ...this.userData,
+    });
   }
+}
 
   constructor(private fb: FormBuilder) {
+ 
     this.form = this.fb.group({
       keycloakId: [''],
       role: [null, Validators.required],
@@ -73,7 +83,7 @@ export class UserDTOFormComponent {
         }))
       };
 
-      console.log("PUT expandedUserDTO: ", expandedUserDTO);
+      //console.log("PUT expandedUserDTO: ", expandedUserDTO);
 
       const result = await Swal.fire({
         title: '¿Confirmar actualización?',
@@ -92,12 +102,12 @@ export class UserDTOFormComponent {
             expandedUserDTO.keycloakId,
             expandedUserDTO
           );
-          console.log("resp de submitUpdatedKeycloakUser(): ", resp);
-
+          //console.log("resp de submitUpdatedKeycloakUser(): ", resp);
+          this.backUserService.setCurrentUser(resp);
           Swal.fire('Actualizado', 'El usuario fue actualizado correctamente.', 'success');
         } catch (err) {
           console.error('Error actualizando usuario:', err);
-          Swal.fire('Error', 'Hubo un problema en Keycloak al actualizar el usuario.', 'error');
+          Swal.fire('Error', 'Hubo un problema actualizar el usuario.', 'error');
         }
       }
     }
@@ -127,12 +137,13 @@ export class UserDTOFormComponent {
 
         console.log("resp deleteKeycloakUser(): ", resp);
 
-       // if(resp){
+        if(resp){
           Swal.fire('Eliminado', 'El usuario fue eliminado correctamente.', 'success');
-        //} else {
-          //Swal.fire('Error', 'Hubo un problema en la Base de Datos al eliminar el usuario.', 'error');
-        //}
+          this.keycloakHelper.logout();
 
+        } else {
+          Swal.fire('Error', 'Hubo un problema en la Base de Datos al eliminar el usuario.', 'error');
+        }
 
       } catch (err) {
         console.error('Error eliminando usuario:', err);
@@ -140,5 +151,11 @@ export class UserDTOFormComponent {
       }
     }
   }
+
+  private parseDateString(dateStr: string): Date {
+  const [day, month, year] = dateStr.split('-').map(Number);
+  return new Date(year, month - 1, day);
+}
+
 
 }

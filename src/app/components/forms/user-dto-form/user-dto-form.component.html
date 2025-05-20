@@ -12,14 +12,14 @@
             <button class="btn btn-danger" (click)="deleteKeycloakUser()">Eliminar mi Usuario</button>
 
             <form [formGroup]="form" (ngSubmit)="submitUpdatedKeycloakUser()">
-                <div class="mb-3">
-                    <label>Email:</label>
-                    <input type="email" formControlName="email" class="form-control" />
+              <div class="mb-3">
+                    <label>Username:</label>
+                    <input type="text" formControlName="username" class="form-control" readonly/>
                 </div>
 
                 <div class="mb-3">
-                    <label>Username:</label>
-                    <input type="text" formControlName="username" class="form-control" />
+                    <label>Email:</label>
+                    <input type="email" formControlName="email" class="form-control" />
                 </div>
 
                 <div class="mb-3">
@@ -38,11 +38,12 @@
                 </div>
 
                 <div class="mb-3">
-                    <label>Género:</label>
-                    <select formControlName="genre" class="form-select">
-                    <option *ngFor="let g of genres" [value]="g">{{ g }}</option>
-                    </select>
+                  <label>Género:</label>
+                  <select formControlName="genre" class="form-select">
+                    <option *ngFor="let g of genres" [value]="g.value">{{ g.label }}</option>
+                  </select>
                 </div>
+
 
                 <!-- @if (userData.role === "SUPER_ADMIN_CUU") {
                 <div class="mb-3" style="display: none;">

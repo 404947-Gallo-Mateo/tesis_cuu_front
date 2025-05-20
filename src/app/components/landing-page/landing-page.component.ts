@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { KeycloakHelperService } from '../../services/keycloak-helper.service';
+import { BackUserService } from '../../services/backend-helpers/back-user.service';
+import { ExpandedUserDTO } from '../../models/backend/ExpandedUserDTO';
 
 @Component({
   selector: 'app-landing-page',
@@ -8,11 +10,41 @@ import { KeycloakHelperService } from '../../services/keycloak-helper.service';
   templateUrl: './landing-page.component.html',
   styleUrl: './landing-page.component.css'
 })
-export class LandingPageComponent {
-  constructor(private keycloakHelper: KeycloakHelperService) {}
+export class LandingPageComponent implements OnInit{
+  constructor() {}
 
-  getUsername() {
-    return this.keycloakHelper.getUsername();  
+  private keycloakHelper = inject(KeycloakHelperService);
+  private userService = inject(BackUserService);
+
+  isLoaded = false; // indica si se cargo el estado del login
+
+  currentUser!: ExpandedUserDTO;
+
+    async ngOnInit() {
+    await this.keycloakHelper.init();
+    this.isLoaded = true; // marcamos que se cargo el estado de login
+
+    // if (this.keycloakHelper.isLoggedIn()) {
+    //    console.log('Token:', this.keycloakHelper.getToken());
+    //    console.log('Navbar component username:', this.keycloakHelper.getUsername());
+    //    console.log('Roles:', this.keycloakHelper.getRoles());
+    // }
+
+    const waitForKeycloak = async () => {
+        while (!this.keycloakHelper.isReady()) {
+          await new Promise(resolve => setTimeout(resolve, 100)); // esperar 100ms
+        }
+      };
+    
+      await waitForKeycloak();
+    
+      // ahora sí el token está disponible
+      this.currentUser = await this.userService.getCurrentUser();
+      console.log("Expanded Current User: ", this.currentUser);
+  }
+
+  getUserName() {
+    return this.currentUser.firstName;
   }
 
   isLoggedIn() {
