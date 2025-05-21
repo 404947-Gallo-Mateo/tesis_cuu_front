@@ -3,17 +3,20 @@ import { ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
 import { BackUserService } from '../../../services/backend-helpers/back-user.service';
 import { KeycloakHelperService } from '../../../services/keycloak-helper.service';
 import { inject } from '@angular/core';
+import { CategoryDtoFormComponent } from '../../forms/category-dto-form/category-dto-form.component';
+import { CategoryDTO } from '../../../models/backend/CategoryDTO';
 
 @Component({
   selector: 'app-cuu-student-disciplines',
   standalone: true,
-  imports: [],
+  imports: [CategoryDtoFormComponent],
   templateUrl: './cuu-student-disciplines.component.html',
   styleUrl: './cuu-student-disciplines.component.css'
 })
 export class CuuStudentDisciplinesComponent {
 
   currentUser!: ExpandedUserDTO;
+  selectedCategory?: CategoryDTO;
 
   private userService = inject(BackUserService);
   private keycloakHelper = inject(KeycloakHelperService);
@@ -35,4 +38,15 @@ export class CuuStudentDisciplinesComponent {
     console.log("Expanded Current User: ", this.currentUser);
   }
 
+    showModal: boolean = false;
+
+  openModal(category: CategoryDTO): void {
+    this.selectedCategory = category;
+    this.showModal = true;
+  }
+
+  closeModal(): void {
+    this.showModal = false;
+    this.selectedCategory = undefined;
+  }
 }

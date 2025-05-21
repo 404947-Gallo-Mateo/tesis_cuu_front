@@ -1,0 +1,39 @@
+<div class="modal fade show d-block" tabindex="-1" role="dialog" *ngIf="show">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h5 class="modal-title">{{ category.name }} ({{ category.disciplineName }})</h5>
+            <button type="button" class="btn-close" (click)="onClose()" aria-label="Close"></button>
+        </div>
+                
+        <div class="row modal-body">
+            <div class="col-6">
+                <p><strong>Descripción:</strong> {{ category.description }}</p>
+                <p><strong>Cuota mensual:</strong> ${{ category.monthlyFee }}</p>
+                <p><strong>Género permitido:</strong> {{ translateAllowedGenre(category.allowedGenre) }}</p>
+                <p><strong>Rango de edad:</strong> {{ category.ageRange.minAge }} - {{ category.ageRange.maxAge }} años</p>
+                @if (category.availableSpaces > 0) {
+                    <p><strong>Vacantes disponibles:</strong> {{ category.availableSpaces }}</p>
+                }
+            </div>
+
+            <div class="col-6">
+                <p><strong>Horarios:</strong></p>
+                <ul>
+                    <li *ngFor="let line of getFormattedSchedules(category)">
+                        <span style="white-space: pre-line">{{ line }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="onClose()">Cerrar</button>
+        </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop fade show" *ngIf="show"></div>

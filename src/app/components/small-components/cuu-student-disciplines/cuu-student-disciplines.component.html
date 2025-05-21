@@ -1,8 +1,21 @@
-<p>cuu-student-disciplines works!</p>
+<h1>Tus Inscripciones</h1>
 
 @if (currentUser) {
+  <div class="d-flex flex-wrap gap-3">
     @for (category of currentUser.studentCategories; track $index) {
-        <h5>{{category.name}}</h5>
-        <p>{{category.description}}</p>
+      <div class="card" style="width: 18rem; cursor: pointer;" (click)="openModal(category)">
+        <img src="https://via.placeholder.com/286x180" class="card-img-top" alt="Imagen categoría">
+        <div class="card-body">
+          <h5 class="card-title">{{ category.disciplineName }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ category.name }}</h6>
+        </div>
+      </div>
     }
+  </div>
 }
+
+<app-category-dto-form
+  [category]="selectedCategory!"
+  [show]="showModal"
+  (close)="closeModal()"
+/>
