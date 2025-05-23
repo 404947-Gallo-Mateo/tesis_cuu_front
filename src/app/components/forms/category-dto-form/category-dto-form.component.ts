@@ -1,6 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { CategoryDTO } from '../../../models/backend/CategoryDTO';
 import { CommonModule } from '@angular/common';
+import { BackUserService } from '../../../services/backend-helpers/user/back-user.service';
+import Swal from 'sweetalert2';
+import { BackStudentInscriptionService } from '../../../services/backend-helpers/student-inscription/back-student-inscription.service';
 
 @Component({
   selector: 'app-category-dto-form',
@@ -9,6 +12,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './category-dto-form.component.css'
 })
 export class CategoryDtoFormComponent {
+
+  private backUserService = inject(BackUserService);
+    private backStudentInscriptionService = inject(BackStudentInscriptionService);
 
   @Input() category!: CategoryDTO;
   @Input() show: boolean = false;
@@ -61,5 +67,45 @@ export class CategoryDtoFormComponent {
       return `${dayMap[day]}:\n${horarios}`;
     });
 }
+
+
+    async deleteInscription() {
+
+      const studentkeycloakId = (await this.backUserService.getCurrentUser()).keycloakId;
+      const disciplineId = this.category.disciplineId;
+      const categoryId = this.category.id;
+
+      console.log("DELETE deleteInscription params = studentkeycloakId: ", studentkeycloakId, " | disciplineId: ", disciplineId, " | categoryId: ", categoryId);
+
+      const result = await Swal.fire({
+        title: '¿Confirmar desinscripción?',
+        text: 'Se eliminara se inscripción en ' + this.category.name + '.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#aaa',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+      });
+
+      if (result.isConfirmed) {
+        try {
+          let resp = await this.backStudentInscriptionService.deleteStudentInscription(
+            studentkeycloakId, disciplineId, categoryId);
+          //console.log("resp de submitUpdatedKeycloakUser(): ", resp);
+          this.backUserService.getUpdatedInfoOfCurrentUser();
+          if(resp){
+            Swal.fire('Actualizado', 'Se elimino la inscripcion, ya no participa de ' + this.category.name +'.', 'success');
+          }
+          else {
+            Swal.fire('Error', 'No se pudo eliminar, intente mas tarde.', 'error');
+          }
+        } catch (err) {
+          console.error('Error actualizando usuario:', err);
+          Swal.fire('Error', 'Hubo un problema actualizar el usuario.', 'error');
+        }
+      }
+    
+  }
 
 }

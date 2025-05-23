@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { KeycloakHelperService } from '../keycloak-helper.service';
-import { ExpandedUserDTO, UserDTO } from '../../models/backend/ExpandedUserDTO';
+import { KeycloakHelperService } from '../../../services/backend-helpers/keycloak/keycloak-helper.service';
 import { firstValueFrom } from 'rxjs';
 import { retryWhen, delay, take, catchError } from 'rxjs/operators';
 import { throwError as observableThrowError } from 'rxjs';
+import { UserDTO, ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +21,7 @@ export class BackUserService {
 
   private currentUser: ExpandedUserDTO | null = null; 
 
-    // Devuelve el usuario si existe aca, caso contrario lo solicita al back
+  // Devuelve el usuario si existe aca, caso contrario lo solicita al back
   async getCurrentUser(): Promise<ExpandedUserDTO> {
     if (this.currentUser) {
       return this.currentUser;
@@ -37,6 +37,8 @@ export class BackUserService {
     this.currentUser = null;
   }
 
+
+  // @GetMapping("/get-current-user-info")
   //llama al back, guarda y despues devuelve el usuario actual
   async getUpdatedInfoOfCurrentUser(): Promise<ExpandedUserDTO> {
     const token = await this.keycloakHelper.getToken();
@@ -65,7 +67,7 @@ export class BackUserService {
     return user;
   }
 
-  // Eliminar
+  // @DeleteMapping("/delete/{keycloakId}")
   //llama al back, elimina en keycloak y despues elimina en DB Disciplinas
   async deleteKeycloakUser(keycloakId: string): Promise<Boolean> {
     const token = await this.keycloakHelper.getToken();
@@ -75,7 +77,7 @@ export class BackUserService {
     };
 
     const resp: any = await firstValueFrom(
-      this.http.delete(`${this.API_URL}/delete/${keycloakId}`, { headers })
+      this.http.delete(`${this.API_URL}/delete/${encodeURIComponent(keycloakId)}`, { headers })
         .pipe(
           retryWhen(errors =>
             errors.pipe(
@@ -93,8 +95,7 @@ export class BackUserService {
     return resp;
   }
 
-// Editar
-//this.http.put(`${this.API_URL}/${keycloakId}`, userDTO);
+// @PutMapping("/update/{keycloakId}")
 //llama al back, guarda y despues devuelve el usuario actual
   async updateInfoOfKeycloakUser(keycloakId: string, userDTO: UserDTO): Promise<ExpandedUserDTO> {
     const token = await this.keycloakHelper.getToken();
@@ -103,10 +104,10 @@ export class BackUserService {
       Authorization: `Bearer ${token}`
     };
 
-    console.log(`${this.API_URL}/update/${keycloakId}`);
+    //console.log(`${this.API_URL}/update/${keycloakId}`);
 
     const resp: any = await firstValueFrom(
-      this.http.put(`${this.API_URL}/update/${keycloakId}`, userDTO, { headers })
+      this.http.put(`${this.API_URL}/update/${encodeURIComponent(keycloakId)}`, userDTO, { headers })
         .pipe(
           retryWhen(errors =>
             errors.pipe(
@@ -123,5 +124,30 @@ export class BackUserService {
 
     let expandedUserDTO: ExpandedUserDTO = resp;
     return expandedUserDTO;
+  }
+
+
+  // @GetMapping("/get-all")
+  //llama al back, trae todos los usuarios de la DB del MS
+  async getAllUsers(): Promise<ExpandedUserDTO> {
+
+    const user = await firstValueFrom(
+      this.http.get<ExpandedUserDTO>(`${this.API_URL}/get-all`)
+        .pipe(
+          retryWhen(errors =>
+            errors.pipe(
+              delay(1000),
+              take(3)
+            )
+          ),
+          catchError(error => {
+            console.error('No se pudo obtener todos los usuarios.');
+            return observableThrowError(() => error);
+          })
+        )
+    );
+
+    this.currentUser = user; 
+    return user;
   }
 }

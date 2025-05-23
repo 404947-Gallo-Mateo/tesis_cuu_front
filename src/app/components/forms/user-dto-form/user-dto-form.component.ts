@@ -6,10 +6,10 @@ import { DisciplineSummaryDTO } from '../../../models/backend/DisciplineSummaryD
 import { CommonModule, formatDate } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { BackUserService } from '../../../services/backend-helpers/back-user.service';
+import { BackUserService } from '../../../services/backend-helpers/user/back-user.service';
 import Swal from 'sweetalert2';
 import { ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
-import { KeycloakHelperService } from '../../../services/keycloak-helper.service';
+import { KeycloakHelperService } from '../../../services/backend-helpers/keycloak/keycloak-helper.service';
 import { UserGenre } from '../../../models/backend/embeddables/UserGenre';
 
 @Component({

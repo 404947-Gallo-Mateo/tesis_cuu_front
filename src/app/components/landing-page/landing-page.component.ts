@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { KeycloakHelperService } from '../../services/keycloak-helper.service';
-import { BackUserService } from '../../services/backend-helpers/back-user.service';
+import { KeycloakHelperService } from '../../services/backend-helpers/keycloak/keycloak-helper.service';
+import { BackUserService } from '../../services/backend-helpers/user/back-user.service';
 import { ExpandedUserDTO } from '../../models/backend/ExpandedUserDTO';
 
 @Component({

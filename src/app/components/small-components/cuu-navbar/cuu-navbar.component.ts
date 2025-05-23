@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { KeycloakHelperService } from '../../../services/keycloak-helper.service';
+import { KeycloakHelperService } from '../../../services/backend-helpers/keycloak/keycloak-helper.service';
 import { CommonModule } from '@angular/common';
 import { inject } from '@angular/core';
 import { UserDTOFormComponent } from "../../forms/user-dto-form/user-dto-form.component";
 import { ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
-import { BackUserService } from '../../../services/backend-helpers/back-user.service';
+import { BackUserService } from '../../../services/backend-helpers/user/back-user.service';
 
 declare var bootstrap: any;
 

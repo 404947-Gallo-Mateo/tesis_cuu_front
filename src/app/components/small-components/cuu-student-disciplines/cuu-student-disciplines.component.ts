@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
-import { BackUserService } from '../../../services/backend-helpers/back-user.service';
-import { KeycloakHelperService } from '../../../services/keycloak-helper.service';
+import { BackUserService } from '../../../services/backend-helpers/user/back-user.service';
+import { KeycloakHelperService } from '../../../services/backend-helpers/keycloak/keycloak-helper.service';
 import { inject } from '@angular/core';
 import { CategoryDtoFormComponent } from '../../forms/category-dto-form/category-dto-form.component';
 import { CategoryDTO } from '../../../models/backend/CategoryDTO';

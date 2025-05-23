@@ -1,13 +1,28 @@
-<h1>Tus Inscripciones</h1>
+<h1 class="mb-4">Tus Inscripciones</h1>
 
 @if (currentUser) {
-  <div class="d-flex flex-wrap gap-3">
+  <div class="row justify-content-center">
     @for (category of currentUser.studentCategories; track $index) {
-      <div class="card" style="width: 18rem; cursor: pointer;" (click)="openModal(category)">
-        <img src="https://via.placeholder.com/286x180" class="card-img-top" alt="Imagen categoría">
-        <div class="card-body">
-          <h5 class="card-title">{{ category.disciplineName }}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">{{ category.name }}</h6>
+      <div
+        class="col-12 col-md-6 d-flex justify-content-center mb-4"
+        style="max-width: 45%;"
+      >
+        <div
+          class="card shadow-sm border-0 h-100"
+          style="width: 100%; cursor: pointer; transition: transform 0.2s;"
+          (click)="openModal(category)"
+          onmouseover="this.style.transform='scale(1.02)'"
+          onmouseout="this.style.transform='scale(1)'"
+        >
+          <img
+            src="https://via.placeholder.com/286x180"
+            class="card-img-top rounded-top"
+            alt="Imagen categoría"
+          />
+          <div class="card-body">
+            <h5 class="card-title mb-1">{{ category.disciplineName }}</h5>
+            <h6 class="card-subtitle text-muted">{{ category.name }}</h6>
+          </div>
         </div>
       </div>
     }
