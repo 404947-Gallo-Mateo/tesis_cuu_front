@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { KeycloakHelperService } from '../../services/backend-helpers/keycloak/keycloak-helper.service';
 import { BackUserService } from '../../services/backend-helpers/user/back-user.service';
 import { ExpandedUserDTO } from '../../models/backend/ExpandedUserDTO';
+import { filter, of, switchMap, take, tap, timer } from 'rxjs';
 
 @Component({
   selector: 'app-landing-page',
@@ -13,41 +14,35 @@ import { ExpandedUserDTO } from '../../models/backend/ExpandedUserDTO';
 export class LandingPageComponent implements OnInit{
   constructor() {}
 
-  private keycloakHelper = inject(KeycloakHelperService);
+ private keycloakHelper = inject(KeycloakHelperService);
   private userService = inject(BackUserService);
 
-  isLoaded = false; // indica si se cargo el estado del login
-
+  isLoaded = false;
   currentUser!: ExpandedUserDTO;
 
-    async ngOnInit() {
-    await this.keycloakHelper.init();
-    this.isLoaded = true; // marcamos que se cargo el estado de login
+  // Nueva propiedad observable
+  isLoggedIn$ = this.keycloakHelper.isLoggedIn$;
 
-    // if (this.keycloakHelper.isLoggedIn()) {
-    //    console.log('Token:', this.keycloakHelper.getToken());
-    //    console.log('Navbar component username:', this.keycloakHelper.getUsername());
-    //    console.log('Roles:', this.keycloakHelper.getRoles());
-    // }
-
-    const waitForKeycloak = async () => {
-        while (!this.keycloakHelper.isReady()) {
-          await new Promise(resolve => setTimeout(resolve, 100)); // esperar 100ms
-        }
-      };
-    
-      await waitForKeycloak();
-    
-      // ahora sí el token está disponible
-      this.currentUser = await this.userService.getCurrentUser();
-      console.log("Expanded Current User: ", this.currentUser);
+  ngOnInit(): void {
+    this.keycloakHelper.isReady$.pipe(
+      filter(isReady => isReady),
+      tap(() => this.isLoaded = true),
+      switchMap(() => this.userService.getCurrentUser()),
+      tap(user => {
+        this.currentUser = user;
+        // console.log("Expanded Current User: ", this.currentUser);
+      })
+    ).subscribe();
   }
 
-  getUserName() {
-    return this.currentUser.firstName;
+  // Este método ahora depende de si `currentUser` fue seteado.
+  getUserName(): string | null {
+    if (this.currentUser) {
+      return this.currentUser.firstName;
+    } else {
+      console.log("No se puede obtener username porque no está cargado el usuario");
+      return null;
+    }
   }
 
-  isLoggedIn() {
-    return this.keycloakHelper.isLoggedIn();  
-  }
 }

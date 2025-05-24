@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { KeycloakHelperService } from '../../../services/backend-helpers/keycloak/keycloak-helper.service';
-import { firstValueFrom } from 'rxjs';
-import { retryWhen, delay, take, catchError } from 'rxjs/operators';
+import { firstValueFrom, Observable, of } from 'rxjs';
+import { retryWhen, delay, take, catchError, switchMap, tap } from 'rxjs/operators';
 import { throwError as observableThrowError } from 'rxjs';
 import { UserDTO, ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
 
@@ -21,133 +21,72 @@ export class BackUserService {
 
   private currentUser: ExpandedUserDTO | null = null; 
 
-  // Devuelve el usuario si existe aca, caso contrario lo solicita al back
-  async getCurrentUser(): Promise<ExpandedUserDTO> {
-    if (this.currentUser) {
-      return this.currentUser;
-    }
-    return await this.getUpdatedInfoOfCurrentUser();
+  getCurrentUser(): Observable<ExpandedUserDTO> {
+  if (this.currentUser) {
+    return of(this.currentUser);
   }
+  return this.getUpdatedInfoOfCurrentUser();
+}
 
-  setCurrentUser(newCurrentUser: ExpandedUserDTO){
-    this.currentUser = newCurrentUser;
-  }
+setCurrentUser(newCurrentUser: ExpandedUserDTO): void {
+  this.currentUser = newCurrentUser;
+}
 
-   clearCachedUser(): void {
-    this.currentUser = null;
-  }
+clearCachedUser(): void {
+  this.currentUser = null;
+}
 
+getUpdatedInfoOfCurrentUser(): Observable<ExpandedUserDTO> {
+  return this.keycloakHelper.getToken().pipe(
+    switchMap(token => {
+      const headers = { Authorization: `Bearer ${token}` };
+      return this.http.get<ExpandedUserDTO>(`${this.API_URL}/get-current-user-info`, { headers }).pipe(
+        retryWhen(errors => errors.pipe(delay(1000), take(3))),
+        tap(user => this.currentUser = user),
+        catchError(error => {
+          console.error('No se pudo obtener la información del usuario luego de 3 intentos.');
+          return observableThrowError(() => error);
+        })
+      );
+    })
+  );
+}
 
-  // @GetMapping("/get-current-user-info")
-  //llama al back, guarda y despues devuelve el usuario actual
-  async getUpdatedInfoOfCurrentUser(): Promise<ExpandedUserDTO> {
-    const token = await this.keycloakHelper.getToken();
+deleteKeycloakUser(keycloakId: string): Observable<boolean> {
+  return this.http.delete<boolean>(`${this.API_URL}/delete/${encodeURIComponent(keycloakId)}`).pipe(
+    retryWhen(errors => errors.pipe(delay(1000), take(3))),
+    catchError(error => {
+      console.error('No se pudo eliminar el usuario luego de 3 intentos.');
+      return observableThrowError(() => error);
+    })
+  );
+}
 
-    const headers = {
-      Authorization: `Bearer ${token}`
-    };
-
-    const user = await firstValueFrom(
-      this.http.get<ExpandedUserDTO>(`${this.API_URL}/get-current-user-info`, { headers })
-        .pipe(
-          retryWhen(errors =>
-            errors.pipe(
-              delay(1000),
-              take(3)
-            )
-          ),
-          catchError(error => {
-            console.error('No se pudo obtener la información del usuario luego de 3 intentos.');
-            return observableThrowError(() => error);
-          })
-        )
-    );
-
-    this.currentUser = user; 
-    return user;
-  }
-
-  // @DeleteMapping("/delete/{keycloakId}")
-  //llama al back, elimina en keycloak y despues elimina en DB Disciplinas
-  async deleteKeycloakUser(keycloakId: string): Promise<Boolean> {
-    const token = await this.keycloakHelper.getToken();
-
-    const headers = {
-      Authorization: `Bearer ${token}`
-    };
-
-    const resp: any = await firstValueFrom(
-      this.http.delete(`${this.API_URL}/delete/${encodeURIComponent(keycloakId)}`, { headers })
-        .pipe(
-          retryWhen(errors =>
-            errors.pipe(
-              delay(1000),
-              take(3)
-            )
-          ),
-          catchError(error => {
-            console.error('No se pudo eliminar el usuario luego de 3 intentos.');
-            return observableThrowError(() => error);
-          })
-        )
-    );
-
-    return resp;
-  }
-
-// @PutMapping("/update/{keycloakId}")
-//llama al back, guarda y despues devuelve el usuario actual
-  async updateInfoOfKeycloakUser(keycloakId: string, userDTO: UserDTO): Promise<ExpandedUserDTO> {
-    const token = await this.keycloakHelper.getToken();
-
-    const headers = {
-      Authorization: `Bearer ${token}`
-    };
-
-    //console.log(`${this.API_URL}/update/${keycloakId}`);
-
-    const resp: any = await firstValueFrom(
-      this.http.put(`${this.API_URL}/update/${encodeURIComponent(keycloakId)}`, userDTO, { headers })
-        .pipe(
-          retryWhen(errors =>
-            errors.pipe(
-              delay(1000),
-              take(3)
-            )
-          ),
-          catchError(error => {
-            console.error('No se pudo obtener la información del usuario luego de 3 intentos.');
-            return observableThrowError(() => error);
-          })
-        )
-    );
-
-    let expandedUserDTO: ExpandedUserDTO = resp;
-    return expandedUserDTO;
-  }
+updateInfoOfKeycloakUser(keycloakId: string, userDTO: UserDTO): Observable<ExpandedUserDTO> {
+  return this.http.put<ExpandedUserDTO>(`${this.API_URL}/update/${encodeURIComponent(keycloakId)}`, userDTO).pipe(
+    retryWhen(errors => errors.pipe(delay(1000), take(3))),
+    catchError(error => {
+      console.error('No se pudo actualizar la información del usuario luego de 3 intentos.');
+      return observableThrowError(() => error);
+    })
+  );
+}
 
 
-  // @GetMapping("/get-all")
-  //llama al back, trae todos los usuarios de la DB del MS
-  async getAllUsers(): Promise<ExpandedUserDTO> {
+  getAllUsers(): Observable<ExpandedUserDTO> {
+  return this.http.get<ExpandedUserDTO>(`${this.API_URL}/get-all`).pipe(
+    retryWhen(errors =>
+      errors.pipe(
+        delay(1000),
+        take(3)
+      )
+    ),
+    tap(user => this.currentUser = user), // guarda en caché si es necesario
+    catchError(error => {
+      console.error('No se pudo obtener todos los usuarios.');
+      return observableThrowError(() => error);
+    })
+  );
+}
 
-    const user = await firstValueFrom(
-      this.http.get<ExpandedUserDTO>(`${this.API_URL}/get-all`)
-        .pipe(
-          retryWhen(errors =>
-            errors.pipe(
-              delay(1000),
-              take(3)
-            )
-          ),
-          catchError(error => {
-            console.error('No se pudo obtener todos los usuarios.');
-            return observableThrowError(() => error);
-          })
-        )
-    );
-
-    this.currentUser = user; 
-    return user;
-  }
 }

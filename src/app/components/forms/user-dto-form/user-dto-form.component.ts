@@ -59,98 +59,95 @@ ngOnChanges(changes: SimpleChanges): void {
     });
   }
 
-  async submitUpdatedKeycloakUser() {
-    if (this.form.valid) {
-      const form = this.form.value;
+submitUpdatedKeycloakUser(): void {
+  if (this.form.valid) {
+    const form = this.form.value;
 
-      const expandedUserDTO: ExpandedUserDTO = {
-        keycloakId: form.keycloakId,
-        role: form.role,
-        username: form.username,
-        email: form.email,
-        firstName: form.firstName,
-        lastName: form.lastName,
-        birthDate: formatDate(form.birthDate, 'dd-MM-yyyy', 'en-US').toString(), // <-- aquí        
-        genre: form.genre,
-        teacherDisciplines: (form.teacherDisciplines || []).map((d: any) => ({
-          id: d.id,
-          name: d.name
-        })),
-        studentCategories: (form.studentCategories || []).map((c: any) => ({
-          id: c.id,
-          name: c.name,
-          disciplineId: c.disciplineId
-        }))
-      };
+    const expandedUserDTO: ExpandedUserDTO = {
+      keycloakId: form.keycloakId,
+      role: form.role,
+      username: form.username,
+      email: form.email,
+      firstName: form.firstName,
+      lastName: form.lastName,
+      birthDate: formatDate(form.birthDate, 'dd-MM-yyyy', 'en-US').toString(),
+      genre: form.genre,
+      teacherDisciplines: (form.teacherDisciplines || []).map((d: any) => ({
+        id: d.id,
+        name: d.name
+      })),
+      studentCategories: (form.studentCategories || []).map((c: any) => ({
+        id: c.id,
+        name: c.name,
+        disciplineId: c.disciplineId
+      }))
+    };
 
-      //console.log("PUT expandedUserDTO: ", expandedUserDTO);
-
-      const result = await Swal.fire({
-        title: '¿Confirmar actualización?',
-        text: 'Se actualizarán los datos del usuario en Keycloak.',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#aaa',
-        confirmButtonText: 'Sí, actualizar',
-        cancelButtonText: 'Cancelar'
-      });
-
-      if (result.isConfirmed) {
-        try {
-          let resp = await this.backUserService.updateInfoOfKeycloakUser(
-            expandedUserDTO.keycloakId,
-            expandedUserDTO
-          );
-          //console.log("resp de submitUpdatedKeycloakUser(): ", resp);
-          this.backUserService.setCurrentUser(resp);
-          Swal.fire('Actualizado', 'El usuario fue actualizado correctamente.', 'success');
-        } catch (err) {
-          console.error('Error actualizando usuario:', err);
-          Swal.fire('Error', 'Hubo un problema actualizar el usuario.', 'error');
-        }
-      }
-    }
-  }
-
-
-  async deleteKeycloakUser() {
-    const userDTO = this.form.value;
-    const userKeycloakId = userDTO.keycloakId;
-
-    //console.log("borrando user keycloak id: ", userDTO.keycloakId);
-
-    const result = await Swal.fire({
-      title: '¿Estás seguro?',
-      text: 'Esta acción eliminará el Usuario permanentemente.',
-      icon: 'warning',
+    Swal.fire({
+      title: '¿Confirmar actualización?',
+      text: 'Se actualizarán los datos del usuario en Keycloak.',
+      icon: 'question',
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Sí, eliminar',
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#aaa',
+      confirmButtonText: 'Sí, actualizar',
       cancelButtonText: 'Cancelar'
-    });
-
-    if (result.isConfirmed) {
-      try {
-        let resp: Boolean = await this.backUserService.deleteKeycloakUser(userKeycloakId);
-
-        console.log("resp deleteKeycloakUser(): ", resp);
-
-        if(resp){
-          Swal.fire('Eliminado', 'El usuario fue eliminado correctamente.', 'success');
-          this.keycloakHelper.logout();
-
-        } else {
-          Swal.fire('Error', 'Hubo un problema en la Base de Datos al eliminar el usuario.', 'error');
-        }
-
-      } catch (err) {
-        console.error('Error eliminando usuario:', err);
-        Swal.fire('Error', 'Hubo un problema en Keycloak al eliminar el usuario.', 'error');
+    }).then(result => {
+      if (result.isConfirmed) {
+        this.backUserService.updateInfoOfKeycloakUser(
+          expandedUserDTO.keycloakId,
+          expandedUserDTO
+        ).subscribe({
+          next: (resp) => {
+            this.backUserService.setCurrentUser(resp);
+            Swal.fire('Actualizado', 'El usuario fue actualizado correctamente.', 'success');
+          },
+          error: (err) => {
+            console.error('Error actualizando usuario:', err);
+            Swal.fire('Error', 'Hubo un problema al actualizar el usuario.', 'error');
+          }
+        });
       }
-    }
+    });
   }
+}
+
+
+deleteKeycloakUser(): void {
+  const userDTO = this.form.value;
+  const userKeycloakId = userDTO.keycloakId;
+
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: 'Esta acción eliminará el Usuario permanentemente.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  }).then(result => {
+    if (result.isConfirmed) {
+      this.backUserService.deleteKeycloakUser(userKeycloakId).subscribe({
+        next: (resp: boolean) => {
+          console.log("resp deleteKeycloakUser(): ", resp);
+
+          if (resp) {
+            Swal.fire('Eliminado', 'El usuario fue eliminado correctamente.', 'success');
+            this.keycloakHelper.logout();
+          } else {
+            Swal.fire('Error', 'Hubo un problema en la Base de Datos al eliminar el usuario.', 'error');
+          }
+        },
+        error: (err) => {
+          console.error('Error eliminando usuario:', err);
+          Swal.fire('Error', 'Hubo un problema en Keycloak al eliminar el usuario.', 'error');
+        }
+      });
+    }
+  });
+}
+
 
   private parseDateString(dateStr: string): Date {
   const [day, month, year] = dateStr.split('-').map(Number);

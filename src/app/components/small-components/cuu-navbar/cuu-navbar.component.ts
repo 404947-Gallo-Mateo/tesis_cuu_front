@@ -5,6 +5,7 @@ import { inject } from '@angular/core';
 import { UserDTOFormComponent } from "../../forms/user-dto-form/user-dto-form.component";
 import { ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
 import { BackUserService } from '../../../services/backend-helpers/user/back-user.service';
+import { filter, of, switchMap, take, tap, timer, combineLatest } from 'rxjs';
 
 declare var bootstrap: any;
 
@@ -15,16 +16,58 @@ declare var bootstrap: any;
   templateUrl: './cuu-navbar.component.html',
   styleUrl: './cuu-navbar.component.css'
 })
-export class CuuNavbarComponent implements OnInit{
-
-  isLoaded = false; // indica si se cargo el estado del login
+export class CuuNavbarComponent implements OnInit {
+  isLoaded = false;
   
   private userService = inject(BackUserService);
   private keycloakHelper = inject(KeycloakHelperService);
   
+  currentUser!: ExpandedUserDTO;
+  isLoggedIn$ = this.keycloakHelper.isLoggedIn$;
+
   constructor() {}
 
-  currentUser!: ExpandedUserDTO;
+  ngOnInit(): void {
+    console.log("Inicializando navbar component...");
+    
+    // IMPORTANTE: Primero inicializar Keycloak
+    this.keycloakHelper.init().subscribe({
+      next: (authenticated) => {
+        console.log('Keycloak inicializado, usuario autenticado:', authenticated);
+      },
+      error: (error) => {
+        console.error('Error al inicializar Keycloak:', error);
+      }
+    });
+
+    // Luego escuchar cuando esté listo Y autenticado para cargar el usuario
+    combineLatest([
+      this.keycloakHelper.isReady$,
+      this.keycloakHelper.isLoggedIn$
+    ]).pipe(
+      filter(([isReady, isLoggedIn]) => isReady), // Solo proceder cuando esté listo
+      tap(([isReady, isLoggedIn]) => {
+        console.log('Estado:', { isReady, isLoggedIn });
+        this.isLoaded = true;
+      }),
+      filter(([isReady, isLoggedIn]) => isLoggedIn), // Solo cargar usuario si está logueado
+      switchMap(() => this.userService.getCurrentUser()),
+      tap(user => {
+        this.currentUser = user;
+        console.log("Usuario actual cargado:", this.currentUser);
+      })
+    ).subscribe({
+      error: (error) => {
+        console.error('Error al cargar usuario:', error);
+        this.isLoaded = true; // Marcar como cargado incluso si hay error
+      }
+    });
+
+    // Debug: Monitorear cambios en el estado de login
+    this.isLoggedIn$.subscribe(isLoggedIn => {
+      console.log('Estado de login cambió:', isLoggedIn);
+    });
+  }
 
   openUserFormModal() {
     const modalElement = document.getElementById('userFormModal');
@@ -34,45 +77,15 @@ export class CuuNavbarComponent implements OnInit{
     }
   }
 
-  //async ngOnInit()Promise<void> {
-  async ngOnInit() {
-    await this.keycloakHelper.init();
-    this.isLoaded = true; // marcamos que se cargo el estado de login
-
-    // if (this.keycloakHelper.isLoggedIn()) {
-    //    console.log('Token:', this.keycloakHelper.getToken());
-    //    console.log('Navbar component username:', this.keycloakHelper.getUsername());
-    //    console.log('Roles:', this.keycloakHelper.getRoles());
-    // }
-
-    const waitForKeycloak = async () => {
-        while (!this.keycloakHelper.isReady()) {
-          await new Promise(resolve => setTimeout(resolve, 100)); // esperar 100ms
-        }
-      };
-    
-      await waitForKeycloak();
-    
-      // ahora sí el token está disponible
-      this.currentUser = await this.userService.getCurrentUser();
-      console.log("Expanded Current User: ", this.currentUser);
-  }
-
   login() {
     this.keycloakHelper.login();
   }
 
   logout() {
-    this.keycloakHelper.logout();  
+    this.keycloakHelper.logout();
   }
 
   getUsername() {
-    return this.keycloakHelper.getUsername();  
+    return this.keycloakHelper.getUsername();
   }
-
-  isLoggedIn() {
-    //console.log("esta logueado?", this.keycloakHelper.isLoggedIn())
-    return this.keycloakHelper.isLoggedIn();  
-  }
-
 }

@@ -5,6 +5,7 @@ import { KeycloakHelperService } from '../../../services/backend-helpers/keycloa
 import { inject } from '@angular/core';
 import { CategoryDtoFormComponent } from '../../forms/category-dto-form/category-dto-form.component';
 import { CategoryDTO } from '../../../models/backend/CategoryDTO';
+import { filter, of, switchMap, take, tap, timer } from 'rxjs';
 
 @Component({
   selector: 'app-cuu-student-disciplines',
@@ -17,28 +18,26 @@ export class CuuStudentDisciplinesComponent {
 
   currentUser!: ExpandedUserDTO;
   selectedCategory?: CategoryDTO;
+  isLoaded = false; // indica si se cargo el estado del login
 
   private userService = inject(BackUserService);
   private keycloakHelper = inject(KeycloakHelperService);
 
   constructor() {}
 
-  async ngOnInit(): Promise<void> {
-    // Esperar hasta que Keycloak esté listo
-    const waitForKeycloak = async () => {
-      while (!this.keycloakHelper.isReady()) {
-        await new Promise(resolve => setTimeout(resolve, 100)); // esperar 100ms
-      }
-    };
-  
-    await waitForKeycloak();
-  
-    // ahora sí el token está disponible
-    this.currentUser = await this.userService.getCurrentUser();
-    console.log("Expanded Current User: ", this.currentUser);
-  }
+ngOnInit(): void {
+  this.keycloakHelper.isReady$.pipe(
+    filter(isReady => isReady), // solo continúa si está listo
+    tap(() => this.isLoaded = true),
+    switchMap(() => this.userService.getCurrentUser()),
+    tap(user => {
+      this.currentUser = user;
+      //console.log("Expanded Current User: ", this.currentUser);
+    })
+  ).subscribe();
+}
 
-    showModal: boolean = false;
+  showModal: boolean = false;
 
   openModal(category: CategoryDTO): void {
     this.selectedCategory = category;
