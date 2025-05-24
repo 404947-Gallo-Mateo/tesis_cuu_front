@@ -1,92 +1,140 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { KeycloakHelperService } from '../../../services/backend-helpers/keycloak/keycloak-helper.service';
-import { firstValueFrom, Observable, of } from 'rxjs';
-import { retryWhen, delay, take, catchError, switchMap, tap } from 'rxjs/operators';
-import { throwError as observableThrowError } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError as observableThrowError } from 'rxjs';
+import { retryWhen, delay, take, catchError, switchMap, tap, filter } from 'rxjs/operators';
 import { UserDTO, ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BackUserService {
+  private http = inject(HttpClient);
+  private keycloakHelper = inject(KeycloakHelperService);
+  private readonly API_URL = 'http://localhost:8090/user';
+
+  // BehaviorSubject para manejar el estado reactivo del usuario
+  private currentUserSubject = new BehaviorSubject<ExpandedUserDTO | null>(null);
+  
+  // Observable público para que los componentes se suscriban
+  public currentUser$ = this.currentUserSubject.asObservable();
+  
+  // Observable filtrado que solo emite cuando hay un usuario válido
+  public currentUserValid$ = this.currentUser$.pipe(
+    filter(user => user !== null)
+  ) as Observable<ExpandedUserDTO>;
 
   constructor() { }
 
-  private http = inject(HttpClient);
-  private keycloakHelper = inject(KeycloakHelperService);
-  private readonly API_URL = 'http://localhost:8090/user'; 
-
-  //http://localhost:8090/user/update/412d79db-c95f-4290-94b3-ddd40f5d52cb
-
-  private currentUser: ExpandedUserDTO | null = null; 
-
+  /**
+   * Obtiene el usuario actual desde el cache (si existe) o desde el servidor
+   * Retorna un Observable que siempre estará actualizado
+   */
   getCurrentUser(): Observable<ExpandedUserDTO> {
-  if (this.currentUser) {
-    return of(this.currentUser);
+    // Si ya tenemos un usuario cacheado, lo retornamos
+    if (this.currentUserSubject.value) {
+      return of(this.currentUserSubject.value);
+    }
+    
+    // Si no, obtenemos la información actualizada
+    return this.getUpdatedInfoOfCurrentUser();
   }
-  return this.getUpdatedInfoOfCurrentUser();
-}
 
-setCurrentUser(newCurrentUser: ExpandedUserDTO): void {
-  this.currentUser = newCurrentUser;
-}
+  /**
+   * Obtiene información actualizada del usuario desde el servidor
+   * y actualiza el BehaviorSubject para notificar a todos los suscriptores
+   */
+  getUpdatedInfoOfCurrentUser(): Observable<ExpandedUserDTO> {
+    return this.keycloakHelper.getToken().pipe(
+      switchMap(token => {
+        const headers = { Authorization: `Bearer ${token}` };
+        return this.http.get<ExpandedUserDTO>(`${this.API_URL}/get-current-user-info`, { headers }).pipe(
+          retryWhen(errors => errors.pipe(delay(1000), take(3))),
+          tap(user => {
+            console.log("Usuario actualizado desde servidor: ", user);
+            // IMPORTANTE: Actualizar el BehaviorSubject para notificar a todos los suscriptores
+            this.currentUserSubject.next(user);
+          }),
+          catchError(error => {
+            console.error('No se pudo obtener la información del usuario luego de 3 intentos.');
+            return observableThrowError(() => error);
+          })
+        );
+      })    
+    );
+  }
 
-clearCachedUser(): void {
-  this.currentUser = null;
-}
+  /**
+   * Establece manualmente el usuario actual
+   * Útil cuando se obtiene información del usuario desde otras fuentes
+   */
+  setCurrentUser(newCurrentUser: ExpandedUserDTO): void {
+    this.currentUserSubject.next(newCurrentUser);
+    console.log("Usuario establecido manualmente:", newCurrentUser);
+  }
 
-getUpdatedInfoOfCurrentUser(): Observable<ExpandedUserDTO> {
-  return this.keycloakHelper.getToken().pipe(
-    switchMap(token => {
-      const headers = { Authorization: `Bearer ${token}` };
-      return this.http.get<ExpandedUserDTO>(`${this.API_URL}/get-current-user-info`, { headers }).pipe(
-        retryWhen(errors => errors.pipe(delay(1000), take(3))),
-        tap(user => this.currentUser = user),
-        catchError(error => {
-          console.error('No se pudo obtener la información del usuario luego de 3 intentos.');
-          return observableThrowError(() => error);
-        })
-      );
-    })
-  );
-}
+  /**
+   * Limpia el cache del usuario y notifica a los suscriptores
+   */
+  clearCachedUser(): void {
+    this.currentUserSubject.next(null);
+    console.log("Cache de usuario limpiado");
+  }
 
-deleteKeycloakUser(keycloakId: string): Observable<boolean> {
-  return this.http.delete<boolean>(`${this.API_URL}/delete/${encodeURIComponent(keycloakId)}`).pipe(
-    retryWhen(errors => errors.pipe(delay(1000), take(3))),
-    catchError(error => {
-      console.error('No se pudo eliminar el usuario luego de 3 intentos.');
-      return observableThrowError(() => error);
-    })
-  );
-}
+  /**
+   * Fuerza la actualización del usuario desde el servidor
+   * Útil después de operaciones que modifican el estado del usuario
+   */
+  refreshCurrentUser(): Observable<ExpandedUserDTO> {
+    console.log("Forzando actualización del usuario...");
+    return this.getUpdatedInfoOfCurrentUser();
+  }
 
-updateInfoOfKeycloakUser(keycloakId: string, userDTO: UserDTO): Observable<ExpandedUserDTO> {
-  return this.http.put<ExpandedUserDTO>(`${this.API_URL}/update/${encodeURIComponent(keycloakId)}`, userDTO).pipe(
-    retryWhen(errors => errors.pipe(delay(1000), take(3))),
-    catchError(error => {
-      console.error('No se pudo actualizar la información del usuario luego de 3 intentos.');
-      return observableThrowError(() => error);
-    })
-  );
-}
+  /**
+   * Obtiene el valor actual del usuario de forma síncrona
+   * Retorna null si no hay usuario cacheado
+   */
+  getCurrentUserSnapshot(): ExpandedUserDTO | null {
+    return this.currentUserSubject.value;
+  }
 
+  deleteKeycloakUser(keycloakId: string): Observable<boolean> {
+    return this.http.delete<boolean>(`${this.API_URL}/delete/${encodeURIComponent(keycloakId)}`).pipe(
+      retryWhen(errors => errors.pipe(delay(1000), take(3))),
+      catchError(error => {
+        console.error('No se pudo eliminar el usuario luego de 3 intentos.');
+        return observableThrowError(() => error);
+      })
+    );
+  }
+
+  updateInfoOfKeycloakUser(keycloakId: string, userDTO: UserDTO): Observable<ExpandedUserDTO> {
+    return this.http.put<ExpandedUserDTO>(`${this.API_URL}/update/${encodeURIComponent(keycloakId)}`, userDTO).pipe(
+      retryWhen(errors => errors.pipe(delay(1000), take(3))),
+      tap(updatedUser => {
+        // Actualizar automáticamente el usuario en cache cuando se actualiza
+        console.log("Usuario actualizado via API:", updatedUser);
+        this.currentUserSubject.next(updatedUser);
+      }),
+      catchError(error => {
+        console.error('No se pudo actualizar la información del usuario luego de 3 intentos.');
+        return observableThrowError(() => error);
+      })
+    );
+  }
 
   getAllUsers(): Observable<ExpandedUserDTO> {
-  return this.http.get<ExpandedUserDTO>(`${this.API_URL}/get-all`).pipe(
-    retryWhen(errors =>
-      errors.pipe(
-        delay(1000),
-        take(3)
-      )
-    ),
-    tap(user => this.currentUser = user), // guarda en caché si es necesario
-    catchError(error => {
-      console.error('No se pudo obtener todos los usuarios.');
-      return observableThrowError(() => error);
-    })
-  );
-}
-
+    return this.http.get<ExpandedUserDTO>(`${this.API_URL}/get-all`).pipe(
+      retryWhen(errors =>
+        errors.pipe(
+          delay(1000),
+          take(3)
+        )
+      ),
+      catchError(error => {
+        console.error('No se pudo obtener todos los usuarios.');
+        return observableThrowError(() => error);
+      })
+    );
+  }
 }

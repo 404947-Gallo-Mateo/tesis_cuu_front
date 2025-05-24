@@ -40,7 +40,7 @@ export class CuuNavbarComponent implements OnInit {
       }
     });
 
-    // Luego escuchar cuando esté listo Y autenticado para cargar el usuario
+    // Escuchar cuando Keycloak esté listo Y el usuario esté autenticado
     combineLatest([
       this.keycloakHelper.isReady$,
       this.keycloakHelper.isLoggedIn$
@@ -52,11 +52,15 @@ export class CuuNavbarComponent implements OnInit {
       }),
       filter(([isReady, isLoggedIn]) => isLoggedIn), // Solo cargar usuario si está logueado
       switchMap(() => this.userService.getCurrentUser()),
-      tap(user => {
-        this.currentUser = user;
-        console.log("Usuario actual cargado:", this.currentUser);
+      switchMap(() => {
+        // Suscribirse a los cambios del usuario de forma reactiva
+        return this.userService.currentUserValid$;
       })
     ).subscribe({
+      next: (user) => {
+        this.currentUser = user;
+        console.log("Usuario actual cargado/actualizado en navbar:", this.currentUser);
+      },
       error: (error) => {
         console.error('Error al cargar usuario:', error);
         this.isLoaded = true; // Marcar como cargado incluso si hay error
