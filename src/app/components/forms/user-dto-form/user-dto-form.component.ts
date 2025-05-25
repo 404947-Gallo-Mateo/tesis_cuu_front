@@ -23,6 +23,7 @@ export class UserDTOFormComponent {
 
   form: FormGroup;
   @Input() userData!: ExpandedUserDTO;
+  @Input() currentRole!: string | null;
 
   roles = Object.values(Role);
   genres = [

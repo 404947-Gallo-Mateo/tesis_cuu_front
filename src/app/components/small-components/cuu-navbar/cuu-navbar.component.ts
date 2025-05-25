@@ -5,7 +5,7 @@ import { inject } from '@angular/core';
 import { UserDTOFormComponent } from "../../forms/user-dto-form/user-dto-form.component";
 import { ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
 import { BackUserService } from '../../../services/backend-helpers/user/back-user.service';
-import { filter, of, switchMap, take, tap, timer, combineLatest } from 'rxjs';
+import { filter, of, switchMap, take, tap, timer, combineLatest, firstValueFrom } from 'rxjs';
 import { SyncUserInfoService } from '../../../services/backend-helpers/user/sync-user-info.service';
 
 declare var bootstrap: any;
@@ -23,10 +23,10 @@ export class CuuNavbarComponent implements OnInit {
   private userService = inject(BackUserService);
   private keycloakHelper = inject(KeycloakHelperService);
   private syncUserInfoService = inject(SyncUserInfoService);
-
   
   currentUser!: ExpandedUserDTO;
   isLoggedIn$ = this.keycloakHelper.isLoggedIn$;
+  currentRole$ = this.userService.currentRole$;
 
   constructor() {}
 
@@ -78,13 +78,28 @@ export class CuuNavbarComponent implements OnInit {
       console.log("se llamo a this.syncUserInfoService.syncInfoOfCurrentUser()");
       this.syncUserInfoService.syncInfoOfCurrentUser();
     }
+
+    this.userService.currentRole$.subscribe(role => {
+      this.currentRole = role;
+      console.log('Rol actualizado:', role);
+    });
   }
 
-  openUserFormModal() {
-    const modalElement = document.getElementById('userFormModal');
-    if (modalElement) {
-      const modal = new bootstrap.Modal(modalElement);
-      modal.show();
+  currentRole: string | null = null; // Variable para almacenar el valor
+
+  async openUserFormModal() {
+    try {
+      // Obtener el valor actual del rol
+      this.currentRole = await firstValueFrom(this.userService.currentRole$);
+      
+      // Abrir el modal
+      const modalElement = document.getElementById('userFormModal');
+      if (modalElement) {
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+      }
+    } catch (error) {
+      console.error('Error al obtener el rol:', error);
     }
   }
 

@@ -4,6 +4,7 @@ import { KeycloakHelperService } from '../../../services/backend-helpers/keycloa
 import { BehaviorSubject, Observable, of, throwError as observableThrowError } from 'rxjs';
 import { delay, take, catchError, switchMap, tap, filter, retry } from 'rxjs/operators';
 import { UserDTO, ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
+import { Role } from '../../../models/backend/embeddables/Role';
 
 @Injectable({
   providedIn: 'root'
@@ -15,14 +16,20 @@ export class BackUserService {
 
   // BehaviorSubject para manejar el estado reactivo del usuario
   private currentUserSubject = new BehaviorSubject<ExpandedUserDTO | null>(null);
-  
+  private currentRoleSubject = new BehaviorSubject<string | null>(null);
+
   // Observable público para que los componentes se suscriban
   public currentUser$ = this.currentUserSubject.asObservable();
-  
+  public currentRole$ = this.currentRoleSubject.asObservable();
+
   // Observable filtrado que solo emite cuando hay un usuario válido
   public currentUserValid$ = this.currentUser$.pipe(
     filter(user => user !== null)
   ) as Observable<ExpandedUserDTO>;
+
+   public currentRoleValid$ = this.currentRole$.pipe(
+    filter(user => user !== null)
+  ) as Observable<string>;
 
   constructor() { }
 
@@ -58,6 +65,7 @@ export class BackUserService {
             //console.log("Usuario actualizado desde servidor: ", user);
             // IMPORTANTE: Actualizar el BehaviorSubject para notificar a todos los suscriptores
             this.currentUserSubject.next(user);
+            this.currentRoleSubject.next(user.role);
           }),
           catchError(error => {
             console.error('No se pudo obtener la información del usuario luego de 3 intentos.');
