@@ -20,6 +20,15 @@ import { InscriptionToCategoryComponent } from "../forms/inscription-to-category
 })
 export class MainPageComponent {
     
+    expandedDisciplines: { [key: string]: boolean } = {};
+
+    toggleDiscipline(disciplineId: string): void {
+      this.expandedDisciplines[disciplineId] = !this.expandedDisciplines[disciplineId];
+    }
+    isExpanded(disciplineId: string): boolean {
+      return this.expandedDisciplines[disciplineId];
+    }
+
     currentUser!: ExpandedUserDTO;
     selectedCategory?: CategoryDTO;
     allDisciplines: DisciplineDto[] = [];

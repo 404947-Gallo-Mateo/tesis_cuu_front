@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Inject, Injectable } from '@angular/core';
 import Keycloak from 'keycloak-js';
 import { BehaviorSubject, catchError, from, map, Observable, of, ReplaySubject, shareReplay, tap, throwError } from 'rxjs';
+import { BackUserService } from '../user/back-user.service';
+import { SyncUserInfoService } from '../user/sync-user-info.service';
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +42,6 @@ export class KeycloakHelperService {
       }),
       map(authenticated => {
         if (authenticated) {
-          //console.log('Usuario autenticado: ', this.keycloak);
         } else {
           console.warn('Usuario no autenticado');
         }

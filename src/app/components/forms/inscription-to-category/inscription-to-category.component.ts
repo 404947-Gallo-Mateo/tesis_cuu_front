@@ -116,8 +116,28 @@ export class InscriptionToCategoryComponent {
             .postStudentInscription(studentKeycloakId, disciplineId, categoryId)
             .subscribe({
                 next: (resp) => {
-                    // ... manejo de éxito igual que antes
-                },
+                        Swal.hideLoading();
+                        if (resp) {
+                            Swal.fire({
+                                title: 'Inscripción exitosa!',
+                                text: 'Se inscribió en ' + this.category.name + '.',
+                                icon: 'success'
+                            }).then(() => {
+                                this.backUserService.refreshCurrentUser().subscribe({
+                                    next: (updatedUser) => {
+                                        console.log("Usuario actualizado:", updatedUser);
+                                        this.onClose();
+                                    },
+                                    error: (refreshError) => {
+                                        console.error('Error al actualizar usuario:', refreshError);
+                                        this.onClose();
+                                    }
+                                });
+                            });
+                        } else {
+                            Swal.fire('Error', 'No se pudo completar la inscripción.', 'error');
+                        }
+                    },
                 error: (err: {message: string, status?: number}) => {
                     Swal.hideLoading();
                     console.error('Error completo en componente:', err);

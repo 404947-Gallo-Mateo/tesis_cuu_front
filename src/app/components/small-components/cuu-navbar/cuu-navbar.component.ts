@@ -6,6 +6,7 @@ import { UserDTOFormComponent } from "../../forms/user-dto-form/user-dto-form.co
 import { ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
 import { BackUserService } from '../../../services/backend-helpers/user/back-user.service';
 import { filter, of, switchMap, take, tap, timer, combineLatest } from 'rxjs';
+import { SyncUserInfoService } from '../../../services/backend-helpers/user/sync-user-info.service';
 
 declare var bootstrap: any;
 
@@ -21,6 +22,8 @@ export class CuuNavbarComponent implements OnInit {
   
   private userService = inject(BackUserService);
   private keycloakHelper = inject(KeycloakHelperService);
+  private syncUserInfoService = inject(SyncUserInfoService);
+
   
   currentUser!: ExpandedUserDTO;
   isLoggedIn$ = this.keycloakHelper.isLoggedIn$;
@@ -32,7 +35,7 @@ export class CuuNavbarComponent implements OnInit {
     // IMPORTANTE: Primero inicializar Keycloak
     this.keycloakHelper.init().subscribe({
       next: (authenticated) => {
-        //console.log('Keycloak inicializado, usuario autenticado:', authenticated);
+        
       },
       error: (error) => {
         console.error('Error al inicializar Keycloak:', error);
@@ -70,6 +73,11 @@ export class CuuNavbarComponent implements OnInit {
     this.isLoggedIn$.subscribe(isLoggedIn => {
       console.log('Estado de login cambió:', isLoggedIn);
     });
+
+    if(this.isLoggedIn$){
+      console.log("se llamo a this.syncUserInfoService.syncInfoOfCurrentUser()");
+      this.syncUserInfoService.syncInfoOfCurrentUser();
+    }
   }
 
   openUserFormModal() {

@@ -21,10 +21,10 @@
 
           @if (isLoggedIn$ | async) {
             <li class="nav-item">
-              <a class="nav-link" href="/mis-disciplinas">Mis Inscripciones</a>
+              <a class="nav-link" href="/mis-inscripciones">Mis Inscripciones</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="bbbb">futura pagina</a>
+              <a class="nav-link" href="/mis-disciplinas">Mis Disciplinas</a>
             </li>
           }
         
@@ -43,11 +43,11 @@
             </button>
 
             <!-- Cerrar sesión -->
-            <button class="btn btn-danger" (click)="logout()">Cerrar sesión</button>
+            <button class="btn btn-outline-primary" (click)="logout()">Cerrar sesión</button>
           }      
           @else {
             <!-- Iniciar sesión -->
-            <button class="btn btn-success" (click)="login()">Iniciar sesión</button>
+            <button class="btn btn-primary" (click)="login()">Iniciar sesión</button>
           }    
         
        
