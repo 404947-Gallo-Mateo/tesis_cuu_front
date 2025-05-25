@@ -29,8 +29,6 @@ postDiscipline(postDisciplineDTO: PostDisciplineDTO): Observable<DisciplineDto> 
   );
 }
 
-
-
     // @PutMapping("/update")
 putDiscipline(disciplineDTO: DisciplineDto): Observable<DisciplineDto> {
   return this.http.put<DisciplineDto>(`${this.API_URL}/update`, disciplineDTO).pipe(
@@ -41,8 +39,6 @@ putDiscipline(disciplineDTO: DisciplineDto): Observable<DisciplineDto> {
     })
   );
 }
-
-
 
   // @DeleteMapping("/delete")
   //llama al back, elimina en DB Disciplinas
@@ -57,8 +53,6 @@ putDiscipline(disciplineDTO: DisciplineDto): Observable<DisciplineDto> {
     })
   );
 }
-
-
 
   // @GetMapping("/find-one/by-name")
   //llama al back, trae todos los usuarios de la DB del MS

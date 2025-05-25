@@ -38,11 +38,20 @@ export class UserDTOFormComponent {
 
 ngOnChanges(changes: SimpleChanges): void {
   if (changes['userData'] && this.userData) {
-    const birthDateObj = this.parseDateString(this.userData.birthDate);
+    const birthDateParsed = this.parseDateString(this.userData.birthDate);
+    //console.log("birthDateParsed con fecha en yyyy-MM-dd: ", birthDateParsed);
+
+    this.userData.birthDate = birthDateParsed;
+
     this.form.patchValue({
       ...this.userData,
     });
   }
+}
+
+private parseDateString(dateStr: string): string {
+  const [day, month, year] = dateStr.split('-').map(Number);
+  return year+"-"+ (month - 1) + "-" + day;
 }
 
   constructor(private fb: FormBuilder) {
@@ -62,6 +71,8 @@ ngOnChanges(changes: SimpleChanges): void {
 submitUpdatedKeycloakUser(): void {
   if (this.form.valid) {
     const form = this.form.value;
+
+    console.log("asi sale del form el birthDate: ", form.birthDate);
 
     const expandedUserDTO: ExpandedUserDTO = {
       keycloakId: form.keycloakId,
@@ -85,7 +96,7 @@ submitUpdatedKeycloakUser(): void {
 
     Swal.fire({
       title: '¿Confirmar actualización?',
-      text: 'Se actualizarán los datos del usuario en Keycloak.',
+      text: 'Se actualizarán los datos de usuario.',
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -147,12 +158,5 @@ deleteKeycloakUser(): void {
     }
   });
 }
-
-
-  private parseDateString(dateStr: string): Date {
-  const [day, month, year] = dateStr.split('-').map(Number);
-  return new Date(year, month - 1, day);
-}
-
 
 }

@@ -28,12 +28,11 @@ export class CuuNavbarComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    console.log("Inicializando navbar component...");
-    
+    //console.log("Inicializando navbar component...");
     // IMPORTANTE: Primero inicializar Keycloak
     this.keycloakHelper.init().subscribe({
       next: (authenticated) => {
-        console.log('Keycloak inicializado, usuario autenticado:', authenticated);
+        //console.log('Keycloak inicializado, usuario autenticado:', authenticated);
       },
       error: (error) => {
         console.error('Error al inicializar Keycloak:', error);
@@ -47,7 +46,7 @@ export class CuuNavbarComponent implements OnInit {
     ]).pipe(
       filter(([isReady, isLoggedIn]) => isReady), // Solo proceder cuando esté listo
       tap(([isReady, isLoggedIn]) => {
-        console.log('Estado:', { isReady, isLoggedIn });
+        //console.log('Estado:', { isReady, isLoggedIn });
         this.isLoaded = true;
       }),
       filter(([isReady, isLoggedIn]) => isLoggedIn), // Solo cargar usuario si está logueado
@@ -59,7 +58,7 @@ export class CuuNavbarComponent implements OnInit {
     ).subscribe({
       next: (user) => {
         this.currentUser = user;
-        console.log("Usuario actual cargado/actualizado en navbar:", this.currentUser);
+        //console.log("Usuario actual cargado/actualizado en navbar:", this.currentUser);
       },
       error: (error) => {
         console.error('Error al cargar usuario:', error);

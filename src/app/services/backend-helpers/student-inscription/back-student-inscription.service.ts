@@ -17,8 +17,13 @@ export class BackStudentInscriptionService {
     private readonly API_URL = 'http://localhost:8090/student_inscription'; 
 
     // @PostMapping("/create")
-postStudentInscription(studentInscriptionDTO: StudentInscriptionDTO): Observable<StudentInscriptionDTO> {
-  return this.http.post<StudentInscriptionDTO>(`${this.API_URL}/create`, studentInscriptionDTO).pipe(
+postStudentInscription(studentKeycloakId: string, disciplineId: string, categoryId: string): Observable<StudentInscriptionDTO> {
+  const url = `${this.API_URL}/create` +
+                `?studentKeycloakId=${encodeURIComponent(studentKeycloakId)}` +
+                `&disciplineId=${encodeURIComponent(disciplineId)}` +
+                `&categoryId=${encodeURIComponent(categoryId)}`;
+
+  return this.http.post<StudentInscriptionDTO>(url, null).pipe(
     retryWhen(errors => errors.pipe(delay(1000), take(3))),
     catchError(error => {
       console.error('No se pudo crear la inscripción.');
@@ -30,8 +35,13 @@ postStudentInscription(studentInscriptionDTO: StudentInscriptionDTO): Observable
     
 
     // @PutMapping("/update")
-  putStudentInscription(studentInscriptionDTO: StudentInscriptionDTO): Observable<StudentInscriptionDTO> {
-    return this.http.put<StudentInscriptionDTO>(`${this.API_URL}/update`, studentInscriptionDTO).pipe(
+  putStudentInscription(studentKeycloakId: string, disciplineId: string, categoryId: string): Observable<StudentInscriptionDTO> {
+     const url = `${this.API_URL}/update` +
+                `?studentKeycloakId=${encodeURIComponent(studentKeycloakId)}` +
+                `&disciplineId=${encodeURIComponent(disciplineId)}` +
+                `&categoryId=${encodeURIComponent(categoryId)}`;
+
+    return this.http.put<StudentInscriptionDTO>(url, null).pipe(
       retryWhen(errors => errors.pipe(delay(1000), take(3))),
       catchError(error => {
         console.error('No se pudo actualizar la inscripción.');

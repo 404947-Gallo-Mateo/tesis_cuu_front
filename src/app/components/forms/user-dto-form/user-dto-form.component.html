@@ -9,53 +9,60 @@
       <div class="modal-body">
         <!-- formulario -->
         <div class="container">
-            <button class="btn btn-danger" (click)="deleteKeycloakUser()">Eliminar mi Usuario</button>
-
             <form [formGroup]="form" (ngSubmit)="submitUpdatedKeycloakUser()">
-              <div class="mb-3">
+              <div class="row">
+                <!-- Columna izquierda -->
+                <div class="col-md-6">
+                  <div class="mb-3">
                     <label>Username:</label>
                     <input type="text" formControlName="username" class="form-control" readonly/>
-                </div>
+                  </div>
 
-                <div class="mb-3">
+                  <div class="mb-3">
                     <label>Email:</label>
                     <input type="email" formControlName="email" class="form-control" />
-                </div>
+                  </div>
 
-                <div class="mb-3">
+                  <div class="mb-3">
                     <label>Nombre:</label>
                     <input type="text" formControlName="firstName" class="form-control" />
+                  </div>
                 </div>
 
-                <div class="mb-3">
+                <!-- Columna derecha -->
+                <div class="col-md-6">
+                  <div class="mb-3">
                     <label>Apellido:</label>
                     <input type="text" formControlName="lastName" class="form-control" />
-                </div>
+                  </div>
 
-                <div class="mb-3">
+                  <div class="mb-3">
                     <label>Fecha de nacimiento:</label>
                     <input type="date" formControlName="birthDate" class="form-control" />
-                </div>
+                  </div>
 
-                <div class="mb-3">
-                  <label>Género:</label>
-                  <select formControlName="genre" class="form-select">
-                    <option *ngFor="let g of genres" [value]="g.value">{{ g.label }}</option>
-                  </select>
-                </div>
-
-
-                <!-- @if (userData.role === "SUPER_ADMIN_CUU") {
-                <div class="mb-3" style="display: none;">
-                    <label>Rol:</label>
-                    <select formControlName="role" class="form-select">
-                    <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+                  <div class="mb-3">
+                    <label>Género:</label>
+                    <select formControlName="genre" class="form-select">
+                      <option *ngFor="let g of genres" [value]="g.value">{{ g.label }}</option>
                     </select>
+                  </div>
                 </div>
-                } -->
-                
+              </div>
 
-                <button type="submit" class="btn btn-primary">Enviar</button>
+              <!-- @if (userData.role === "SUPER_ADMIN_CUU") {
+              <div class="mb-3" style="display: none;">
+                  <label>Rol:</label>
+                  <select formControlName="role" class="form-select">
+                  <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+                  </select>
+              </div>
+              } -->
+              
+              <div class="d-flex justify-content-between mt-3">
+                <button type="button" class="btn btn-danger" (click)="deleteKeycloakUser()">Eliminar mi Usuario</button>
+                <button type="submit" class="btn btn-primary">Actualizar mi Usuario</button>
+              </div>
             </form>
         </div>
       </div>

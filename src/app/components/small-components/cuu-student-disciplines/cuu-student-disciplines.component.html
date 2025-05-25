@@ -9,20 +9,20 @@
           style="max-width: 45%;"
         >
           <div
-            class="card shadow-sm border-0 h-100"
-            style="width: 100%; cursor: pointer; transition: transform 0.2s; background-color: rgb(2, 2, 197);"
+            class="card shadow-sm border-0 h-100 text-light"
+            style="width: 100%; cursor: pointer; transition: transform 0.2s; background-color: rgb(30, 30, 157);"
             (click)="openModal(category)"
             onmouseover="this.style.transform='scale(1.02)'"
             onmouseout="this.style.transform='scale(1)'"
           >
             <img
-              src="https://via.placeholder.com/286x180"
+              src=""
               class="card-img-top rounded-top"
               alt="Imagen categoría"
             />
-            <div class="card-body">
+            <div class="card-body text-light p-5">
               <h5 class="card-title mb-1">{{ category.disciplineName }}</h5>
-              <h6 class="card-subtitle text-muted">{{ category.name }}</h6>
+              <h6 class="card-subtitle">{{ category.name }}</h6>
             </div>
           </div>
         </div>

@@ -40,7 +40,7 @@ export class LandingPageComponent implements OnInit{
     if (this.currentUser) {
       return this.currentUser.firstName;
     } else {
-      console.log("No se puede obtener username porque no está cargado el usuario");
+      //console.log("No se puede obtener username porque no está cargado el usuario");
       return null;
     }
   }

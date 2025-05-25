@@ -1,35 +1,38 @@
-<div class="container-fluid">
-    <h4>Disciplinas disponibles</h4>
+<div class="container-fluid text-light" style="background-color: rgb(11, 11, 152);">
+  <div class="container-fluid p-4" style="background-color: rgb(11, 11, 152);">
+    <h3 class="fw-semibold">Disciplinas disponibles</h3>
+  </div>
+    
 
-    <div class="row justify-content-center">
-      @for (category of currentUser.studentCategories; track $index) {
-        <div
-          class="col-12 col-md-6 d-flex justify-content-center mb-4 text-light"
-          style="max-width: 45%;"
-        >
-        <!-- (click)="openModal(category)" -->
-          <div
-            class="card shadow-sm border-0 h-100"
-            style="width: 100%; cursor: pointer; transition: transform 0.2s; background-color: rgb(2, 2, 197);"
-            
-            onmouseover="this.style.transform='scale(1.02)'"
-            onmouseout="this.style.transform='scale(1)'"
-          >
-            <img
-              src="https://via.placeholder.com/286x180"
-              class="card-img-top rounded-top"
-              alt="Imagen categoría"
-            />
-            <div class="card-body">
-              <h5 class="card-title mb-1">{{ category.disciplineName }}</h5>
-              <h6 class="card-subtitle text-muted">{{ category.name }}</h6>
+    <div class="row justify-content-center align-items-start g-4 mt-1 p-4" style="background-color: rgb(0, 0, 176);">
+      @for (discipline of allDisciplines; track $index) {        
+        <div class="col-12 text-start">
+          <h4>{{discipline.name}}</h4>
+          <p>{{discipline.description}}</p>
+        </div>
+
+        @for (category of discipline.categories; track $index) {
+          <div class="col-12 col-md-6 col-lg-4 col-xl-3 d-flex justify-content-center">
+            <div
+              class="card shadow-sm border-0 h-100"
+              style="width: 100%; cursor: pointer; transition: transform 0.2s; background-color: white;"
+              (click)="openModal(category)"
+              onmouseover="this.style.transform='scale(1.02)'"
+              onmouseout="this.style.transform='scale(1)'"
+            >
+              <div class="card-body">
+                <h5 class="card-title mb-1" style="color: rgb(2, 2, 157);">{{ category.name }}</h5>
+                <h6 class="card-subtitle text-muted">{{ category.description }}</h6>
+              </div>
             </div>
           </div>
-        </div>
+        }
       }
     </div>
 
-
-    
+    <app-inscription-to-category
+      [category]="selectedCategory!"
+      [show]="showModal"
+      (close)="closeModal()"
+    />
 </div>
-
