@@ -40,7 +40,7 @@ export class UserDTOFormComponent {
 ngOnChanges(changes: SimpleChanges): void {
   if (changes['userData'] && this.userData) {
     const birthDateParsed = this.parseDateString(this.userData.birthDate);
-    //console.log("birthDateParsed con fecha en yyyy-MM-dd: ", birthDateParsed);
+    console.log("birthDateParsed con fecha en yyyy-MM-dd: ", birthDateParsed);
 
     this.userData.birthDate = birthDateParsed;
 
@@ -51,8 +51,28 @@ ngOnChanges(changes: SimpleChanges): void {
 }
 
 private parseDateString(dateStr: string): string {
-  const [day, month, year] = dateStr.split('-').map(Number);
-  return year+"-"+ (month - 1) + "-" + day;
+  let [day, month, year] = dateStr.split('-').map(Number);
+
+  let stringDay = "day";
+  let stringMonth = "month";
+
+  if(day < 10){
+    stringDay = "0" + day;
+  }
+  else {
+    stringDay = day.toString();
+  }
+
+  month = month - 1;
+  if(month < 10){
+    stringMonth = "0" + month;
+  }
+  else {
+    stringMonth = month.toString();
+  }
+
+  console.log("[day, month, year]= ", [day, month, year]);
+  return year+"-"+ stringMonth + "-" + stringDay;
 }
 
   constructor(private fb: FormBuilder) {

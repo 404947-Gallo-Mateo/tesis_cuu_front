@@ -27,6 +27,8 @@ export class CuuNavbarComponent implements OnInit {
   currentUser!: ExpandedUserDTO;
   isLoggedIn$ = this.keycloakHelper.isLoggedIn$;
   currentRole$ = this.userService.currentRole$;
+  currentRole: string | null = null; // Variable para almacenar el valor
+
 
   constructor() {}
 
@@ -84,8 +86,6 @@ export class CuuNavbarComponent implements OnInit {
       console.log('Rol actualizado:', role);
     });
   }
-
-  currentRole: string | null = null; // Variable para almacenar el valor
 
   async openUserFormModal() {
     try {
