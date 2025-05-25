@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { KeycloakHelperService } from '../../../services/backend-helpers/keycloak/keycloak-helper.service';
 import { BehaviorSubject, Observable, of, throwError as observableThrowError } from 'rxjs';
-import { retryWhen, delay, take, catchError, switchMap, tap, filter } from 'rxjs/operators';
+import { delay, take, catchError, switchMap, tap, filter, retry } from 'rxjs/operators';
 import { UserDTO, ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
 
 @Injectable({
@@ -49,9 +49,13 @@ export class BackUserService {
       switchMap(token => {
         const headers = { Authorization: `Bearer ${token}` };
         return this.http.get<ExpandedUserDTO>(`${this.API_URL}/get-current-user-info`, { headers }).pipe(
-          retryWhen(errors => errors.pipe(delay(1000), take(3))),
+          retry({
+                count: 3,
+                delay: 1000,
+                resetOnSuccess: true
+              }),
           tap(user => {
-            console.log("Usuario actualizado desde servidor: ", user);
+            //console.log("Usuario actualizado desde servidor: ", user);
             // IMPORTANTE: Actualizar el BehaviorSubject para notificar a todos los suscriptores
             this.currentUserSubject.next(user);
           }),
@@ -100,7 +104,11 @@ export class BackUserService {
 
   deleteKeycloakUser(keycloakId: string): Observable<boolean> {
     return this.http.delete<boolean>(`${this.API_URL}/delete/${encodeURIComponent(keycloakId)}`).pipe(
-      retryWhen(errors => errors.pipe(delay(1000), take(3))),
+      retry({
+      count: 3,
+      delay: 1000,
+      resetOnSuccess: true
+    }),
       catchError(error => {
         console.error('No se pudo eliminar el usuario luego de 3 intentos.');
         return observableThrowError(() => error);
@@ -110,7 +118,11 @@ export class BackUserService {
 
   updateInfoOfKeycloakUser(keycloakId: string, userDTO: UserDTO): Observable<ExpandedUserDTO> {
     return this.http.put<ExpandedUserDTO>(`${this.API_URL}/update/${encodeURIComponent(keycloakId)}`, userDTO).pipe(
-      retryWhen(errors => errors.pipe(delay(1000), take(3))),
+      retry({
+      count: 3,
+      delay: 1000,
+      resetOnSuccess: true
+    }),
       tap(updatedUser => {
         // Actualizar automáticamente el usuario en cache cuando se actualiza
         console.log("Usuario actualizado via API:", updatedUser);
@@ -125,12 +137,11 @@ export class BackUserService {
 
   getAllUsers(): Observable<ExpandedUserDTO> {
     return this.http.get<ExpandedUserDTO>(`${this.API_URL}/get-all`).pipe(
-      retryWhen(errors =>
-        errors.pipe(
-          delay(1000),
-          take(3)
-        )
-      ),
+      retry({
+      count: 3,
+      delay: 1000,
+      resetOnSuccess: true
+    }),
       catchError(error => {
         console.error('No se pudo obtener todos los usuarios.');
         return observableThrowError(() => error);

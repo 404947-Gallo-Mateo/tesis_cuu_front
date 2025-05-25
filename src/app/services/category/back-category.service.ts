@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { KeycloakHelperService } from '../backend-helpers/keycloak/keycloak-helper.service';
 import { CategoryDTO } from '../../models/backend/CategoryDTO';
-import { catchError, delay, firstValueFrom, Observable, retryWhen, take } from 'rxjs';
+import { catchError, delay, firstValueFrom, Observable, retry, take } from 'rxjs';
 import { throwError as observableThrowError } from 'rxjs';
 
 @Injectable({
@@ -23,12 +23,11 @@ getAllByDisciplineId(disciplineId: string): Observable<CategoryDTO[]> {
   const url = `${this.API_URL}/find-all/by-discipline-id?disciplineId=${encodeURIComponent(disciplineId)}`;
 
   return this.http.get<CategoryDTO[]>(url).pipe(
-    retryWhen(errors =>
-      errors.pipe(
-        delay(1000),
-        take(3)
-      )
-    ),
+    retry({
+      count: 3,
+      delay: 1000,
+      resetOnSuccess: true
+    }),
     catchError(error => {
       console.error('No se pudo obtener todos los usuarios.');
       return observableThrowError(() => error);

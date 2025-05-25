@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { KeycloakHelperService } from '../keycloak/keycloak-helper.service';
-import { catchError, delay, firstValueFrom, Observable, retryWhen, take } from 'rxjs';
+import { catchError, delay, firstValueFrom, Observable, retry, take, throwError } from 'rxjs';
 import { StudentInscriptionDTO } from '../../../models/StudentInscriptionDTO';
 import { throwError as observableThrowError } from 'rxjs';
 
@@ -19,15 +19,25 @@ export class BackStudentInscriptionService {
     // @PostMapping("/create")
 postStudentInscription(studentKeycloakId: string, disciplineId: string, categoryId: string): Observable<StudentInscriptionDTO> {
   const url = `${this.API_URL}/create` +
-                `?studentKeycloakId=${encodeURIComponent(studentKeycloakId)}` +
-                `&disciplineId=${encodeURIComponent(disciplineId)}` +
-                `&categoryId=${encodeURIComponent(categoryId)}`;
+              `?studentKeycloakId=${encodeURIComponent(studentKeycloakId)}` +
+              `&disciplineId=${encodeURIComponent(disciplineId)}` +
+              `&categoryId=${encodeURIComponent(categoryId)}`;
 
   return this.http.post<StudentInscriptionDTO>(url, null).pipe(
-    retryWhen(errors => errors.pipe(delay(1000), take(3))),
-    catchError(error => {
-      console.error('No se pudo crear la inscripción.');
-      return observableThrowError(() => error);
+    retry({
+      count: 3,
+      delay: 1000,
+      resetOnSuccess: true
+    }),
+    catchError((error: HttpErrorResponse) => {
+      console.error('Error en inscripción:', error);
+      const errorMessage = typeof error.error === 'string' 
+        ? error.error 
+        : error.error?.message || error.message || 'Error desconocido al crear inscripción';
+      return throwError(() => ({
+        message: errorMessage,
+        status: error.status
+      }));
     })
   );
 }
@@ -42,12 +52,18 @@ postStudentInscription(studentKeycloakId: string, disciplineId: string, category
                 `&categoryId=${encodeURIComponent(categoryId)}`;
 
     return this.http.put<StudentInscriptionDTO>(url, null).pipe(
-      retryWhen(errors => errors.pipe(delay(1000), take(3))),
-      catchError(error => {
-        console.error('No se pudo actualizar la inscripción.');
-        return observableThrowError(() => error);
-      })
-    );
+    retry({
+      count: 3,
+      delay: 1000,
+      resetOnSuccess: true
+    }),
+    catchError((error: HttpErrorResponse) => {
+      console.error('Error en inscripción:', error);
+      // Extraer el mensaje de error del backend si existe
+      const errorMessage = error.error?.message || error.error || error.message || 'Error desconocido al crear inscripción';
+      return throwError(() => new Error(errorMessage));
+    })
+  );
   }
 
 
@@ -60,7 +76,11 @@ postStudentInscription(studentKeycloakId: string, disciplineId: string, category
                 `&categoryId=${encodeURIComponent(categoryId)}`;
 
     return this.http.delete<boolean>(url).pipe(
-      retryWhen(errors => errors.pipe(delay(1000), take(3))),
+      retry({
+      count: 3,
+      delay: 1000,
+      resetOnSuccess: true
+    }),
       catchError(error => {
         console.error('No se pudo eliminar la inscripción luego de 3 intentos.', error);
         return observableThrowError(() => error);
@@ -77,7 +97,11 @@ getAllByStudentKeycloakId(studentKeycloakId: string): Observable<StudentInscript
               `?studentKeycloakId=${encodeURIComponent(studentKeycloakId)}`;
 
   return this.http.get<StudentInscriptionDTO[]>(url).pipe(
-    retryWhen(errors => errors.pipe(delay(1000), take(3))),
+    retry({
+      count: 3,
+      delay: 1000,
+      resetOnSuccess: true
+    }),
     catchError(error => {
       console.error('No se pudo obtener todos los usuarios.');
       return observableThrowError(() => error);
@@ -93,7 +117,11 @@ getAllByDisciplineId(disciplineId: string): Observable<StudentInscriptionDTO[]> 
               `?disciplineId=${encodeURIComponent(disciplineId)}`;
 
   return this.http.get<StudentInscriptionDTO[]>(url).pipe(
-    retryWhen(errors => errors.pipe(delay(1000), take(3))),
+    retry({
+      count: 3,
+      delay: 1000,
+      resetOnSuccess: true
+    }),
     catchError(error => {
       console.error('No se pudo obtener las inscripciones por disciplina.');
       return observableThrowError(() => error);
@@ -109,7 +137,11 @@ getAllByCategoryId(categoryId: string): Observable<StudentInscriptionDTO[]> {
               `?categoryId=${encodeURIComponent(categoryId)}`;
 
   return this.http.get<StudentInscriptionDTO[]>(url).pipe(
-    retryWhen(errors => errors.pipe(delay(1000), take(3))),
+    retry({
+      count: 3,
+      delay: 1000,
+      resetOnSuccess: true
+    }),
     catchError(error => {
       console.error('No se pudo obtener las inscripciones por categoría.');
       return observableThrowError(() => error);
@@ -131,7 +163,11 @@ getAllByCategoryId(categoryId: string): Observable<StudentInscriptionDTO[]> {
               `&categoryId=${encodeURIComponent(categoryId)}`;
 
   return this.http.get<StudentInscriptionDTO>(url).pipe(
-    retryWhen(errors => errors.pipe(delay(1000), take(3))),
+    retry({
+      count: 3,
+      delay: 1000,
+      resetOnSuccess: true
+    }),
     catchError(error => {
       console.error('No se pudo obtener la inscripción específica del alumno.');
       return observableThrowError(() => error);
@@ -151,7 +187,11 @@ getOneByKeycloakIdAnddisciplineId(
               `&disciplineId=${encodeURIComponent(disciplineId)}`;
 
   return this.http.get<StudentInscriptionDTO>(url).pipe(
-    retryWhen(errors => errors.pipe(delay(1000), take(3))),
+    retry({
+      count: 3,
+      delay: 1000,
+      resetOnSuccess: true
+    }),
     catchError(error => {
       console.error('No se pudo obtener la inscripción del alumno por disciplina.');
       return observableThrowError(() => error);
