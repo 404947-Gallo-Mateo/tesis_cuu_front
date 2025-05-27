@@ -156,4 +156,20 @@ export class BackUserService {
       })
     );
   }
+
+  //    @GetMapping("/get-all/by-role/{role}")
+  getAllUsersByRole(role: Role): Observable<ExpandedUserDTO[]> {
+    //http://localhost:8090/user/get-all/by-role/TEACHER
+    return this.http.get<ExpandedUserDTO[]>(`${this.API_URL}/get-all/by-role/${role}`).pipe(
+      retry({
+      count: 3,
+      delay: 1000,
+      resetOnSuccess: true
+    }),
+      catchError(error => {
+        console.error('No se pudo obtener todos los usuarios.');
+        return observableThrowError(() => error);
+      })
+    );
+  }
 }

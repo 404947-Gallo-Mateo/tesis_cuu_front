@@ -1,1 +1,43 @@
-<p>teacher-disciplines works!</p>
+<div class="container-fluid p-5">
+  <h1 class="mb-4">Gestión de Disciplinas</h1>
+
+  <div class="container-fluid p-2" style="background-color: rgb(19, 19, 129);">
+    @if (currentUser) {
+        <div class="row justify-content-center p-3">
+        @for (discipline of currentUserDisciplines; track $index) {
+            <div
+            class="col-12 col-md-6 d-flex justify-content-center mb-2 p-4 text-light"
+            style="max-width: 45%;"
+            >
+            
+            <div
+                class="card shadow-sm border-0 h-100 text-light"
+                style="width: 100%; cursor: pointer; transition: transform 0.2s; background-color: rgb(30, 30, 157);"
+                (click)="openDisciplineModal(discipline)"
+                onmouseover="this.style.transform='scale(1.02)'"
+                onmouseout="this.style.transform='scale(1)'"
+            >
+                <img
+                src=""
+                class="card-img-top rounded-top"
+                alt="Imagen categoría"
+                />
+                <div class="card-body text-light p-5">
+                <h5 class="card-title mb-1">{{ discipline.name }}</h5>
+                <!-- <h6 class="card-subtitle">{{ category.name }}</h6> -->
+                </div>
+            </div>
+            </div>
+        }
+        </div>
+    }
+  </div>
+
+
+<app-put-discipline-form
+  [discipline]="selectedDiscipline!"
+  [show]="showDisciplineModal"
+  (close)="closeDisciplineModal()"
+  (updateSuccess)="onDisciplineUpdated($event)"
+/>
+</div>

@@ -29,13 +29,13 @@ export class CuuStudentDisciplinesComponent implements OnInit, OnDestroy {
   constructor() {}
 
   ngOnInit(): void {
-    console.log("Inicializando CuuStudentDisciplinesComponent...");
+    //console.log("Inicializando CuuStudentDisciplinesComponent...");
     
     // Inicializar Keycloak y luego suscribirse a los cambios del usuario
     this.keycloakHelper.isReady$.pipe(
       filter(isReady => isReady),
       tap(() => {
-        console.log("Keycloak está listo, iniciando suscripción al usuario...");
+        //console.log("Keycloak está listo, iniciando suscripción al usuario...");
         this.isLoaded = true;
       }),
       switchMap(() => {
@@ -49,7 +49,7 @@ export class CuuStudentDisciplinesComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe({
       next: (user) => {
-        console.log("Usuario actualizado en CuuStudentDisciplinesComponent:", user);
+        //console.log("Usuario actualizado en CuuStudentDisciplinesComponent:", user);
         this.currentUser = user;
       },
       error: (error) => {

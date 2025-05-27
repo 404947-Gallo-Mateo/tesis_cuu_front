@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { KeycloakHelperService } from '../keycloak/keycloak-helper.service';
 import { catchError, delay, firstValueFrom, Observable, retry, take } from 'rxjs';
 import { throwError as observableThrowError } from 'rxjs';
-import { PostDisciplineDTO } from '../../../models/backend/PostDisciplineDTO';
+import { PostDisciplineDTO, PutDisciplineDTO } from '../../../models/backend/PostDisciplineDTO';
 import { DisciplineDto } from '../../../models/backend/DisciplineDTO';
 
 @Injectable({
@@ -34,7 +34,7 @@ postDiscipline(postDisciplineDTO: PostDisciplineDTO): Observable<DisciplineDto> 
 }
 
     // @PutMapping("/update")
-putDiscipline(disciplineDTO: DisciplineDto): Observable<DisciplineDto> {
+putDiscipline(disciplineDTO: PutDisciplineDTO): Observable<DisciplineDto> {
   return this.http.put<DisciplineDto>(`${this.API_URL}/update`, disciplineDTO).pipe(
     retry({
       count: 3,

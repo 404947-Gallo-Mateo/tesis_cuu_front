@@ -2,10 +2,10 @@
   <h1 class="mb-4">Tus Inscripciones</h1>
 
   @if (currentUser) {
-    <div class="row justify-content-center">
+    <div class="row justify-content-center p-3">
       @for (category of currentUser.studentCategories; track $index) {
         <div
-          class="col-12 col-md-6 d-flex justify-content-center mb-4 text-light"
+          class="col-12 col-md-6 d-flex justify-content-center mb-2 p-4 text-light"
           style="max-width: 45%;"
         >
           <div

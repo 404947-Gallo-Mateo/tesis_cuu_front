@@ -8,7 +8,7 @@ export const routes: Routes = [
     { path: '', component: LandingPageComponent },            
     { path: 'principal', component: MainPageComponent },    
     { path: 'mis-inscripciones', component: CuuStudentDisciplinesComponent},
-    { path: 'mis-disciplinas', component: TeacherDisciplinesComponent},
+    { path: 'gestion-disciplinas', component: TeacherDisciplinesComponent},
 
     { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
