@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, SimpleChanges } from '@angular/core';
 import { ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
 import { DisciplineDto } from '../../../models/backend/DisciplineDTO';
 import { BackUserService } from '../../../services/backend-helpers/user/back-user.service';
@@ -21,6 +21,14 @@ export class TeacherDisciplinesComponent {
 selectedDiscipline?: DisciplineDto;
 showDisciplineModal = false;
 
+  currentUser!: ExpandedUserDTO;
+  currentUserDisciplines: DisciplineDto[] = [];
+  
+  // Estados de carga
+  isLoaded = false;
+  isLoadingDisciplines = false;
+  showModal = false;
+
 openDisciplineModal(discipline: DisciplineDto): void {
   this.selectedDiscipline = discipline;
   this.showDisciplineModal = true;
@@ -35,14 +43,6 @@ onDisciplineUpdated(updatedDiscipline: DisciplineDto): void {
   // Actualizar la lista de disciplinas o hacer lo que necesites
   console.log('Disciplina actualizada:', updatedDiscipline);
 }
-
-  currentUser!: ExpandedUserDTO;
-  currentUserDisciplines: DisciplineDto[] = [];
-  
-  // Estados de carga
-  isLoaded = false;
-  isLoadingDisciplines = false;
-  showModal = false;
   
   private userService = inject(BackUserService);
   private disciplineService = inject(BackDisciplineService);
@@ -50,11 +50,41 @@ onDisciplineUpdated(updatedDiscipline: DisciplineDto): void {
   private destroy$ = new Subject<void>();
 
   ngOnInit(): void {
-    console.log("Inicializando teacherDisciplinesComponent...");
-    
+    //console.log("Inicializando teacherDisciplinesComponent...");
     this.loadInitialData();
     this.setupRealtimeUpdates();
+    this.loadCurrentUser();
   }
+
+    loadCurrentUser(): void {
+      //console.log("Inicializando CuuStudentDisciplinesComponent...");
+      
+      // Inicializar Keycloak y luego suscribirse a los cambios del usuario
+      this.keycloakHelper.isReady$.pipe(
+        filter(isReady => isReady),
+        tap(() => {
+          //console.log("Keycloak está listo, iniciando suscripción al usuario...");
+          this.isLoaded = true;
+        }),
+        switchMap(() => {
+          // Primero obtener el usuario actual (esto iniciará la carga si es necesario)
+          return this.userService.getCurrentUser();
+        }),
+        switchMap(() => {
+          // Luego suscribirse a todos los cambios futuros del usuario
+          return this.userService.currentUserValid$;
+        }),
+        takeUntil(this.destroy$)
+      ).subscribe({
+        next: (user) => {
+          //console.log("Usuario actualizado en CuuStudentDisciplinesComponent:", user);
+          this.currentUser = user;
+        },
+        error: (error) => {
+          console.error('Error al obtener usuario:', error);
+        }
+      });
+    }
 
   private loadInitialData(): void {
     this.keycloakHelper.isReady$.pipe(
@@ -69,6 +99,12 @@ onDisciplineUpdated(updatedDiscipline: DisciplineDto): void {
           return this.disciplineService.getAllByTeacherKeycloakId(user.keycloakId).pipe(
             finalize(() => this.isLoadingDisciplines = false)
           );
+        } else if(user.role !== 'STUDENT'){
+          this.isLoadingDisciplines = true;
+          return this.disciplineService.getAll().pipe(
+            finalize(() => this.isLoadingDisciplines = false)
+          );
+
         } else {
           return of([]); // Retorna array vacío si no es profesor
         }
@@ -90,11 +126,21 @@ onDisciplineUpdated(updatedDiscipline: DisciplineDto): void {
     this.userService.currentUserValid$.pipe(
       filter(user => user.role != 'STUDENT'), // Solo si es profesor
       tap(() => this.isLoadingDisciplines = true),
-      switchMap(user => 
-        this.disciplineService.getAllByTeacherKeycloakId(user.keycloakId).pipe(
-          finalize(() => this.isLoadingDisciplines = false)
-        )
-      ),
+      switchMap(user => {
+        if(user.role === 'TEACHER') {
+          this.isLoadingDisciplines = true;
+          return this.disciplineService.getAllByTeacherKeycloakId(user.keycloakId).pipe(
+            finalize(() => this.isLoadingDisciplines = false)
+          );
+        } else if(user.role !== 'STUDENT'){
+          this.isLoadingDisciplines = true;
+          return this.disciplineService.getAll().pipe(
+            finalize(() => this.isLoadingDisciplines = false)
+          );
+        } else {
+          return of([]); // Retorna array vacío si no es profesor
+        }
+    }),
       takeUntil(this.destroy$)
     ).subscribe({
       next: (disciplines) => {

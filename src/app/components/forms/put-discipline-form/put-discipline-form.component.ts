@@ -174,9 +174,12 @@ getSchedules(categoryIndex: number): FormArray {
         }))
       };
 
+      console.log("obj putDiscipline: ", putDiscipline);
+
       this.disciplineService.putDiscipline(putDiscipline).subscribe({
         next: (updatedDiscipline) => {
           this.updateSuccess.emit(updatedDiscipline);
+          this.userService.getUpdatedInfoOfCurrentUser();
           this.onClose();
         },
         error: (err) => console.error('Error updating discipline:', err)
