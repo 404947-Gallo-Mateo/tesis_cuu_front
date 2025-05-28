@@ -6,10 +6,11 @@ import { BackUserService } from '../../../services/backend-helpers/user/back-use
 import { BackDisciplineService } from '../../../services/backend-helpers/discipline/back-discipline.service';
 import { DisciplineDto } from '../../../models/backend/DisciplineDTO';
 import { Role } from '../../../models/backend/embeddables/Role';
-import { PutCategoryDTO, PutDisciplineDTO } from '../../../models/backend/PostDisciplineDTO';
 import { Schedule } from '../../../models/backend/embeddables/Schedule';
 import { CommonModule } from '@angular/common';
 import { DayOfWeek } from '../../../models/backend/embeddables/DayOfWeek';
+import { PutCategoryDTO } from '../../../models/backend/CategoryDTO';
+import { PutDisciplineDTO } from '../../../models/backend/PostDisciplineDTO';
 
 @Component({
   selector: 'app-put-discipline-form',
@@ -168,9 +169,16 @@ getSchedules(categoryIndex: number): FormArray {
         description: formValue.description,
         teacherIds: formValue.teacherIds,
         categories: formValue.categories.map((category: PutCategoryDTO) => ({
-          ...category,
+          id: category.id,
+          name: category.name,
+          description: category.description,  
+          monthlyFee: category.monthlyFee,  
           disciplineId: this.discipline.id,
-          disciplineName: this.discipline.name
+          disciplineName: this.discipline.name,
+          availableSpaces: category.availableSpaces,
+          ageRange: category.ageRange,
+          schedules: category.schedules,
+          allowedGenre: category.allowedGenre
         }))
       };
 
