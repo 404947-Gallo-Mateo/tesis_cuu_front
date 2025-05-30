@@ -1,4 +1,4 @@
-import { Component, inject, SimpleChanges } from '@angular/core';
+import { Component, HostListener, inject, SimpleChanges } from '@angular/core';
 import { ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
 import { DisciplineDto } from '../../../models/backend/DisciplineDTO';
 import { BackUserService } from '../../../services/backend-helpers/user/back-user.service';
@@ -7,6 +7,7 @@ import { filter, Subject, switchMap, takeUntil, tap, finalize, of } from 'rxjs';
 import { BackDisciplineService } from '../../../services/backend-helpers/discipline/back-discipline.service';
 import { CommonModule } from '@angular/common';
 import { PutDisciplineFormComponent } from '../../forms/put-discipline-form/put-discipline-form.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-teacher-disciplines',
@@ -17,10 +18,11 @@ import { PutDisciplineFormComponent } from '../../forms/put-discipline-form/put-
 })
 export class TeacherDisciplinesComponent {
 
-  // En el componente padre
-selectedDiscipline?: DisciplineDto;
-showDisciplineModal = false;
+  openMenuId: string | null = null;
 
+  // En el componente padre
+  selectedDiscipline?: DisciplineDto;
+  showDisciplineModal = false;
   currentUser!: ExpandedUserDTO;
   currentUserDisciplines: DisciplineDto[] = [];
   
@@ -29,6 +31,52 @@ showDisciplineModal = false;
   isLoadingDisciplines = false;
   showModal = false;
 
+
+   // Manejador para cerrar menús al hacer clic fuera
+@HostListener('document:click', ['$event'])
+onDocumentClick(event: MouseEvent): void {
+  if (!(event.target as HTMLElement).closest('.position-relative')) {
+    this.openMenuId = null;
+  }
+}
+  // Alternar menú
+toggleMenu(disciplineId: string): void {
+  this.openMenuId = this.openMenuId === disciplineId ? null : disciplineId;
+}
+
+  // Eliminar disciplina (adaptado de tu código extra)
+  deleteDiscipline(discipline: DisciplineDto): void {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción eliminará la Disciplina permanentemente.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then(result => {
+      if (result.isConfirmed) {
+        this.disciplineService.deleteDisciplineById(discipline.id).subscribe({
+          next: (resp: boolean) => {
+            if (resp) {
+              Swal.fire('Eliminada', 'La Disciplina fue eliminada correctamente.', 'success');
+              // Actualizar la lista local
+              this.currentUserDisciplines = this.currentUserDisciplines.filter(d => d.id !== discipline.id);
+            } else {
+              Swal.fire('Error', 'Hubo un problema en la Base de Datos al eliminar la Disciplina.', 'error');
+            }
+          },
+          error: (err) => {
+            console.error('Error eliminando disciplina:', err);
+            Swal.fire('Error', 'Hubo un problema externo al eliminar la Disciplina.', 'error');
+          }
+        });
+      }
+    });
+  }
+
+  
 openDisciplineModal(discipline: DisciplineDto): void {
   this.selectedDiscipline = discipline;
   this.showDisciplineModal = true;
@@ -39,11 +87,26 @@ closeDisciplineModal(): void {
   this.selectedDiscipline = undefined;
 }
 
+// En TeacherDisciplinesComponent
+
 onDisciplineUpdated(updatedDiscipline: DisciplineDto): void {
-  // Actualizar la lista de disciplinas o hacer lo que necesites
-  console.log('Disciplina actualizada:', updatedDiscipline);
-}
+  // Encuentra el índice de la disciplina actualizada en el array
+  const index = this.currentUserDisciplines.findIndex(d => d.id === updatedDiscipline.id);
   
+  if (index !== -1) {
+    // Actualiza la disciplina en el array
+    this.currentUserDisciplines[index] = updatedDiscipline;
+    
+    // Opcional: Forzar una nueva referencia del array para detectar cambios
+    this.currentUserDisciplines = [...this.currentUserDisciplines];
+  } else {
+    console.warn('Disciplina actualizada no encontrada en la lista actual');
+  }
+  
+  // Cierra el modal
+  this.closeDisciplineModal();
+}
+
   private userService = inject(BackUserService);
   private disciplineService = inject(BackDisciplineService);
   private keycloakHelper = inject(KeycloakHelperService);

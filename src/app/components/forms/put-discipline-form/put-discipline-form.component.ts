@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { DayOfWeek } from '../../../models/backend/embeddables/DayOfWeek';
 import { PutCategoryDTO } from '../../../models/backend/CategoryDTO';
 import { PutDisciplineDTO } from '../../../models/backend/PostDisciplineDTO';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-put-discipline-form',
@@ -160,42 +161,46 @@ getSchedules(categoryIndex: number): FormArray {
     this.getSchedules(categoryIndex).removeAt(scheduleIndex);
   }
 
-  onSubmit(): void {
-    if (this.disciplineForm.valid) {
-      const formValue = this.disciplineForm.value;
-      const putDiscipline: PutDisciplineDTO = {
-        id: this.discipline.id,
-        name: formValue.name,
-        description: formValue.description,
-        teacherIds: formValue.teacherIds,
-        categories: formValue.categories.map((category: PutCategoryDTO) => ({
-          id: category.id,
-          name: category.name,
-          description: category.description,  
-          monthlyFee: category.monthlyFee,  
-          disciplineId: this.discipline.id,
-          disciplineName: this.discipline.name,
-          availableSpaces: category.availableSpaces,
-          ageRange: category.ageRange,
-          schedules: category.schedules,
-          allowedGenre: category.allowedGenre
-        }))
-      };
+// En PutDisciplineFormComponent
+onSubmit(): void {
+  if (this.disciplineForm.valid) {
+    const formValue = this.disciplineForm.value;
+    const putDiscipline: PutDisciplineDTO = {
+      id: this.discipline.id,
+      name: formValue.name,
+      description: formValue.description,
+      teacherIds: formValue.teacherIds,
+      categories: formValue.categories.map((category: PutCategoryDTO) => ({
+        id: category.id,
+        name: category.name,
+        description: category.description,  
+        monthlyFee: category.monthlyFee,  
+        disciplineId: this.discipline.id,
+        disciplineName: this.discipline.name,
+        availableSpaces: category.availableSpaces,
+        ageRange: category.ageRange,
+        schedules: category.schedules,
+        allowedGenre: category.allowedGenre
+      }))
+    };
 
-      console.log("obj putDiscipline: ", putDiscipline);
-
-      this.disciplineService.putDiscipline(putDiscipline).subscribe({
-        next: (updatedDiscipline) => {
-          this.updateSuccess.emit(updatedDiscipline);
-          this.userService.getUpdatedInfoOfCurrentUser();
-          this.onClose();
-        },
-        error: (err) => console.error('Error updating discipline:', err)
-      });
-    }
+    this.disciplineService.putDiscipline(putDiscipline).subscribe({
+      next: (updatedDiscipline) => {
+        Swal.fire('Éxito', 'Disciplina actualizada correctamente', 'success');
+        this.updateSuccess.emit(updatedDiscipline);
+        this.userService.getUpdatedInfoOfCurrentUser();
+        this.onClose();
+      },
+      error: (err) => {
+        console.error('Error updating discipline:', err);
+        Swal.fire('Error', 'No se pudo actualizar la disciplina', 'error');
+      }
+    });
   }
+}
 
   onClose(): void {
     this.close.emit();
   }
+
 }

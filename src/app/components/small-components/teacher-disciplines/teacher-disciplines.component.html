@@ -1,43 +1,59 @@
+<!-- teacher-disciplines.component.html -->
 <div class="container-fluid p-5">
   <h1 class="mb-4">Gestión de Disciplinas</h1>
 
   <div class="container-fluid p-2" style="background-color: rgb(19, 19, 129);">
     @if (currentUser) {
-        <div class="row justify-content-center p-3">
+      <div class="row justify-content-center p-3">
         @for (discipline of currentUserDisciplines; track $index) {
-            <div
-            class="col-12 col-md-6 d-flex justify-content-center mb-2 p-4 text-light"
-            style="max-width: 45%;"
-            >
-            
-            <div
-                class="card shadow-sm border-0 h-100 text-light"
-                style="width: 100%; cursor: pointer; transition: transform 0.2s; background-color: rgb(30, 30, 157);"
-                (click)="openDisciplineModal(discipline)"
-                onmouseover="this.style.transform='scale(1.02)'"
-                onmouseout="this.style.transform='scale(1)'"
-            >
-                <img
-                src=""
-                class="card-img-top rounded-top"
-                alt="Imagen categoría"
-                />
-                <div class="card-body text-light p-5">
+          <div class="col-12 col-md-6 d-flex justify-content-center mb-2 p-4 text-light" style="max-width: 45%;">
+            <div class="card shadow-sm border-0 h-100 text-light position-relative"
+                 style="width: 100%; cursor: pointer; transition: transform 0.2s; background-color: rgb(30, 30, 157);"
+                 onmouseover="this.style.transform='scale(1.02)'"
+                 onmouseout="this.style.transform='scale(1)'">
+              
+              <!-- Botón de tres puntos -->
+              <div class="position-absolute top-0 end-0 m-2">
+                <button class="btn bg-transparent border-0 p-0"
+                        (click)="$event.stopPropagation(); toggleMenu(discipline.id)">
+                  <i class="bi bi-three-dots-vertical text-light fs-5"></i>
+                </button>
+                
+                <!-- Menú desplegable -->
+                @if (openMenuId === discipline.id) {
+                  <div class="position-absolute end-0 mt-1 bg-white rounded shadow overflow-hidden"
+                       style="min-width: 150px;"
+                       (click)="$event.stopPropagation()">
+                    <button class="dropdown-item d-block w-100 text-start px-3 py-2 text-dark" 
+                            (click)="openDisciplineModal(discipline)">
+                      Actualizar
+                    </button>
+                    <button class="dropdown-item d-block w-100 text-start px-3 py-2 text-danger"
+                            (click)="deleteDiscipline(discipline)">
+                      Eliminar
+                    </button>
+                    <button class="dropdown-item d-block w-100 text-start px-3 py-2 text-dark disabled"
+                            (click)="$event.stopPropagation()">
+                      Gestionar Alumnos
+                    </button>
+                  </div>
+                }
+              </div>
+
+              <div class="card-body text-light p-5">
                 <h5 class="card-title mb-1">{{ discipline.name }}</h5>
-                <!-- <h6 class="card-subtitle">{{ category.name }}</h6> -->
-                </div>
+              </div>
             </div>
-            </div>
+          </div>
         }
-        </div>
+      </div>
     }
   </div>
 
-
-<app-put-discipline-form
-  [discipline]="selectedDiscipline!"
-  [show]="showDisciplineModal"
-  (close)="closeDisciplineModal()"
-  (updateSuccess)="onDisciplineUpdated($event)"
-/>
+  <app-put-discipline-form
+    [discipline]="selectedDiscipline!"
+    [show]="showDisciplineModal"
+    (close)="closeDisciplineModal()"
+    (updateSuccess)="onDisciplineUpdated($event)"
+  />
 </div>
