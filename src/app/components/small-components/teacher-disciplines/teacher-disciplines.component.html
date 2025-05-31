@@ -8,12 +8,12 @@
         @for (discipline of currentUserDisciplines; track $index) {
           <div class="col-12 col-md-6 d-flex justify-content-center mb-2 p-4 text-light" style="max-width: 45%;">
             <div class="card shadow-sm border-0 h-100 text-light position-relative"
-                 style="width: 100%; cursor: pointer; transition: transform 0.2s; background-color: rgb(30, 30, 157);"
+                 style="width: 100%; transition: transform 0.2s; background-color: rgb(30, 30, 157);"
                  onmouseover="this.style.transform='scale(1.02)'"
                  onmouseout="this.style.transform='scale(1)'">
               
               <!-- Botón de tres puntos -->
-              <div class="position-absolute top-0 end-0 m-2">
+              <div class="position-absolute top-0 end-0 m-2" style="cursor: pointer;">
                 <button class="btn bg-transparent border-0 p-0"
                         (click)="$event.stopPropagation(); toggleMenu(discipline.id)">
                   <i class="bi bi-three-dots-vertical text-light fs-5"></i>

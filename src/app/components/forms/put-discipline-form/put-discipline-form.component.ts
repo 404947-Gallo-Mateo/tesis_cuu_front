@@ -25,10 +25,33 @@ export class PutDisciplineFormComponent {
   @Output() close = new EventEmitter<void>();
   @Output() updateSuccess = new EventEmitter<DisciplineDto>();
 
-  disciplineForm: FormGroup;
-  genres = Object.values(Genre);
-  daysOfWeek = Object.values(DayOfWeek);
+  disciplineForm: FormGroup;  
   teachers: ExpandedUserDTO[] = [];
+  daysOfWeek = [
+    {value: DayOfWeek.MONDAY, label: "Lunes"},
+    {value: DayOfWeek.THURSDAY, label: "Martes"},
+    {value: DayOfWeek.WEDNESDAY, label: "Miércoles"},
+    {value: DayOfWeek.TUESDAY, label: "Jueves"},
+    {value: DayOfWeek.FRIDAY, label: "Viernes"},
+    {value: DayOfWeek.SATURDAY, label: "Sábado"},
+    {value: DayOfWeek.SUNDAY, label: "Domingo"}
+  ];
+    genres = [
+      { value: Genre.MALE, label: 'Masculino' },
+      { value: Genre.FEMALE, label: 'Femenino' },
+      { value: Genre.MIXED, label: 'Ambos' }
+    ];
+
+//metodos para toggle en category
+  expandedCategories: boolean[] = [];
+  toggleCategory(index: number) {
+    this.expandedCategories[index] = !this.expandedCategories[index];
+  }
+
+  isCategoryExpanded(index: number): boolean {
+    return this.expandedCategories[index];
+  }
+
 
   constructor(
     private fb: FormBuilder,
@@ -45,6 +68,7 @@ export class PutDisciplineFormComponent {
 
   ngOnInit(): void {
     this.loadTeachers();
+    this.expandedCategories = new Array(this.categories.length).fill(false);
   }
 
   ngOnChanges(): void {
@@ -138,10 +162,12 @@ private createSchedulesArray(schedules?: Schedule[]): FormArray {
 
   addCategory(): void {
     this.categories.push(this.createCategoryFormGroup());
+    this.expandedCategories.push(false); 
   }
 
   removeCategory(index: number): void {
     this.categories.removeAt(index);
+    this.expandedCategories.splice(index, 1);
   }
 
   // Métodos para schedules
@@ -183,6 +209,8 @@ onSubmit(): void {
         allowedGenre: category.allowedGenre
       }))
     };
+
+    console.log("putDiscipline", putDiscipline);
 
     this.disciplineService.putDiscipline(putDiscipline).subscribe({
       next: (updatedDiscipline) => {

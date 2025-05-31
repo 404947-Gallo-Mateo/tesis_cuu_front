@@ -5,12 +5,13 @@ import { Genre } from '../../../models/backend/embeddables/Genre';
 import { DisciplineSummaryDTO } from '../../../models/backend/DisciplineSummaryDTO';
 import { CommonModule, formatDate } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { last, Subscription } from 'rxjs';
 import { BackUserService } from '../../../services/backend-helpers/user/back-user.service';
 import Swal from 'sweetalert2';
 import { ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
 import { KeycloakHelperService } from '../../../services/backend-helpers/keycloak/keycloak-helper.service';
 import { UserGenre } from '../../../models/backend/embeddables/UserGenre';
+import { DayOfWeek } from '../../../models/backend/embeddables/DayOfWeek';
 
 @Component({
   selector: 'app-user-dto-form',
@@ -25,7 +26,12 @@ export class UserDTOFormComponent {
   @Input() userData!: ExpandedUserDTO;
   @Input() currentRole!: string | null;
 
-  roles = Object.values(Role);
+  roles = [
+    {value: Role.SUPER_ADMIN_CUU, label: "SuperAdmin"},
+    {value: Role.ADMIN_CUU, label: "Admin"},
+    {value: Role.TEACHER, label: "Profesor"},
+    {value: Role.STUDENT, label: "Alumno"}
+  ];
   genres = [
     { value: UserGenre.MALE, label: 'Masculino' },
     { value: UserGenre.FEMALE, label: 'Femenino' }
@@ -38,6 +44,10 @@ export class UserDTOFormComponent {
   private keycloakHelper = inject(KeycloakHelperService);
 
 ngOnChanges(changes: SimpleChanges): void {
+
+  console.log("roles: ", this.roles);
+  console.log("genres: :", this.genres);
+
   if (changes['userData'] && this.userData) {
     const birthDateParsed = this.parseDateString(this.userData.birthDate);
     console.log("birthDateParsed con fecha en yyyy-MM-dd: ", birthDateParsed);

@@ -44,11 +44,11 @@
                     </select>
                   </div>
 
-                  @if (currentRole == "SUPER_ADMIN_CUU" || currentRole == "ADMIN_CUU" || currentRole == "STUDENT") {
+                  @if (currentRole == "SUPER_ADMIN_CUU" || currentRole == "ADMIN_CUU") {
                     <div class="mb-3">
                         <label>Rol:</label>
                         <select formControlName="role" class="form-select">
-                        <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+                        <option *ngFor="let r of roles" [value]="r.value">{{ r.label }}</option>
                         </select>
                     </div>
                     }  

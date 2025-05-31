@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { KeycloakHelperService } from '../backend-helpers/keycloak/keycloak-helper.service';
-import { CategoryDTO } from '../../models/backend/CategoryDTO';
+import { KeycloakHelperService } from '../keycloak/keycloak-helper.service';
+import { CategoryDTO } from '../../../models/backend/CategoryDTO';
 import { catchError, delay, firstValueFrom, Observable, retry, take } from 'rxjs';
 import { throwError as observableThrowError } from 'rxjs';
 
