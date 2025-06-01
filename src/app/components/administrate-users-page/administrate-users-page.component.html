@@ -109,9 +109,25 @@
     </div>
   }
 
-  <app-user-dto-form 
-    [userData]="userSelected" 
-    [currentRole]="currentRole"
-  />
+  @if (showModal()) {
+    <div class="modal fade show d-block" id="adminUserFormModal" tabindex="-1" aria-labelledby="adminUserFormModalLabel" aria-hidden="true" [class.show]="showModal()">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="adminUserFormModalLabel">Editar Usuario</h5>
+            <button type="button" class="btn-close" (click)="closeModal()" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            @if (userSelected) {
+              <app-admin-user-dto-form 
+                [userData]="userSelected"
+                (modalClosed)="onUserUpdated($event)" />
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-backdrop fade show" (click)="closeModal()"></div>
+  }
 
 </div>
