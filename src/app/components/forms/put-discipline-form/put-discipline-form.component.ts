@@ -20,7 +20,7 @@ import Swal from 'sweetalert2';
   styleUrl: './put-discipline-form.component.css'
 })
 export class PutDisciplineFormComponent {
-@Input() discipline!: DisciplineDto;
+  @Input() discipline!: DisciplineDto;
   @Input() show: boolean = false;
   @Output() close = new EventEmitter<void>();
   @Output() updateSuccess = new EventEmitter<DisciplineDto>();
@@ -52,6 +52,18 @@ export class PutDisciplineFormComponent {
     return this.expandedCategories[index];
   }
 
+  // Métodos para toggle de horarios
+  expandedSchedules: boolean[][] = [];
+  toggleSchedules(categoryIndex: number) {
+    if (!this.expandedSchedules[categoryIndex]) {
+      this.expandedSchedules[categoryIndex] = [];
+    }
+    this.expandedSchedules[categoryIndex][0] = !this.expandedSchedules[categoryIndex][0];
+  }
+
+  areSchedulesExpanded(categoryIndex: number): boolean {
+    return this.expandedSchedules[categoryIndex] && this.expandedSchedules[categoryIndex][0];
+  }
 
   constructor(
     private fb: FormBuilder,
@@ -98,8 +110,10 @@ export class PutDisciplineFormComponent {
     this.initializeTeachers();
 
     // Inicializar categorías
-    this.discipline.categories?.forEach(category => {
+     this.discipline.categories?.forEach((category, index) => {
       this.categories.push(this.createCategoryFormGroup(category));
+      this.expandedCategories.push(false);
+      this.expandedSchedules.push([false]); // Inicializa colapsado
     });
   }
 
@@ -163,11 +177,13 @@ private createSchedulesArray(schedules?: Schedule[]): FormArray {
   addCategory(): void {
     this.categories.push(this.createCategoryFormGroup());
     this.expandedCategories.push(false); 
+    this.expandedSchedules.push([false]);
   }
 
   removeCategory(index: number): void {
     this.categories.removeAt(index);
     this.expandedCategories.splice(index, 1);
+    this.expandedSchedules.splice(index, 1);
   }
 
   // Métodos para schedules
@@ -178,8 +194,8 @@ getSchedules(categoryIndex: number): FormArray {
   addSchedule(categoryIndex: number): void {
     this.getSchedules(categoryIndex).push(this.fb.group({
       dayOfWeek: [DayOfWeek.MONDAY, Validators.required],
-      startHour: ['09:00', Validators.required],
-      endHour: ['10:00', Validators.required]
+      startHour: ['09:00:00', Validators.required],
+      endHour: ['10:00:00', Validators.required]
     }));
   }
 
@@ -219,10 +235,17 @@ onSubmit(): void {
         this.userService.getUpdatedInfoOfCurrentUser();
         this.onClose();
       },
-      error: (err) => {
-        console.error('Error updating discipline:', err);
-        Swal.fire('Error', 'No se pudo actualizar la disciplina', 'error');
-      }
+      error: (err: {message: string, status?: number}) => {
+                          Swal.hideLoading();
+                          console.error('Error completo en componente:', err);
+                          
+                          Swal.fire({
+                              title: `Error`,
+                              text: err.message,
+                              icon: 'error',
+                              confirmButtonText: 'Entendido'
+                          });
+                      }
     });
   }
 }

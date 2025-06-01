@@ -8,11 +8,12 @@ import { BackDisciplineService } from '../../../services/backend-helpers/discipl
 import { CommonModule } from '@angular/common';
 import { PutDisciplineFormComponent } from '../../forms/put-discipline-form/put-discipline-form.component';
 import Swal from 'sweetalert2';
+import { PostDisciplineFormComponent } from '../../forms/post-discipline-form/post-discipline-form.component';
 
 @Component({
   selector: 'app-teacher-disciplines',
   standalone: true,
-  imports: [CommonModule, PutDisciplineFormComponent],
+  imports: [CommonModule, PutDisciplineFormComponent, PostDisciplineFormComponent],
   templateUrl: './teacher-disciplines.component.html',
   styleUrl: './teacher-disciplines.component.css'
 })
@@ -31,6 +32,26 @@ export class TeacherDisciplinesComponent {
   isLoadingDisciplines = false;
   showModal = false;
 
+  //modal crear discipline
+    showNewDisciplineModal = false;
+
+    openNewDisciplineModal() {
+    this.showNewDisciplineModal = true;
+  }
+
+  closeNewDisciplineModal() {
+    this.showNewDisciplineModal = false;
+  }
+
+  onDisciplineCreated(newDiscipline: DisciplineDto) {
+    // Actualiza la lista de disciplinas
+    let currentUserIsATeachar = newDiscipline.teachers.find(x => x.keycloakId == this.currentUser.keycloakId);
+
+    if(currentUserIsATeachar){
+      this.currentUserDisciplines.push(newDiscipline);
+    }
+    this.closeNewDisciplineModal();
+  }
 
    // Manejador para cerrar menús al hacer clic fuera
 @HostListener('document:click', ['$event'])

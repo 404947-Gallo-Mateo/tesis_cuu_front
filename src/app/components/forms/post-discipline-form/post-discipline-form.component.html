@@ -1,0 +1,165 @@
+<div class="modal fade" [class.show]="show" [style.display]="show ? 'block' : 'none'" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Crear Disciplina</h3>
+        <button type="button" class="btn-close" (click)="onClose()" aria-label="Close"></button>
+      </div>
+      
+      <form [formGroup]="disciplineForm" (ngSubmit)="onSubmit()">
+        <div class="modal-body">
+          <!-- Campos básicos -->
+          <div class="mb-3">
+            <label class="form-label">Nombre de la Disciplina</label>
+            <input type="text" class="form-control" formControlName="name" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Descripción</label>
+            <textarea class="form-control" formControlName="description" rows="3"></textarea>
+          </div>
+
+          <hr>
+
+          <!-- Profesores -->
+          <h4>Profesores</h4>
+          <div formArrayName="teacherIds">
+            <div *ngFor="let teacherControl of teacherIds.controls; let i = index" class="mb-3">
+              <div class="input-group">
+                <select class="form-select" [formControlName]="i">
+                  <option value="">Seleccionar profesor</option>
+                  <option *ngFor="let t of teachers" [value]="t.keycloakId">
+                    {{ t.firstName }} {{ t.lastName }} ({{ t.email }})
+                  </option>
+                </select>
+                <button class="btn btn-outline-danger" type="button" (click)="removeTeacher(i)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+            <button class="btn btn-outline-primary btn-sm" type="button" (click)="addTeacher()">
+              <i class="bi bi-plus"></i> Añadir Profesor
+            </button>
+          </div>
+
+          <hr>
+<!-- Categorías -->
+<h4 class="mt-4">Categorías</h4>
+<div formArrayName="categories">
+  <div *ngFor="let categoryGroup of categories.controls; let i = index" [formGroupName]="i" class="card mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center" 
+         (click)="toggleCategory(i)" 
+         style="cursor: pointer;">
+      <h5 class="mb-0">Categoría {{i + 1}} <span class="badge bg-primary ms-3">
+          {{ isCategoryExpanded(i) ? 'Ocultar' : 'Mostrar' }}
+        </span></h5>
+      <div>        
+        <button class="btn btn-sm btn-outline-danger" type="button" (click)="removeCategory(i); $event.stopPropagation()">
+          <i class="bi bi-trash"></i> Eliminar
+        </button>
+      </div>
+    </div>
+    
+    <div class="card-body" [class.collapse]="!isCategoryExpanded(i)" [id]="'categoryCollapse'+i">
+      <div class="mb-3">
+        <label class="form-label">Nombre de categoría</label>
+        <input type="text" class="form-control" formControlName="name" required>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-4">
+          <label class="form-label">Tarifa mensual</label>
+          <input type="number" class="form-control" formControlName="monthlyFee" required>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Género permitido</label>
+          <select class="form-select" formControlName="allowedGenre">
+            <option *ngFor="let genre of genres" [value]="genre.value">
+              {{ genre.label }}
+            </option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Espacios disponibles</label>
+          <input type="number" class="form-control" formControlName="availableSpaces" required>
+        </div>
+      </div>
+
+      <!-- Rango de edad -->
+      <div class="row g-3 mb-3" formGroupName="ageRange">
+        <div class="col-md-6">
+          <label class="form-label">Edad mínima</label>
+          <input type="number" class="form-control" formControlName="minAge" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Edad máxima</label>
+          <input type="number" class="form-control" formControlName="maxAge" required>
+        </div>
+      </div>
+
+      <!-- Horarios con toggle -->
+      <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
+        <h5 class="mb-0">Horarios</h5>
+        <button class="btn btn-sm btn-secondary" 
+                type="button" 
+                (click)="toggleSchedules(i); $event.stopPropagation()">
+          <i class="bi" [class.bi-chevron-down]="!areSchedulesExpanded(i)" [class.bi-chevron-up]="areSchedulesExpanded(i)"></i>
+          {{ areSchedulesExpanded(i) ? 'Ocultar' : 'Mostrar' }}
+        </button>
+      </div>
+
+      <div [class.collapse]="!areSchedulesExpanded(i)" id="schedulesCollapse{{i}}">
+        <div formArrayName="schedules">
+          <div *ngFor="let scheduleGroup of getSchedules(i).controls; let j = index" [formGroupName]="j" class="card mb-2">
+            <div class="card-body">
+              <div class="row g-3 align-items-center">
+                <div class="col-md-4">
+                  <label class="form-label">Día</label>
+                  <select class="form-select" formControlName="dayOfWeek">
+                    <option *ngFor="let day of daysOfWeek" [value]="day.value">
+                      {{ day.label }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">Hora inicio</label>
+                  <input type="time" step="1" class="form-control" formControlName="startHour" required>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">Hora fin</label>
+                  <input type="time" step="1" class="form-control" formControlName="endHour" required>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                  <button class="btn btn-outline-danger" type="button" (click)="removeSchedule(i, j); $event.stopPropagation()">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-outline-primary btn-sm" type="button" (click)="addSchedule(i); $event.stopPropagation()">
+            <i class="bi bi-plus"></i> Añadir Horario
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-outline-primary" type="button" (click)="addCategory()">
+    <i class="bi bi-plus"></i> Añadir Categoría
+  </button>
+</div>
+
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="onClose()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="!disciplineForm.valid">
+            Guardar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop fade" [class.show]="show" [style.display]="show ? 'block' : 'none'"></div>
