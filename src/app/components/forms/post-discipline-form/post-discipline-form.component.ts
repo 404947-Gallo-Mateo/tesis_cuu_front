@@ -27,6 +27,10 @@ export class PostDisciplineFormComponent {
   @Output() close = new EventEmitter<void>();
   @Output() updateSuccess = new EventEmitter<DisciplineDto>();
 
+  onClose(): void {
+    this.close.emit();
+  }
+
   disciplineForm: FormGroup;  
   teachers: ExpandedUserDTO[] = [];
   daysOfWeek = [
@@ -212,10 +216,5 @@ onSubmit(): void {
     });
   }
 }
-
-  onClose(): void {
-    this.close.emit();
-  }
-
 
 }

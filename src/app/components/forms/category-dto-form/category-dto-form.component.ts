@@ -114,10 +114,17 @@ export class CategoryDtoFormComponent {
                 Swal.fire('Error', 'No se pudo eliminar, intente más tarde.', 'error');
               }
             },
-            error: (err) => {
-              console.error('Error eliminando inscripción:', err);
-              Swal.fire('Error', 'Hubo un problema al eliminar la inscripción.', 'error');
-            }
+            error: (err: {message: string, status?: number}) => {
+                                Swal.hideLoading();
+                                console.error('Error completo en componente:', err);
+                                
+                                Swal.fire({
+                                    title: `Error (${err.status || 'Desconocido'})`,
+                                    text: err.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'Entendido'
+                                });
+                            }
           });
       }
     });

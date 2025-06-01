@@ -11,12 +11,12 @@
           <!-- Campos básicos -->
           <div class="mb-3">
             <label class="form-label">Nombre de la Disciplina</label>
-            <input type="text" class="form-control" formControlName="name" required>
+            <input type="text" placeholder="Ingrese el nombre..." maxlength="100" class="form-control" formControlName="name" required>
           </div>
 
           <div class="mb-3">
             <label class="form-label">Descripción</label>
-            <textarea class="form-control" formControlName="description" rows="3"></textarea>
+            <textarea class="form-control" formControlName="description" maxlength="1000" rows="3"></textarea>
           </div>
 
           <hr>
@@ -63,13 +63,13 @@
     <div class="card-body" [class.collapse]="!isCategoryExpanded(i)" [id]="'categoryCollapse'+i">
       <div class="mb-3">
         <label class="form-label">Nombre de categoría</label>
-        <input type="text" class="form-control" formControlName="name" required>
+        <input type="text" placeholder="Ingrese el nombre..." maxlength="100" class="form-control" formControlName="name" required>
       </div>
 
       <div class="row g-3 mb-3">
         <div class="col-md-4">
           <label class="form-label">Tarifa mensual</label>
-          <input type="number" class="form-control" formControlName="monthlyFee" required>
+          <input min="1" type="number" class="form-control" formControlName="monthlyFee" required>
         </div>
         <div class="col-md-4">
           <label class="form-label">Género permitido</label>
@@ -81,7 +81,7 @@
         </div>
         <div class="col-md-4">
           <label class="form-label">Espacios disponibles</label>
-          <input type="number" class="form-control" formControlName="availableSpaces" required>
+          <input type="number" min="0" class="form-control" formControlName="availableSpaces" required>
         </div>
       </div>
 
@@ -89,11 +89,11 @@
       <div class="row g-3 mb-3" formGroupName="ageRange">
         <div class="col-md-6">
           <label class="form-label">Edad mínima</label>
-          <input type="number" class="form-control" formControlName="minAge" required>
+          <input type="number" min="1" max="100" class="form-control" formControlName="minAge" required>
         </div>
         <div class="col-md-6">
           <label class="form-label">Edad máxima</label>
-          <input type="number" class="form-control" formControlName="maxAge" required>
+          <input type="number" min="1" max="100" class="form-control" formControlName="maxAge" required>
         </div>
       </div>
 

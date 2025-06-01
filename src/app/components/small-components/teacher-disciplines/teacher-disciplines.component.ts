@@ -9,17 +9,36 @@ import { CommonModule } from '@angular/common';
 import { PutDisciplineFormComponent } from '../../forms/put-discipline-form/put-discipline-form.component';
 import Swal from 'sweetalert2';
 import { PostDisciplineFormComponent } from '../../forms/post-discipline-form/post-discipline-form.component';
+import { AdministrateStudentInscriptionsComponent } from "../administrate-student-inscriptions/administrate-student-inscriptions.component";
 
 @Component({
   selector: 'app-teacher-disciplines',
   standalone: true,
-  imports: [CommonModule, PutDisciplineFormComponent, PostDisciplineFormComponent],
+  imports: [CommonModule, PutDisciplineFormComponent, PostDisciplineFormComponent, AdministrateStudentInscriptionsComponent],
   templateUrl: './teacher-disciplines.component.html',
   styleUrl: './teacher-disciplines.component.css'
 })
 export class TeacherDisciplinesComponent {
 
   openMenuId: string | null = null;
+
+  showInscriptionsModal = false;
+  selectedDisciplineId = '';
+
+  openInscriptionsModal(disciplineId: string): void {
+    console.log("openInscriptionsModal");
+    this.selectedDisciplineId = disciplineId;
+    this.showInscriptionsModal = true;
+  }
+
+  closeInscriptionsModal(): void {
+    this.showInscriptionsModal = false;
+  }
+
+  onInscriptionsUpdated(): void {
+    // Lógica para actualizar datos si es necesario
+    console.log('Inscripciones actualizadas');
+  }
 
   // En el componente padre
   selectedDiscipline?: DisciplineDto;
@@ -33,9 +52,9 @@ export class TeacherDisciplinesComponent {
   showModal = false;
 
   //modal crear discipline
-    showNewDisciplineModal = false;
+  showNewDisciplineModal = false;
 
-    openNewDisciplineModal() {
+  openNewDisciplineModal() {
     this.showNewDisciplineModal = true;
   }
 
