@@ -143,8 +143,8 @@ export class BackUserService {
     );
   }
 
-  getAllUsers(): Observable<ExpandedUserDTO> {
-    return this.http.get<ExpandedUserDTO>(`${this.API_URL}/get-all`).pipe(
+  getAllUsers(): Observable<ExpandedUserDTO[]> {
+    return this.http.get<ExpandedUserDTO[]>(`${this.API_URL}/get-all`).pipe(
       retry({
       count: 3,
       delay: 1000,

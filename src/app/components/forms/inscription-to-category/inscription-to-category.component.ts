@@ -188,7 +188,7 @@ export class InscriptionToCategoryComponent {
                     console.error('Error completo en componente:', err);
                     
                     Swal.fire({
-                        title: `Error (${err.status || 'Desconocido'})`,
+                        title: `Error`,
                         text: err.message,
                         icon: 'error',
                         confirmButtonText: 'Entendido'

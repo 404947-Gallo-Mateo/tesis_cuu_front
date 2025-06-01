@@ -66,7 +66,7 @@ export class TeacherDisciplinesComponent {
     // Actualiza la lista de disciplinas
     let currentUserIsATeachar = newDiscipline.teachers.find(x => x.keycloakId == this.currentUser.keycloakId);
 
-    if(currentUserIsATeachar){
+    if(currentUserIsATeachar || (this.currentUser.role == "ADMIN_CUU"  || this.currentUser.role == "SUPER_ADMIN_CUU") ){
       this.currentUserDisciplines.push(newDiscipline);
     }
     this.closeNewDisciplineModal();

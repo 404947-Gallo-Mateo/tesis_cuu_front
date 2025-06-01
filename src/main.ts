@@ -5,6 +5,7 @@ import { KeycloakHelperService } from './app/services/backend-helpers/keycloak/k
 import { provideRouter } from '@angular/router';
 import { routes } from './app/app.routes';
 import { provideHttpClient } from '@angular/common/http';
+import { RolePipe } from './app/CustomPipes/role.pipe';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -12,6 +13,6 @@ bootstrapApplication(AppComponent, {
     KeycloakHelperService,
     provideClientHydration(),
     provideHttpClient(),
-    
+    RolePipe
   ]
 }).catch(err => console.error(err));
