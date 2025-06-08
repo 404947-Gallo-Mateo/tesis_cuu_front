@@ -2,7 +2,7 @@
   <!-- Botón para alternar vista -->
   <div class="row pt-3 mb-3 d-flex align-items-center">
     <div class="col">
-        <h2 class="mb-0">Cuotas Sociales</h2> <!-- mb-0 para eliminar margen inferior -->
+        <h2 class="mb-0">Cuotas Sociales</h2>
     </div>
     <div class="col-auto">
         <button class="btn btn-primary" (click)="toggleView()">
@@ -14,7 +14,15 @@
   <!-- Sección SOCIAL -->
   <div class="row mb-4">
     <div class="col-12">    
+      <!-- Mensajes para cuotas sociales -->
+      <div *ngIf="showUnpaid && !unpaidFees.social.length" class="alert alert-info">
+        No hay cuotas sociales pendientes de pago
+      </div>
       
+      <div *ngIf="showPaid && !paidFees.social.length" class="alert alert-info">
+        No hay cuotas sociales pagadas
+      </div>
+
       <!-- No Pagadas - Visible solo cuando showUnpaid es true -->
       <div *ngIf="showUnpaid && unpaidFees.social.length" class="mb-4">
         <h3>Pendientes de Pago</h3>
@@ -51,7 +59,7 @@
         </div>
       </div>
 
-      <!-- Mensaje si no hay cuotas -->
+      <!-- Mensaje general si no hay cuotas sociales -->
       <div *ngIf="!unpaidFees.social.length && !paidFees.social.length" class="alert alert-info">
         No se encontraron cuotas sociales
       </div>
@@ -63,6 +71,15 @@
     <div class="col-12">
       <h2 class="mb-3">Cuotas de Disciplinas</h2>
       
+      <!-- Mensajes para cuotas de disciplinas -->
+      <div *ngIf="showUnpaid && !unpaidFees.discipline.length" class="alert alert-info">
+        No hay cuotas de disciplinas pendientes de pago
+      </div>
+      
+      <div *ngIf="showPaid && !paidFees.discipline.length" class="alert alert-info">
+        No hay cuotas de disciplinas pagadas
+      </div>
+
       <!-- No Pagadas - Visible solo cuando showUnpaid es true -->
       <div *ngIf="showUnpaid && unpaidFees.discipline.length" class="mb-4">
         <h3>Pendientes de Pago</h3>
@@ -103,7 +120,7 @@
         </div>
       </div>
 
-      <!-- Mensaje si no hay cuotas -->
+      <!-- Mensaje general si no hay cuotas de disciplinas -->
       <div *ngIf="!unpaidFees.discipline.length && !paidFees.discipline.length" class="alert alert-info">
         No se encontraron cuotas de disciplinas
       </div>
