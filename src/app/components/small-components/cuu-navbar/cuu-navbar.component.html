@@ -33,6 +33,22 @@
                 <a class="nav-link" href="/gestion-usuarios">Gestión Usuarios</a>
               </li>
             }
+            @if (currentRole == "STUDENT") {
+              <li class="nav-item">
+                <a class="nav-link" href="/mis-cuotas">Mis Cuotas</a>
+              </li>
+            }
+            @if (currentRole == "TEACHER") {
+              <li class="nav-item">
+                <a class="nav-link" href="/gestion-cuotas">Gestión Cuotas</a>
+              </li>
+            }
+
+            @if (currentRole == "SUPER_ADMIN_CUU" || currentRole == "ADMIN_CUU") {
+              <li class="nav-item">
+                <a class="nav-link" href="/gestion-cuotas-club">Gestión Cuotas del Club</a>
+              </li>
+            }
             
           }
         

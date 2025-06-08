@@ -6,4 +6,6 @@ export interface StudentInscriptionDTO{
      student: UserDTO;
      discipline: DisciplineSummaryDTO;
      category: CategorySummaryDTO;
+     createdDate: string; //yyyy-MM-dd
+     updatedDate: string; //yyyy-MM-dd
 }

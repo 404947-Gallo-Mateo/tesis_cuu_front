@@ -1,0 +1,51 @@
+<div class="modal-header">
+  <h5 class="modal-title">Cuotas del Estudiante</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+</div>
+
+<div class="modal-body">
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+  
+  <div *ngIf="inscriptionFees.length === 0" class="alert alert-info">
+    No se encontraron cuotas para esta inscripción
+  </div>
+
+  <table *ngIf="inscriptionFees.length > 0" class="table table-striped">
+    <thead>
+      <tr>
+        <th>Tipo</th>
+        <th>Monto</th>
+        <th>Vencimiento</th>
+        <th>Periodo</th>
+        <th>Pagada</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let fee of inscriptionFees | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+        <td>{{ fee.feeType }}</td>
+        <td>{{ fee.amount | currency }}</td>
+        <td>{{ fee.dueDate | date:'dd/MM/yyyy' }}</td>
+        <td>{{ fee.period }}</td>
+        <td>{{ fee.paid ? 'Sí' : 'No' }}</td>
+        <td>
+          <button 
+            class="btn btn-sm btn-primary"
+            [disabled]="isLoading && selectedFee === fee"
+            (click)="updateFeePaidState(fee)">
+            <span *ngIf="isLoading && selectedFee === fee" class="spinner-border spinner-border-sm"></span>
+            {{ fee.paid ? 'Marcar como No Pagada' : 'Marcar como Pagada' }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <pagination-controls *ngIf="inscriptionFees.length > 0" (pageChange)="page = $event"></pagination-controls>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
+</div>

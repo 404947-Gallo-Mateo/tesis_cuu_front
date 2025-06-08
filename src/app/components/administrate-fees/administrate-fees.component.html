@@ -1,0 +1,155 @@
+<div class="container-fluid p-3" *ngIf="isLoaded">
+
+  <div class="row pt-3 mb-3 d-flex align-items-center">
+    <div class="col">
+        <h2 class="mb-0">Gestión de Cuotas de mis Disciplinas</h2> 
+    </div>
+    <div class="col-auto">
+        <button 
+      class="btn btn-primary"
+      (click)="toggleView()">
+      {{ debtorMode ? 'Ver Disciplinas' : 'Ver Deudores' }}
+    </button>
+    </div>
+  </div>
+
+  <!-- Modo Normal: Lista de Disciplinas -->
+  <div *ngIf="!debtorMode">
+    <div *ngFor="let discipline of disciplines" class="card mb-3">
+      <div 
+        class="card-header d-flex justify-content-between align-items-center cursor-pointer"
+        (click)="toggleDiscipline(discipline.id)">
+        <h5 class="mb-0">{{ discipline.name }}</h5>
+        <span>
+          {{ disciplineInscriptions[discipline.id].expanded ? '▲' : '▼' }}
+        </span>
+      </div>
+
+      <div *ngIf="disciplineInscriptions[discipline.id].expanded" class="card-body">
+        <div *ngIf="disciplineInscriptions[discipline.id].loading" class="text-center">
+          Cargando inscripciones...
+        </div>
+
+        <div *ngIf="!disciplineInscriptions[discipline.id].loading">
+          <div *ngIf="disciplineInscriptions[discipline.id].inscriptions.length === 0" 
+               class="alert alert-info">
+            No hay inscripciones para esta disciplina
+          </div>
+
+          <table *ngIf="disciplineInscriptions[discipline.id].inscriptions.length > 0" 
+                 class="table table-striped">
+            <thead>
+              <tr>
+                <th>Estudiante</th>
+                <th>Email</th>
+                <th>Edad</th>
+                <th>Género</th>
+                <th>Disciplina</th>
+                <th>Categoría</th>
+                <th>Ver Cuotas</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let ins of disciplineInscriptions[discipline.id].inscriptions | 
+                            paginate: { 
+                              id: discipline.id, 
+                              itemsPerPage: itemsPerPage, 
+                              currentPage: disciplineInscriptions[discipline.id].page 
+                            }">
+                <td>
+                  {{ ins.student.firstName }} {{ ins.student.lastName }}
+                  <span *ngIf="ins.isDebtor" class="badge bg-danger ms-2">Deudor</span>
+                </td>
+                <td>{{ ins.student.email }}</td>
+                <td>{{ ins.student.birthDate | age }} años</td>
+                <td>{{ ins.student.genre | genre }}</td>
+                <td>{{ ins.discipline.name }}</td>
+                <td>{{ ins.category.name }}</td>
+                <td class="text-center align-middle">
+                  <button class="btn btn-sm btn-outline-success open-fees-modal" (click)="openFeesModal(ins.inscriptionFees)">
+                    <i class="bi bi-cash-stack"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <pagination-controls 
+            [id]="discipline.id"
+            (pageChange)="disciplineInscriptions[discipline.id].page = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modo Deudores: Tabla Única -->
+  <div *ngIf="debtorMode">
+    <h4 class="mb-3">Estudiantes Deudores</h4>
+    
+    <div *ngIf="loadingDebtors" class="text-center">
+      Cargando deudores...
+    </div>
+
+    <div *ngIf="!loadingDebtors">
+      <div *ngIf="debtorInscriptions.length === 0" class="alert alert-info">
+        No se encontraron estudiantes deudores
+      </div>
+
+      <table *ngIf="debtorInscriptions.length > 0" class="table table-striped">
+        <thead>
+          <tr>
+            <th>Estudiante</th>
+                <th>Email</th>
+                <th>Edad</th>
+                <th>Género</th>
+                <th>Disciplina</th>
+                <th>Categoría</th>
+                <th>Ver Cuotas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ins of debtorInscriptions | 
+                        paginate: { 
+                          itemsPerPage: itemsPerPage, 
+                          currentPage: debtorPage 
+                        }">
+            <td class="text-danger">{{ ins.student.firstName }} {{ ins.student.lastName }}
+                <span *ngIf="ins.isDebtor" class="badge bg-danger ms-2">Deudor</span>
+            </td>
+            <td>{{ ins.student.email }}</td>
+                <td>{{ ins.student.birthDate | age }} años</td>
+                <td>{{ ins.student.genre | genre }}</td>
+                <td>{{ ins.discipline.name }}</td>
+                <td>{{ ins.category.name }}</td>
+                <td class="text-center align-middle">
+                  <button class="btn btn-sm btn-outline-success open-fees-modal" (click)="openFeesModal(ins.inscriptionFees)">
+                    <i class="bi bi-cash-stack"></i>
+                  </button>
+                </td>
+          </tr>
+        </tbody>
+      </table>
+      <pagination-controls (pageChange)="debtorPage = $event"></pagination-controls>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!isLoaded" class="text-center">
+  Cargando datos del usuario...
+</div>
+
+ <!-- Modal de cuotas -->
+  <div *ngIf="showFeesModal" class="modal-backdrop fade show"></div>
+  <div *ngIf="showFeesModal" class="modal fade show d-block" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <app-modal-student-fees
+          [inscriptionFees]="selectedInscriptionFees"
+          [currentUserRole]="currentUser?.role"
+          (feesUpdated)="handleFeeUpdated($event)"
+          (closeModalEvent)="closeFeesModal()" 
+        />
+      </div>
+    </div>
+  </div>
+
