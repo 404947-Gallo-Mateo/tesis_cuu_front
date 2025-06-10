@@ -36,6 +36,17 @@
             No hay inscripciones para esta disciplina
           </div>
 
+            <!-- Barra de búsqueda para disciplinas (arriba de la tabla) -->
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <input 
+                type="text" 
+                class="form-control" 
+                placeholder="Buscar por nombre o email..."
+                [(ngModel)]="disciplineInscriptions[discipline.id].searchTerm">
+            </div>
+          </div>
+
           <table *ngIf="disciplineInscriptions[discipline.id].inscriptions.length > 0" 
                  class="table table-striped">
             <thead>
@@ -50,12 +61,12 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let ins of disciplineInscriptions[discipline.id].inscriptions | 
-                            paginate: { 
-                              id: discipline.id, 
-                              itemsPerPage: itemsPerPage, 
-                              currentPage: disciplineInscriptions[discipline.id].page 
-                            }">
+              <tr *ngFor="let ins of filterInscriptions(disciplineInscriptions[discipline.id].inscriptions, disciplineInscriptions[discipline.id].searchTerm) | 
+                    paginate: { 
+                      id: discipline.id, 
+                      itemsPerPage: itemsPerPage, 
+                      currentPage: disciplineInscriptions[discipline.id].page 
+                    }">
                 <td>
                   {{ ins.student.firstName }} {{ ins.student.lastName }}
                   <span *ngIf="ins.isDebtor" class="badge bg-danger ms-2">Deudor</span>
@@ -86,6 +97,17 @@
   <div *ngIf="debtorMode">
     <h4 class="mb-3">Estudiantes Deudores</h4>
     
+      <!-- Barra de búsqueda para deudores -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <input 
+          type="text" 
+          class="form-control" 
+          placeholder="Buscar por nombre o email..."
+          [(ngModel)]="debtorSearchTerm">
+      </div>
+    </div>
+
     <div *ngIf="loadingDebtors" class="text-center">
       Cargando deudores...
     </div>
@@ -108,11 +130,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let ins of debtorInscriptions | 
-                        paginate: { 
-                          itemsPerPage: itemsPerPage, 
-                          currentPage: debtorPage 
-                        }">
+          <tr *ngFor="let ins of filterInscriptions(debtorInscriptions, debtorSearchTerm) | 
+                    paginate: { 
+                      itemsPerPage: itemsPerPage, 
+                      currentPage: debtorPage 
+                    }">
             <td class="text-danger">{{ ins.student.firstName }} {{ ins.student.lastName }}
                 <span *ngIf="ins.isDebtor" class="badge bg-danger ms-2">Deudor</span>
             </td>
@@ -145,7 +167,7 @@
       <div class="modal-content">
         <app-modal-student-fees
           [inscriptionFees]="selectedInscriptionFees"
-          [currentUserRole]="currentUser?.role"
+          [currentUserRole]="currentUser.role"
           (feesUpdated)="handleFeeUpdated($event)"
           (closeModalEvent)="closeFeesModal()" 
         />

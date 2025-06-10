@@ -7,6 +7,7 @@ import { AdministrateStudentInscriptionsComponent } from './components/small-com
 import { AdministrateUsersPageComponent } from './components/administrate-users-page/administrate-users-page.component';
 import { StudentFeesComponent } from './components/student-fees/student-fees.component';
 import { AdministrateFeesComponent } from './components/administrate-fees/administrate-fees.component';
+import { AdministrateSocialFeesComponent } from './components/administrate-social-fees/administrate-social-fees.component';
 
 export const routes: Routes = [
     { path: '', component: LandingPageComponent },            
@@ -16,6 +17,7 @@ export const routes: Routes = [
     { path: 'gestion-usuarios', component: AdministrateUsersPageComponent},
     { path: 'mis-cuotas', component: StudentFeesComponent},
     { path: 'gestion-cuotas', component: AdministrateFeesComponent},
+    { path: 'gestion-cuotas-club', component: AdministrateSocialFeesComponent},
 
     { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

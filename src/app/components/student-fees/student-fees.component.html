@@ -51,7 +51,7 @@
                 <h5 class="card-title">{{ fee.description }}</h5>
                 <p class="card-text">
                   <strong>Monto:</strong> {{ fee.amount | currency }}<br>
-                  <strong>Pagado:</strong> {{ fee.paymentProof?.paymentDate | date:'dd/MM/yyyy' }}
+                  <strong>Pagado:</strong> {{ fee.paymentProof.paymentDate | date:'dd/MM/yyyy' }}
                 </p>
               </div>
             </div>
@@ -112,7 +112,7 @@
                 <p class="card-text">
                   {{ fee.description }}<br>
                   <strong>Monto:</strong> {{ fee.amount | currency }}<br>
-                  <strong>Pagado:</strong> {{ fee.paymentProof?.paymentDate | date:'dd/MM/yyyy' }}
+                  <strong>Pagado:</strong> {{ fee.paymentProof.paymentDate | date:'dd/MM/yyyy' }}
                 </p>
               </div>
             </div>

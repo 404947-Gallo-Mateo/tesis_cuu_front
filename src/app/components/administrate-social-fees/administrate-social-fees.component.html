@@ -1,0 +1,69 @@
+<div class="container-fluid p-3" *ngIf="isLoaded">
+  <!-- Modal de cuotas sociales -->
+  <div *ngIf="showModal" class="modal-backdrop fade show"></div>
+  <div *ngIf="showModal" class="modal fade show d-block" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <app-modal-social-fees
+          [user]="selectedUser"
+          [currentUserRole]="currentUser.role"
+          (feeUpdated)="handleFeeUpdated($event)"
+          (closeModal)="closeModal()"
+          />
+      </div>
+    </div>
+  </div>
+
+  <div class="row pt-3 mb-3 d-flex align-items-center">
+    <div class="col">
+      <h2 class="mb-0">Gestión de Cuotas Sociales</h2>
+    </div>
+    <div class="col-auto">
+      <button 
+        class="btn btn-primary"
+        (click)="toggleView()">
+        {{ debtorMode ? 'Ver Todos' : 'Ver Solo Deudores' }}
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="filteredUsers.length === 0" class="alert alert-info">
+    {{ debtorMode ? 'No hay usuarios deudores' : 'No hay usuarios' }}
+  </div>
+
+  <table *ngIf="filteredUsers.length > 0" class="table table-striped">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Rol</th>
+        <th>Deudor</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of filteredUsers | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+        <td>{{ user.firstName }} {{ user.lastName }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.role }}</td>
+        <td>
+          <span *ngIf="user.isDebtor" class="badge bg-danger">Deudor</span>
+          <span *ngIf="!user.isDebtor" class="badge bg-success">Al día</span>
+        </td>
+        <td class="text-end">
+          <button 
+            class="btn btn-sm btn-outline-primary"
+            (click)="openSocialFeesModal(user)">
+            <i class="bi bi-cash-coin"></i> Ver Cuotas
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <pagination-controls (pageChange)="page = $event"></pagination-controls>
+</div>
+
+<div *ngIf="!isLoaded" class="text-center">
+  Cargando datos del usuario...
+</div>

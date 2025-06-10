@@ -112,7 +112,27 @@ export class FeeService {
       //  http://localhost:8090/fee/find-all/by-student-keycloak-id-and-discipline-id?studentKeycloakId=1&disciplineId=11111111-1111-1111-1111-111111111111
       const url = `${this.API_URL}/find-all/by-student-keycloak-id-and-discipline-id` +
                   `?studentKeycloakId=${encodeURIComponent(studentKeycloakId)}` +
-                  `?disciplineId=${encodeURIComponent(disciplineId)}`;
+                  `&disciplineId=${encodeURIComponent(disciplineId)}`;
+    
+      return this.http.get<FeeDTO[]>(url).pipe(
+        retry({
+          count: 3,
+          delay: 1000,
+          resetOnSuccess: true
+        }),
+        catchError(error => {
+          console.error('No se pudo obtener todas las cuotas del alumno.');
+          return observableThrowError(() => error);
+        })
+      );
+    }
+
+     // @GetMapping("/find-all/by-fee-type-and-student-keycloak-id")
+    getAllByFeeTypeAndStudentKeycloakId(feeType: FeeType, studentKeycloakId: string): Observable<FeeDTO[]> {
+
+      const url = `${this.API_URL}/find-all/by-fee-type-and-student-keycloak-id` +
+                  `?feeType=${encodeURIComponent(feeType)}` +
+                  `&studentKeycloakId=${encodeURIComponent(studentKeycloakId)}`;
     
       return this.http.get<FeeDTO[]>(url).pipe(
         retry({

@@ -43,8 +43,7 @@ export class ModalStudentFeesComponent {
     }
     else {
       return Role.STUDENT;
-    }
-    
+    }    
   }
 
  updateFeePaidState(fee: FeeDTO): void {

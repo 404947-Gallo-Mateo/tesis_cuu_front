@@ -1,0 +1,49 @@
+<div class="modal-header">
+  <h5 class="modal-title">Cuotas Sociales de {{ user!.firstName }} {{ user!.lastName }}</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+</div>
+
+<div class="modal-body">
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+  
+  <div *ngIf="socialFees.length === 0" class="alert alert-info">
+    No se encontraron cuotas sociales para este usuario
+  </div>
+
+  <table *ngIf="socialFees.length > 0" class="table table-striped">
+    <thead>
+      <tr>
+        <th>Monto</th>
+        <th>Vencimiento</th>
+        <th>Periodo</th>
+        <th>Pagada</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let fee of socialFees | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+        <td>{{ fee.amount | currency }}</td>
+        <td>{{ fee.dueDate | date:'dd/MM/yyyy' }}</td>
+        <td>{{ fee.period }}</td>
+        <td>{{ fee.paid ? 'Sí' : 'No' }}</td>
+        <td>
+          <button 
+            class="btn btn-sm btn-primary"
+            [disabled]="isLoading && selectedFee === fee"
+            (click)="updateFeePaidState(fee)">
+            <span *ngIf="isLoading && selectedFee === fee" class="spinner-border spinner-border-sm"></span>
+            {{ fee.paid ? 'Marcar como No Pagada' : 'Marcar como Pagada' }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <pagination-controls *ngIf="socialFees.length > 0" (pageChange)="page = $event"></pagination-controls>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="close()">Cerrar</button>
+</div>

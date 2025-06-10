@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable, of, throwError as observableThrowError } f
 import { delay, take, catchError, switchMap, tap, filter, retry } from 'rxjs/operators';
 import { UserDTO, ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
 import { Role } from '../../../models/backend/embeddables/Role';
+import { UserWithFeesDTO } from '../../../models/backend/UserWithFeesDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -145,6 +146,20 @@ export class BackUserService {
 
   getAllUsers(): Observable<ExpandedUserDTO[]> {
     return this.http.get<ExpandedUserDTO[]>(`${this.API_URL}/get-all`).pipe(
+      retry({
+      count: 3,
+      delay: 1000,
+      resetOnSuccess: true
+    }),
+      catchError(error => {
+        console.error('No se pudo obtener todos los usuarios.');
+        return observableThrowError(() => error);
+      })
+    );
+  }
+
+  getAllUsersWithSocialFees(): Observable<UserWithFeesDTO[]> {
+    return this.http.get<UserWithFeesDTO[]>(`${this.API_URL}/get-all-with-social-fees`).pipe(
       retry({
       count: 3,
       delay: 1000,

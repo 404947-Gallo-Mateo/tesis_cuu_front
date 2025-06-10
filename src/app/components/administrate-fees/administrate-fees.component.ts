@@ -26,19 +26,35 @@ export class AdministrateFeesComponent {
   currentUser!: ExpandedUserDTO;
   isLoaded = false;
 
+  // Agrega esta función de filtro en la clase
+filterInscriptions(inscriptions: ExpandedStudentInscriptionDTO[], term: string): ExpandedStudentInscriptionDTO[] {
+  if (!term || term.trim() === '') return inscriptions;
+  
+  const lowerTerm = term.toLowerCase().trim();
+  return inscriptions.filter(ins => 
+    (ins.student.firstName.toLowerCase() + ' ' + ins.student.lastName.toLowerCase()).includes(lowerTerm) ||
+    ins.student.email.toLowerCase().includes(lowerTerm)
+  );
+}
+
+// Agrega esta propiedad en la clase
+debtorSearchTerm: string = '';
+
   // Modos de visualización
   debtorMode = false;
   
   // Estructuras para datos
   disciplines: DisciplineSummaryDTO[] = [];
-  disciplineInscriptions: { 
-    [disciplineId: string]: {
-      inscriptions: ExpandedStudentInscriptionDTO[];
-      expanded: boolean;
-      loading: boolean;
-      page: number;
-    }
-  } = {};
+// En la propiedad disciplineInscriptions, agrega searchTerm
+disciplineInscriptions: { 
+  [disciplineId: string]: {
+    inscriptions: ExpandedStudentInscriptionDTO[];
+    expanded: boolean;
+    loading: boolean;
+    page: number;
+    searchTerm: string; // Nueva propiedad
+  }
+} = {};
   
   debtorInscriptions: ExpandedStudentInscriptionDTO[] = [];
   
@@ -73,19 +89,19 @@ export class AdministrateFeesComponent {
     });
   }
 
-  initializeDisciplineData(): void {
+initializeDisciplineData(): void {
+  let startexpanded:boolean = this.disciplines.length <= 2;
 
-    let startexpanded:boolean = this.disciplines.length <= 2;
-
-    this.disciplines.forEach(discipline => {
-      this.disciplineInscriptions[discipline.id] = {
-        inscriptions: [],
-        expanded: startexpanded,
-        loading: false,
-        page: 1
-      };
-    });
-  }
+  this.disciplines.forEach(discipline => {
+    this.disciplineInscriptions[discipline.id] = {
+      inscriptions: [],
+      expanded: startexpanded,
+      loading: false,
+      page: 1,
+      searchTerm: '' // Inicializado aquí
+    };
+  });
+}
 
   toggleView(): void {
     this.debtorMode = !this.debtorMode;
