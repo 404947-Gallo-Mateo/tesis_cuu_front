@@ -35,6 +35,7 @@
                   <strong>Monto:</strong> {{ fee.amount | currency }}<br>
                   <strong>Vencimiento:</strong> {{ fee.dueDate | date:'dd/MM/yyyy' }}
                 </p>
+                <button class="btn btn-success mt-2" (click)="mpPayFee(fee)">Pagar</button>
               </div>
             </div>
           </div>
@@ -94,6 +95,7 @@
                   <strong>Monto:</strong> {{ fee.amount | currency }}<br>
                   <strong>Vencimiento:</strong> {{ fee.dueDate | date:'dd/MM/yyyy' }}
                 </p>
+                <button class="btn btn-success mt-2" (click)="mpPayFee(fee)">Pagar</button>
               </div>
             </div>
           </div>

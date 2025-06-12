@@ -70,6 +70,10 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "host": "0.0.0.0",
+            "allowedHosts": ["https://450a-177-37-40-2.ngrok-free.app", "450a-177-37-40-2.ngrok-free.app"]
+          },
           "configurations": {
             "production": {
               "buildTarget": "frontend_club_union:build:production"

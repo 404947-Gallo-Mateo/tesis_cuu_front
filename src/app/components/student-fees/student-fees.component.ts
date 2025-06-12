@@ -7,6 +7,9 @@ import { filter, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { FeeDTO } from '../../models/backend/FeeDTO';
 import { FeeType } from '../../models/backend/embeddables/FeeType';
 import { CommonModule } from '@angular/common';
+import { MPFeeDTO } from '../../models/backend/MPFeeDTO';
+import { MpService } from '../../services/backend-helpers/mp/mp.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-student-fees',
@@ -32,8 +35,32 @@ export class StudentFeesComponent {
   
   private userService = inject(BackUserService);
   private feeService = inject(FeeService);
+  private mpService = inject(MpService);
   private keycloakHelper = inject(KeycloakHelperService);
   private destroy$ = new Subject<void>();
+
+
+  mpPayFee(fee: FeeDTO) {
+
+    const mpFeeDTO: MPFeeDTO = {
+      feeType: fee.feeType,
+      period: fee.period,
+      userKeycloakId: fee.userKeycloakId,
+      disciplineId: fee.disciplineId
+    }
+
+    this.mpService.createPreference(mpFeeDTO).subscribe({
+        next: (response) => {
+            console.log("response: ",response);
+            window.location.href = response.initPoint;
+        },
+        error: (err: {message: string, status?: number}) => {
+            console.error('Error completo:', err);
+            console.error('Error msj:', err.message);      
+            //if()                      
+        }
+    });    
+  }
 
   ngOnInit(): void {    
     this.loadCurrentUser();
