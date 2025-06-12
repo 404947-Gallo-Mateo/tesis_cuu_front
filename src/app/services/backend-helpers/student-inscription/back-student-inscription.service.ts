@@ -148,6 +148,23 @@ getAllByDisciplineIdWithFees(disciplineId: string): Observable<ExpandedStudentIn
 }
 
 
+getAllWithFees(): Observable<ExpandedStudentInscriptionDTO[]> {
+  const url = `${this.API_URL}/find-all/with-fees`;
+
+  return this.http.get<ExpandedStudentInscriptionDTO[]>(url).pipe(
+    retry({
+      count: 3,
+      delay: 1000,
+      resetOnSuccess: true
+    }),
+    catchError(error => {
+      console.error('No se pudo obtener las inscripciones por disciplina.');
+      return observableThrowError(() => error);
+    })
+  );
+}
+
+
     // @GetMapping("/find-all/by-category-id")
     //llama al back, trae todos los usuarios de la DB del MS
 getAllByCategoryId(categoryId: string): Observable<StudentInscriptionDTO[]> {

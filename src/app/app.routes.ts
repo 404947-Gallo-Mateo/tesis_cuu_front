@@ -16,7 +16,7 @@ export const routes: Routes = [
     { path: 'gestion-disciplinas', component: TeacherDisciplinesComponent},
     { path: 'gestion-usuarios', component: AdministrateUsersPageComponent},
     { path: 'mis-cuotas', component: StudentFeesComponent},
-    { path: 'gestion-cuotas', component: AdministrateFeesComponent},
+    { path: 'gestion-cuotas-disciplinas', component: AdministrateFeesComponent},
     { path: 'gestion-cuotas-club', component: AdministrateSocialFeesComponent},
 
     { path: '**', redirectTo: '', pathMatch: 'full' }

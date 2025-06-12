@@ -7,6 +7,7 @@ import { Role } from '../../../models/backend/embeddables/Role';
 import { FeeDTO } from '../../../models/backend/FeeDTO';
 import { FeeService } from '../../../services/backend-helpers/fee/fee.service';
 import { FeeType } from '../../../models/backend/embeddables/FeeType';
+import { RolePipe } from '../../../CustomPipes/role.pipe';
 
 @Component({
   selector: 'app-modal-social-fees',
@@ -30,7 +31,9 @@ export class ModalSocialFeesComponent {
   constructor(private feeService: FeeService) {}
 
   get socialFees(): FeeDTO[] {
-    return this.user!.userFees.filter(fee => fee.feeType === FeeType.SOCIAL);
+    return this.user!.userFees.filter(fee => 
+      fee.feeType === FeeType.SOCIAL && !fee.paid 
+    );
   }
 
     getRole(roleString: string | undefined): Role{
@@ -54,6 +57,12 @@ export class ModalSocialFeesComponent {
   }
 
   updateFeePaidState(fee: FeeDTO): void {
+
+    if (fee.paid) {
+      console.warn('La cuota ya está marcada como pagada');
+      return;
+    }
+
     this.selectedFee = fee;
     this.isLoading = true;
     this.errorMessage = null;
@@ -65,8 +74,21 @@ export class ModalSocialFeesComponent {
       this.getRole(this.currentUserRole)
     ).subscribe({
       next: (updatedFee) => {
+        // ACTUALIZAR ESTADO LOCALMENTE
+        const index = this.user!.userFees.findIndex(f => 
+          f.feeType === updatedFee.feeType && 
+          f.period === updatedFee.period
+        );
+        
+        if (index !== -1) {
+          // Actualizar el objeto local con la versión actualizada
+          this.user!.userFees[index] = updatedFee;
+        }
+        
         this.feeUpdated.emit(updatedFee);
         this.isLoading = false;
+        
+        // La cuota desaparecerá automáticamente por el nuevo filtro
       },
       error: (error) => {
         console.error('Error al actualizar cuota social:', error);

@@ -49,8 +49,9 @@
 
           <table *ngIf="disciplineInscriptions[discipline.id].inscriptions.length > 0" 
                  class="table table-striped">
-            <thead>
+            <thead class="table-dark">
               <tr>
+                <th>Deudor</th>
                 <th>Estudiante</th>
                 <th>Email</th>
                 <th>Edad</th>
@@ -68,8 +69,11 @@
                       currentPage: disciplineInscriptions[discipline.id].page 
                     }">
                 <td>
-                  {{ ins.student.firstName }} {{ ins.student.lastName }}
-                  <span *ngIf="ins.isDebtor" class="badge bg-danger ms-2">Deudor</span>
+                  <span *ngIf="ins.isDebtor" class="badge bg-danger">Deudor</span>
+                  <span *ngIf="!ins.isDebtor" class="badge bg-success">Al día</span>
+                </td>                
+                <td>
+                  {{ ins.student.firstName }} {{ ins.student.lastName }}                  
                 </td>
                 <td>{{ ins.student.email }}</td>
                 <td>{{ ins.student.birthDate | age }} años</td>
@@ -118,8 +122,9 @@
       </div>
 
       <table *ngIf="debtorInscriptions.length > 0" class="table table-striped">
-        <thead>
+            <thead class="table-dark">
           <tr>
+            <th>Deudor</th>
             <th>Estudiante</th>
                 <th>Email</th>
                 <th>Edad</th>
@@ -135,8 +140,11 @@
                       itemsPerPage: itemsPerPage, 
                       currentPage: debtorPage 
                     }">
-            <td class="text-danger">{{ ins.student.firstName }} {{ ins.student.lastName }}
-                <span *ngIf="ins.isDebtor" class="badge bg-danger ms-2">Deudor</span>
+            <td>
+                  <span *ngIf="ins.isDebtor" class="badge bg-danger">Deudor</span>
+                  <span *ngIf="!ins.isDebtor" class="badge bg-success">Al día</span>
+            </td>   
+            <td>{{ ins.student.firstName }} {{ ins.student.lastName }}                
             </td>
             <td>{{ ins.student.email }}</td>
                 <td>{{ ins.student.birthDate | age }} años</td>

@@ -12,10 +12,14 @@ import { UserWithFeesDTO } from '../../models/backend/UserWithFeesDTO';
 import { FeeDTO } from '../../models/backend/FeeDTO';
 import { FeeType } from '../../models/backend/embeddables/FeeType';
 import { ModalSocialFeesComponent } from '../forms/modal-social-fees/modal-social-fees.component';
+import { RolePipe } from '../../CustomPipes/role.pipe';
+import { AgePipe } from '../../CustomPipes/age.pipe';
+import { Genre } from '../../models/backend/embeddables/Genre';
+import { GenrePipe } from '../../CustomPipes/genre.pipe';
 
 @Component({
   selector: 'app-administrate-social-fees',
-  imports: [CommonModule, NgxPaginationModule, FormsModule, ModalSocialFeesComponent],
+  imports: [CommonModule, NgxPaginationModule, FormsModule, ModalSocialFeesComponent, RolePipe, AgePipe, GenrePipe],
   templateUrl: './administrate-social-fees.component.html',
   styleUrl: './administrate-social-fees.component.css'
 })
@@ -40,6 +44,8 @@ export class AdministrateSocialFeesComponent {
   private keycloakHelper = inject(KeycloakHelperService);
   private feeService = inject(FeeService);
   private destroy$ = new Subject<void>();
+
+  
 
   ngOnInit(): void {    
     this.loadCurrentUser();
@@ -79,13 +85,33 @@ export class AdministrateSocialFeesComponent {
     this.updateFilteredUsers();
   }
 
-  updateFilteredUsers(): void {
-    if (this.debtorMode) {
-      this.filteredUsers = this.allUsers.filter(user => user.isDebtor);
-    } else {
-      this.filteredUsers = [...this.allUsers];
-    }
+// Agregar esta propiedad a la clase
+searchTerm = '';
+
+// Modificar el método updateFilteredUsers para incluir el filtro de búsqueda
+updateFilteredUsers(): void {
+  // Primero filtramos por modo deudor
+  let filtered = this.debtorMode 
+    ? this.allUsers.filter(user => user.isDebtor) 
+    : [...this.allUsers];
+
+  // Luego aplicamos el filtro de búsqueda si hay término
+  if (this.searchTerm) {
+    const term = this.searchTerm.toLowerCase();
+    filtered = filtered.filter(user => 
+      (user.firstName + ' ' + user.lastName).toLowerCase().includes(term) ||
+      user.email.toLowerCase().includes(term)
+    );
   }
+
+  this.filteredUsers = filtered;
+}
+
+// Agregar este método para aplicar el filtro al escribir
+applyFilter(): void {
+  this.page = 1; // Resetear a la primera página
+  this.updateFilteredUsers();
+}
 
   openSocialFeesModal(user: UserWithFeesDTO): void {
     this.selectedUser = user;

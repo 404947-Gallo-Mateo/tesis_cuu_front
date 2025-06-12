@@ -101,6 +101,9 @@ initializeDisciplineData(): void {
       searchTerm: '' // Inicializado aquí
     };
   });
+
+  //agregar disciplinesInscriptions con isDue==true  a this.debtorInscriptions
+
 }
 
   toggleView(): void {
@@ -130,24 +133,36 @@ initializeDisciplineData(): void {
         return of([]);
       })
     ).subscribe(inscriptions => {
+      //console.log("inscriptions: ", inscriptions);
       disciplineData.inscriptions = inscriptions;
       disciplineData.loading = false;
+      //console.log("disciplineID: ", disciplineId, " | inscriptions: ", disciplineData.inscriptions)
     });
+
+    
   }
 
   loadDebtorInscriptions(): void {
     this.loadingDebtors = true;
     this.debtorInscriptions = [];
-    
-    const requests = this.disciplines.map(discipline => 
-      this.inscriptionService.getAllByDisciplineIdWithFees(discipline.id)
-    );
 
-    forkJoin(requests).subscribe(results => {
-      const allInscriptions = ([] as ExpandedStudentInscriptionDTO[]).concat(...results);
-      this.debtorInscriptions = allInscriptions.filter(ins => ins.isDebtor);
+    this.inscriptionService.getAllWithFees().pipe(
+      catchError(error => {
+        console.error('Error cargando inscripciones:', error);
+        this.loadingDebtors = false;
+        return of([]);
+      })
+    ).subscribe(inscriptions => {
+      //console.log("inscriptions: ", inscriptions);
+            console.log("inscriptions: ", inscriptions);
+
+      this.debtorInscriptions = inscriptions.filter(ins => ins.isDebtor);
       this.loadingDebtors = false;
+      console.log("debtorInscriptions: ", this.debtorInscriptions);
+      //console.log("disciplineID: ", disciplineId, " | inscriptions: ", disciplineData.inscriptions)
     });
+    
+    
   }
 
   ngOnDestroy(): void {
