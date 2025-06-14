@@ -4,7 +4,7 @@ import { BackUserService } from '../../../services/backend-helpers/user/back-use
 import { BackStudentInscriptionService } from '../../../services/backend-helpers/student-inscription/back-student-inscription.service';
 import { CategoryDTO } from '../../../models/backend/CategoryDTO';
 import { CommonModule } from '@angular/common';
-import { StudentInscriptionDTO } from '../../../models/StudentInscriptionDTO';
+import { StudentInscriptionDTO } from '../../../models/backend/StudentInscriptionDTO';
 import { UserDTO } from '../../../models/backend/ExpandedUserDTO';
 import { DisciplineSummaryDTO } from '../../../models/backend/DisciplineSummaryDTO';
 import { CategorySummaryDTO } from '../../../models/backend/CategorySummaryDTO';

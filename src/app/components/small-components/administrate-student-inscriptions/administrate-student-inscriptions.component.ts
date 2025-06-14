@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, EventEmitter, inject, Input, Output, signal } from '@angular/core';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { BackStudentInscriptionService } from '../../../services/backend-helpers/student-inscription/back-student-inscription.service';
-import { StudentInscriptionDTO } from '../../../models/StudentInscriptionDTO';
+import { StudentInscriptionDTO } from '../../../models/backend/StudentInscriptionDTO';
 import { AgePipe } from '../../../CustomPipes/age.pipe';
 import { GenrePipe } from '../../../CustomPipes/genre.pipe';
 import Swal from 'sweetalert2';

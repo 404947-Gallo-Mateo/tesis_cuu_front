@@ -1,0 +1,131 @@
+<div class="container mt-4">
+  <!-- Botón para alternar vista -->
+  <div class="row pt-3 mb-3 d-flex align-items-center">
+    <div class="col">
+        <h2 class="mb-0">Cuotas Sociales</h2>
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-primary" (click)="toggleView()">
+        {{ showUnpaid ? 'Mostrar Pagadas' : 'Mostrar Pendientes' }}
+        </button>
+    </div>
+  </div>
+
+  <!-- Sección SOCIAL -->
+  <div class="row mb-4">
+    <div class="col-12">    
+      <!-- Mensajes para cuotas sociales -->
+      <div *ngIf="showUnpaid && !unpaidFees.social.length" class="alert alert-info">
+        No hay cuotas sociales pendientes de pago
+      </div>
+      
+      <div *ngIf="showPaid && !paidFees.social.length" class="alert alert-info">
+        No hay cuotas sociales pagadas
+      </div>
+
+      <!-- No Pagadas - Visible solo cuando showUnpaid es true -->
+      <div *ngIf="showUnpaid && unpaidFees.social.length" class="mb-4">
+        <h3>Pendientes de Pago</h3>
+        <div class="row">
+          <div *ngFor="let fee of unpaidFees.social" class="col-md-6 mb-3">
+            <div class="card border-danger">
+              <div class="card-body">
+                <h5 class="card-title">{{ fee.description }}</h5>
+                <p class="card-text">
+                  <strong>Monto:</strong> {{ fee.amount | currency }}<br>
+                  <strong>Vencimiento:</strong> {{ fee.dueDate | date:'dd/MM/yyyy' }}
+                </p>
+                <button class="btn btn-success mt-2" (click)="mpPayFee(fee)">Pagar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Pagadas - Visible solo cuando showPaid es true -->
+      <div *ngIf="showPaid && paidFees.social.length">
+        <h3>Pagadas</h3>
+        <div class="row">
+          <div *ngFor="let fee of paidFees.social" class="col-md-6 mb-3">
+            <div class="card border-success">
+              <div class="card-body">
+                <h5 class="card-title">{{ fee.description }}</h5>
+                <p class="card-text">
+                  <strong>Monto:</strong> {{ fee.amount | currency }}<br>
+                  <strong>Pagado:</strong> {{ fee.paymentProof.paymentDate | date:'dd/MM/yyyy' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mensaje general si no hay cuotas sociales -->
+      <div *ngIf="!unpaidFees.social.length && !paidFees.social.length" class="alert alert-info">
+        No se encontraron cuotas sociales
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección DISCIPLINE -->
+  <div class="row">
+    <div class="col-12">
+      <h2 class="mb-3">Cuotas de Disciplinas</h2>
+      
+      <!-- Mensajes para cuotas de disciplinas -->
+      <div *ngIf="showUnpaid && !unpaidFees.discipline.length" class="alert alert-info">
+        No hay cuotas de disciplinas pendientes de pago
+      </div>
+      
+      <div *ngIf="showPaid && !paidFees.discipline.length" class="alert alert-info">
+        No hay cuotas de disciplinas pagadas
+      </div>
+
+      <!-- No Pagadas - Visible solo cuando showUnpaid es true -->
+      <div *ngIf="showUnpaid && unpaidFees.discipline.length" class="mb-4">
+        <h3>Pendientes de Pago</h3>
+        <div class="row">
+          <div *ngFor="let fee of unpaidFees.discipline" class="col-md-6 mb-3">
+            <div class="card border-danger">
+              <div class="card-body">
+                <h5 class="card-title">{{ fee.disciplineName }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Periodo: {{ fee.period }}</h6>
+                <p class="card-text">
+                  {{ fee.description }}<br>
+                  <strong>Monto:</strong> {{ fee.amount | currency }}<br>
+                  <strong>Vencimiento:</strong> {{ fee.dueDate | date:'dd/MM/yyyy' }}
+                </p>
+                <button class="btn btn-success mt-2" (click)="mpPayFee(fee)">Pagar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Pagadas - Visible solo cuando showPaid es true -->
+      <div *ngIf="showPaid && paidFees.discipline.length">
+        <h3>Pagadas</h3>
+        <div class="row">
+          <div *ngFor="let fee of paidFees.discipline" class="col-md-6 mb-3">
+            <div class="card border-success">
+              <div class="card-body">
+                <h5 class="card-title">{{ fee.disciplineName }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Periodo: {{ fee.period }}</h6>
+                <p class="card-text">
+                  {{ fee.description }}<br>
+                  <strong>Monto:</strong> {{ fee.amount | currency }}<br>
+                  <strong>Pagado:</strong> {{ fee.paymentProof.paymentDate | date:'dd/MM/yyyy' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mensaje general si no hay cuotas de disciplinas -->
+      <div *ngIf="!unpaidFees.discipline.length && !paidFees.discipline.length" class="alert alert-info">
+        No se encontraron cuotas de disciplinas
+      </div>
+    </div>
+  </div>
+</div>

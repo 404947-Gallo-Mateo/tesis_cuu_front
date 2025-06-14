@@ -12,7 +12,7 @@ export class SyncUserInfoService {
   private http = inject(HttpClient);
   private readonly API_URL = 'http://localhost:8090/user';
 
-  syncInfoOfCurrentUser(): void {
+  async syncInfoOfCurrentUser(): Promise<void> {
 
         const user = this.http.get<ExpandedUserDTO>(`${this.API_URL}/get-current-user-info`).pipe(
             retry({

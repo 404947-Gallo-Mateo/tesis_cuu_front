@@ -14,7 +14,6 @@ export class BackDisciplineService {
   constructor() { }
 
     private http = inject(HttpClient);
-    private keycloakHelper = inject(KeycloakHelperService);
     private readonly API_URL = 'http://localhost:8090/discipline'; 
 
 

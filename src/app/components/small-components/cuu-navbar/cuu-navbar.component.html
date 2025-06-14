@@ -20,9 +20,16 @@
         </li>
 
           @if (isLoggedIn$ | async) {
-            <li class="nav-item">
-              <a class="nav-link" href="/mis-inscripciones">Mis Inscripciones</a>
-            </li>
+            @if (currentRole == "STUDENT" || currentRole == "SUPER_ADMIN_CUU") { 
+              <li class="nav-item">
+                <a class="nav-link" href="/mis-inscripciones">Mis Inscripciones</a>
+              </li>
+            }
+            @if (currentRole == "STUDENT" || currentRole == "SUPER_ADMIN_CUU") { 
+              <li class="nav-item">
+                <a class="nav-link" href="/mis-cuotas">Mis Cuotas</a>
+              </li>
+            }
             @if (currentRole == "SUPER_ADMIN_CUU" || currentRole == "ADMIN_CUU" || currentRole == "TEACHER") {
               <li class="nav-item">
                 <a class="nav-link" href="/gestion-disciplinas">Gestión Disciplinas</a>
@@ -31,6 +38,17 @@
             @if (currentRole == "SUPER_ADMIN_CUU" || currentRole == "ADMIN_CUU") {
               <li class="nav-item">
                 <a class="nav-link" href="/gestion-usuarios">Gestión Usuarios</a>
+              </li>
+            }
+            @if (currentRole == "TEACHER") {
+              <li class="nav-item">
+                <a class="nav-link" href="/gestion-cuotas-disciplinas">Gestión Cuotas</a>
+              </li>
+            }
+
+            @if (currentRole == "SUPER_ADMIN_CUU" || currentRole == "ADMIN_CUU") {
+              <li class="nav-item">
+                <a class="nav-link" href="/gestion-cuotas-club">Gestión Cuotas</a>
               </li>
             }
             

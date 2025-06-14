@@ -2,8 +2,9 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { KeycloakHelperService } from '../keycloak/keycloak-helper.service';
 import { catchError, delay, firstValueFrom, Observable, retry, take, throwError } from 'rxjs';
-import { StudentInscriptionDTO } from '../../../models/StudentInscriptionDTO';
+import { StudentInscriptionDTO } from '../../../models/backend/StudentInscriptionDTO';
 import { throwError as observableThrowError } from 'rxjs';
+import { ExpandedStudentInscriptionDTO } from '../../../models/backend/ExpandedStudentInscriptionDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -117,6 +118,40 @@ getAllByDisciplineId(disciplineId: string): Observable<StudentInscriptionDTO[]> 
               `?disciplineId=${encodeURIComponent(disciplineId)}`;
 
   return this.http.get<StudentInscriptionDTO[]>(url).pipe(
+    retry({
+      count: 3,
+      delay: 1000,
+      resetOnSuccess: true
+    }),
+    catchError(error => {
+      console.error('No se pudo obtener las inscripciones por disciplina.');
+      return observableThrowError(() => error);
+    })
+  );
+}
+
+getAllByDisciplineIdWithFees(disciplineId: string): Observable<ExpandedStudentInscriptionDTO[]> {
+  const url = `${this.API_URL}/find-all/by-discipline-id-with-fees` +
+              `?disciplineId=${encodeURIComponent(disciplineId)}`;
+
+  return this.http.get<ExpandedStudentInscriptionDTO[]>(url).pipe(
+    retry({
+      count: 3,
+      delay: 1000,
+      resetOnSuccess: true
+    }),
+    catchError(error => {
+      console.error('No se pudo obtener las inscripciones por disciplina.');
+      return observableThrowError(() => error);
+    })
+  );
+}
+
+
+getAllWithFees(): Observable<ExpandedStudentInscriptionDTO[]> {
+  const url = `${this.API_URL}/find-all/with-fees`;
+
+  return this.http.get<ExpandedStudentInscriptionDTO[]>(url).pipe(
     retry({
       count: 3,
       delay: 1000,
