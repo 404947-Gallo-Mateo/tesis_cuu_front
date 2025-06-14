@@ -1,0 +1,70 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="">Club Unión Unquillo</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/principal">Disciplinas</a>
+        </li>
+
+          @if (isLoggedIn$ | async) {
+            <li class="nav-item">
+              <a class="nav-link" href="/mis-inscripciones">Mis Inscripciones</a>
+            </li>
+            @if (currentRole == "SUPER_ADMIN_CUU" || currentRole == "ADMIN_CUU" || currentRole == "TEACHER") {
+              <li class="nav-item">
+                <a class="nav-link" href="/gestion-disciplinas">Gestión Disciplinas</a>
+              </li>
+            }
+            @if (currentRole == "SUPER_ADMIN_CUU" || currentRole == "ADMIN_CUU") {
+              <li class="nav-item">
+                <a class="nav-link" href="/gestion-usuarios">Gestión Usuarios</a>
+              </li>
+            }
+            
+          }
+        
+      </ul>
+
+      <!-- Botones alineados a la derecha -->
+      <div class="d-flex ms-auto align-items-center gap-2">
+          @if (isLoggedIn$ | async) {
+            <!-- Botón configuración (icono engranaje) -->
+            <button 
+              class="btn btn-outline-secondary" 
+              title="Configuración"
+              (click)="openUserFormModal()"
+            >
+              <i class="bi bi-gear"></i>
+            </button>
+
+            <!-- Cerrar sesión -->
+            <button class="btn btn-outline-primary" (click)="logout()">Cerrar sesión</button>
+          }      
+          @else {
+            <!-- Iniciar sesión -->
+            <button class="btn btn-primary" (click)="login()">Iniciar sesión</button>
+          }    
+        
+       
+      </div>
+    </div>
+  </div>
+</nav>
+
+<app-user-dto-form 
+[userData]="currentUser" 
+[currentRole]="currentRole"
+/>

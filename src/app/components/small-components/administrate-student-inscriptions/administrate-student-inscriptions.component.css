@@ -1,0 +1,39 @@
+/* administrate-student-inscriptions.component.css */
+.modal-xl {
+  max-width: 1200px;
+}
+
+.table-responsive {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.my-pagination ::ng-deep .ngx-pagination {
+  margin-bottom: 0;
+}
+
+.my-pagination ::ng-deep .ngx-pagination .current {
+  background: #3f51b5;
+  border-radius: 4px;
+}
+
+.badge {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  text-transform: capitalize;
+}
+/* Agrega esto a tu archivo CSS */
+.input-group-text {
+  background-color: #f8f9fa;
+}
+
+.badge.bg-info {
+  font-size: 0.9rem;
+  padding: 0.5rem 0.75rem;
+}
+
+/* Estilo para el botón de limpiar búsqueda */
+.btn-outline-secondary:hover {
+  background-color: #f8f9fa;
+}

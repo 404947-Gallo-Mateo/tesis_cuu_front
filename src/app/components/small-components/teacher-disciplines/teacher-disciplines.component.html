@@ -1,0 +1,81 @@
+<!-- teacher-disciplines.component.html -->
+<div class="container-fluid p-5">
+  <h1 class="mb-4">Gestión de Disciplinas</h1>
+
+    <!-- Botón flotante -->
+  <button class="btn btn-primary rounded-circle position-fixed shadow-lg" 
+          style="width: 60px; height: 60px; bottom: 30px; right: 30px; z-index: 1000;"
+          (click)="openNewDisciplineModal()">
+    <i class="bi bi-plus fs-4"></i>
+  </button>
+
+  <div class="container-fluid p-2" style="background-color: rgb(19, 19, 129);">
+    @if (currentUser) {
+      <div class="row justify-content-center p-3">
+        @for (discipline of currentUserDisciplines; track $index) {
+          <div class="col-12 col-md-6 d-flex justify-content-center mb-2 p-4 text-light" style="cursor: pointer;max-width: 45%;"
+               (click)="$event.stopPropagation(); toggleMenu(discipline.id)">
+            <div class="card shadow-sm border-0 h-100 text-light position-relative"
+                 style="width: 100%; transition: transform 0.2s; background-color: rgb(30, 30, 157);"
+                 onmouseover="this.style.transform='scale(1.02)'"
+                 onmouseout="this.style.transform='scale(1)'">
+              
+              <!-- Botón de tres puntos -->
+              <div class="position-absolute top-0 end-0 m-2" style="cursor: pointer;">
+                <button class="btn bg-transparent border-0 p-0"
+                        (click)="$event.stopPropagation(); toggleMenu(discipline.id)">
+                  <i class="bi bi-three-dots-vertical text-light fs-5"></i>
+                </button>
+                
+                <!-- Menú desplegable -->
+                @if (openMenuId === discipline.id) {
+                  <div class="position-absolute end-0 mt-1 bg-white rounded shadow overflow-hidden"
+                       style="min-width: 150px;"
+                       (click)="$event.stopPropagation()">
+                    <button class="dropdown-item d-block w-100 text-start px-3 py-2 text-dark"
+                            (click)="openInscriptionsModal(discipline.id)">
+                      Gestionar Alumnos
+                    </button>
+                    <button class="dropdown-item d-block w-100 text-start px-3 py-2 text-dark" 
+                            (click)="openDisciplineModal(discipline)">
+                      Actualizar Disciplina
+                    </button>
+                    <button class="dropdown-item d-block w-100 text-start px-3 py-2 text-danger"
+                            (click)="deleteDiscipline(discipline)">
+                      Eliminar Disciplina 
+                    </button>                    
+                  </div>
+                }
+              </div>
+
+              <div class="card-body text-light p-5">
+                <h5 class="card-title mb-1">{{ discipline.name }}</h5>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <app-put-discipline-form
+    [discipline]="selectedDiscipline!"
+    [show]="showDisciplineModal"
+    (close)="closeDisciplineModal()"
+    (updateSuccess)="onDisciplineUpdated($event)"
+  />
+
+  <app-post-discipline-form
+    [show]="showNewDisciplineModal"
+    (close)="closeNewDisciplineModal()"
+    (updateSuccess)="onDisciplineCreated($event)"
+  />
+
+  <app-administrate-student-inscriptions
+    [show]="showInscriptionsModal"
+    [disciplineId]="selectedDisciplineId"
+    (close)="closeInscriptionsModal()"
+    (updateSuccess)="onInscriptionsUpdated()"
+  />
+
+</div>

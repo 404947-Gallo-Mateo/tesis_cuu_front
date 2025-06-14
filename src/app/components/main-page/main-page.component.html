@@ -1,0 +1,57 @@
+<div class="container-fluid text-light" style="background-color: rgb(11, 11, 152);">
+  <div class="container-fluid p-4">
+    <h3 class="fw-semibold">Disciplinas disponibles</h3>
+  </div>
+
+  <div class="row justify-content-center g-4 p-4" style="background-color: rgb(0, 0, 176);">
+    @for (discipline of allDisciplines; track $index) {
+      <!-- Contenedor principal con borde blanco -->
+      <div class="col-12 border border-2 border-white rounded-3 p-3 mb-4">
+        <!-- Encabezado clickable -->
+        <div 
+          class="d-flex justify-content-between align-items-center p-3 rounded-3 mb-2" 
+          style="cursor: pointer; background-color: rgba(255, 255, 255, 0.1);"
+          (click)="toggleDiscipline(discipline.id)"
+        >
+          <h4 class="mb-0">{{ discipline.name }}</h4>
+          <i 
+            class="bi" 
+            [class.bi-chevron-down]="isExpanded(discipline.id)" 
+            [class.bi-chevron-right]="!isExpanded(discipline.id)"
+          ></i>
+        </div>
+
+        <p class="px-3">{{ discipline.description }}</p>
+
+        <!-- Contenido toggleable (categorías) -->
+        <div 
+          class="row g-4 mt-2" 
+          [class.collapse]="!isExpanded(discipline.id)"
+          [class.show]="isExpanded(discipline.id)"
+        >
+          @for (category of discipline.categories; track $index) {
+            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+              <div
+                class="card shadow-sm border-0 h-100"
+                style="cursor: pointer; background-color: white;"
+                (click)="openModal(category); $event.stopPropagation()"
+              >
+                <div class="card-body">
+                  <h5 class="card-title text-primary">{{ category.name }}</h5>
+                  <p class="text-muted">{{ category.description }}</p>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <app-inscription-to-category 
+    [category]="selectedCategory!"
+    [show]="showModal"
+    (close)="closeModal()"
+  />
+
+</div>
