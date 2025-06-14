@@ -56,8 +56,8 @@ export class StudentFeesComponent {
         },
         error: (err: {message: string, status?: number}) => {
             console.error('Error completo:', err);
-            console.error('Error msj:', err.message);      
-            //if()                      
+            console.error('Error msj:', err.message);                                      
+            //TODO si el msj es q la 'cuota ya fue pagada' mostrar un alert
         }
     });    
   }

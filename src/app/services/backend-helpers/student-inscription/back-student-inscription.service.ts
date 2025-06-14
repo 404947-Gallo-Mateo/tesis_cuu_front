@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { KeycloakHelperService } from '../keycloak/keycloak-helper.service';
 import { catchError, delay, firstValueFrom, Observable, retry, take, throwError } from 'rxjs';
-import { StudentInscriptionDTO } from '../../../models/StudentInscriptionDTO';
+import { StudentInscriptionDTO } from '../../../models/backend/StudentInscriptionDTO';
 import { throwError as observableThrowError } from 'rxjs';
 import { ExpandedStudentInscriptionDTO } from '../../../models/backend/ExpandedStudentInscriptionDTO';
 

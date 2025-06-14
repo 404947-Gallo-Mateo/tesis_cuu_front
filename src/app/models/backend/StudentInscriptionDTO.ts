@@ -1,6 +1,6 @@
-import { CategorySummaryDTO } from "./backend/CategorySummaryDTO";
-import { DisciplineSummaryDTO } from "./backend/DisciplineSummaryDTO";
-import { UserDTO } from "./backend/ExpandedUserDTO";
+import { CategorySummaryDTO } from "./CategorySummaryDTO";
+import { DisciplineSummaryDTO } from "./DisciplineSummaryDTO";
+import { UserDTO } from "./ExpandedUserDTO";
 
 export interface StudentInscriptionDTO{
      student: UserDTO;
