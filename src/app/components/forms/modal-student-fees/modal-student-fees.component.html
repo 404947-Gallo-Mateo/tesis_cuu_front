@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h5 class="modal-title">Cuotas del Estudiante</h5>
+  <h5 class="modal-title">Cuotas del Estudiante: <span>{{inscriptionFees.at(0)?.payerEmail}}</span></h5>
   <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
 </div>
 
@@ -15,7 +15,8 @@
   <table *ngIf="inscriptionFees.length > 0" class="table table-striped">
     <thead class="table-dark">
       <tr>
-        <th style="background-color: black;">Tipo</th>
+        <th style="background-color: black;">Disciplina</th>
+        <th style="background-color: black;">Categoría</th>
         <th style="background-color: black;">Monto</th>
         <th style="background-color: black;">Vencimiento</th>
         <th style="background-color: black;">Periodo</th>
@@ -25,7 +26,8 @@
     </thead>
     <tbody>
       <tr *ngFor="let fee of inscriptionFees | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
-        <td>{{ fee.feeType }}</td>
+        <td>{{ fee.disciplineName }}</td>
+        <td>{{ fee.categoryName }}</td>
         <td>{{ fee.amount | currency }}</td>
         <td>{{ fee.dueDate | date:'dd/MM/yyyy' }}</td>
         <td>{{ fee.period }}</td>

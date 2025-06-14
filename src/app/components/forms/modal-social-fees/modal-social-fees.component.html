@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h5 class="modal-title">Cuotas Sociales de {{ user!.firstName }} {{ user!.lastName }}</h5>
+  <h5 class="modal-title">Cuotas Sociales de: {{ user!.email }}</h5>
   <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
 </div>
 
@@ -24,11 +24,12 @@
     </thead>
     <tbody>
       <tr *ngFor="let fee of socialFees | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
-        <td>{{ fee.amount | currency }}</td>
-        <td>{{ fee.dueDate | date:'dd/MM/yyyy' }}</td>
-        <td>{{ fee.period }}</td>
-        <td>{{ fee.paid ? 'Sí' : 'No' }}</td>
-        <td>
+        @if (!fee.paid) {
+          <td>{{ fee.amount | currency }}</td>
+          <td>{{ fee.dueDate | date:'dd/MM/yyyy' }}</td>
+          <td>{{ fee.period }}</td>
+          <td>{{ fee.paid ? 'Sí' : 'No' }}</td>
+          <td>
           <button 
             class="btn btn-sm btn-primary"
             [disabled]="isLoading && selectedFee === fee"
@@ -37,6 +38,8 @@
             {{ fee.paid ? 'Marcar como No Pagada' : 'Marcar como Pagada' }}
           </button>
         </td>
+        }
+        
       </tr>
     </tbody>
   </table>
