@@ -193,7 +193,7 @@ onSubmit(): void {
       }))
     };
 
-    console.log("postDiscipline: ", postDiscipline);
+    //console.log("postDiscipline: ", postDiscipline);
 
     this.disciplineService.postDiscipline(postDiscipline).subscribe({
       next: (createdDisicpline) => {

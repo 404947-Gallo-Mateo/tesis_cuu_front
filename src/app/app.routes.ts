@@ -10,6 +10,7 @@ import { AdministrateFeesComponent } from './components/administrate-fees/admini
 import { AdministrateSocialFeesComponent } from './components/administrate-social-fees/administrate-social-fees.component';
 import { MpCancelledPaymentPageComponent } from './components/small-components/mp/mp-cancelled-payment-page/mp-cancelled-payment-page.component';
 import { MpPendingPaymentPageComponent } from './components/small-components/mp/mp-pending-payment-page/mp-pending-payment-page.component';
+import { UsersReportComponent } from './components/reports/users-report/users-report.component';
 
 export const routes: Routes = [
     { path: '', component: LandingPageComponent },            
@@ -22,6 +23,8 @@ export const routes: Routes = [
     { path: 'gestion-cuotas-club', component: AdministrateSocialFeesComponent},
     { path: 'cancelado', component: MpCancelledPaymentPageComponent},
     { path: 'pendiente', component: MpPendingPaymentPageComponent},
+    { path: 'reporte-usuarios', component: UsersReportComponent},
+
 
     { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

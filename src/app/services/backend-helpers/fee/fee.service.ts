@@ -68,7 +68,7 @@ export class FeeService {
     }
 
     formatYearMonth(period: string): string {
-      console.log("period: ", period);
+      //console.log("period: ", period);
 
       // Verifica si el formato ya es yyyy-mm
       const yearMonthRegex = /^\d{4}-\d{2}$/;

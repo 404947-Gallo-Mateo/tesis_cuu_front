@@ -38,11 +38,11 @@ export class KeycloakHelperService {
       tap(authenticated => {
         // CORRECCIÓN: Solo actualizar el estado con el valor real de authenticated
         this.loggedInSubject.next(authenticated);
-        console.log('Estado de autenticación actualizado:', authenticated);
+        //console.log('Estado de autenticación actualizado:', authenticated);
       }),
       map(authenticated => {
         if (authenticated) {
-          console.log("usuario logueado:", this.keycloak);
+          //console.log("usuario logueado:", this.keycloak);
         } else {
           console.warn('Usuario no autenticado');
         }
@@ -65,7 +65,7 @@ export class KeycloakHelperService {
         this.keycloak.login();
       } else {
         // Ya está autenticado, el estado ya se actualizó en init()
-        console.log('Usuario ya está autenticado');
+        //console.log('Usuario ya está autenticado');
       }
     });
   }
@@ -96,9 +96,9 @@ export class KeycloakHelperService {
     return from(this.keycloak.updateToken(60)).pipe(
       map(refreshed => {
         if (refreshed) {
-          console.log('Token actualizado');
+          //console.log('Token actualizado');
         } else {
-          console.log('Token todavía válido');
+          //console.log('Token todavía válido');
         }
       }),
       catchError(err => {
@@ -113,6 +113,6 @@ export class KeycloakHelperService {
   syncAuthState(): void {
     const currentState = this.keycloak.authenticated || false;
     this.loggedInSubject.next(currentState);
-    console.log('Estado sincronizado:', currentState);
+    //console.log('Estado sincronizado:', currentState);
   }
 }

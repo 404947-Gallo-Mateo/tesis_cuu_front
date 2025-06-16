@@ -226,7 +226,7 @@ onSubmit(): void {
       }))
     };
 
-    console.log("putDiscipline", putDiscipline);
+    //console.log("putDiscipline", putDiscipline);
 
     this.disciplineService.putDiscipline(putDiscipline).subscribe({
       next: (updatedDiscipline) => {

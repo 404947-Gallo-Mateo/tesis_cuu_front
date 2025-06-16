@@ -73,17 +73,17 @@ export class CuuNavbarComponent implements OnInit {
 
     // Debug: Monitorear cambios en el estado de login
     this.isLoggedIn$.subscribe(isLoggedIn => {
-      console.log('Estado de login cambió:', isLoggedIn);
+      //console.log('Estado de login cambió:', isLoggedIn);
     });
 
     if(this.isLoggedIn$){
-      console.log("se llamo a this.syncUserInfoService.syncInfoOfCurrentUser()");
+      //console.log("se llamo a this.syncUserInfoService.syncInfoOfCurrentUser()");
       this.syncUserInfoService.syncInfoOfCurrentUser();
     }
 
     this.userService.currentRole$.subscribe(role => {
       this.currentRole = role;
-      console.log('Rol actualizado:', role);
+      //console.log('Rol actualizado:', role);
     });
   }
 

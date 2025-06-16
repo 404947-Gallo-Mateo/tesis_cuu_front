@@ -45,12 +45,12 @@ export class UserDTOFormComponent {
 
 ngOnChanges(changes: SimpleChanges): void {
 
-  console.log("roles: ", this.roles);
-  console.log("genres: :", this.genres);
+  //console.log("roles: ", this.roles);
+  //console.log("genres: :", this.genres);
 
   if (changes['userData'] && this.userData) {
     const birthDateParsed = this.parseDateString(this.userData.birthDate);
-    console.log("birthDateParsed con fecha en yyyy-MM-dd: ", birthDateParsed);
+    //console.log("birthDateParsed con fecha en yyyy-MM-dd: ", birthDateParsed);
 
     this.userData.birthDate = birthDateParsed;
 
@@ -81,7 +81,7 @@ private parseDateString(dateStr: string): string {
     stringMonth = month.toString();
   }
 
-  console.log("[day, month, year]= ", [day, month, year]);
+  //console.log("[day, month, year]= ", [day, month, year]);
   return year+"-"+ stringMonth + "-" + stringDay;
 }
 
@@ -103,7 +103,7 @@ submitUpdatedKeycloakUser(): void {
   if (this.form.valid) {
     const form = this.form.value;
 
-    console.log("asi sale del form el birthDate: ", form.birthDate);
+    //console.log("asi sale del form el birthDate: ", form.birthDate);
 
     const expandedUserDTO: ExpandedUserDTO = {
       keycloakId: form.keycloakId,
@@ -172,7 +172,7 @@ deleteKeycloakUser(): void {
     if (result.isConfirmed) {
       this.backUserService.deleteKeycloakUser(userKeycloakId).subscribe({
         next: (resp: boolean) => {
-          console.log("resp deleteKeycloakUser(): ", resp);
+          //console.log("resp deleteKeycloakUser(): ", resp);
 
           if (resp) {
             Swal.fire('Eliminado', 'El usuario fue eliminado correctamente.', 'success');

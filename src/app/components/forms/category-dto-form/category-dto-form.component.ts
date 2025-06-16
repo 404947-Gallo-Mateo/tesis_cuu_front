@@ -78,7 +78,7 @@ export class CategoryDtoFormComponent {
     const disciplineId = this.category.disciplineId;
     const categoryId = this.category.id;
     
-    console.log("DELETE deleteInscription params =", studentkeycloakId, disciplineId, categoryId);
+    //console.log("DELETE deleteInscription params =", studentkeycloakId, disciplineId, categoryId);
     
     Swal.fire({
       title: '¿Confirmar desinscripción?',
@@ -99,7 +99,7 @@ export class CategoryDtoFormComponent {
                 // IMPORTANTE: Actualizar la información del usuario después de la operación
                 this.backUserService.refreshCurrentUser().subscribe({
                   next: (updatedUser) => {
-                    console.log("Usuario actualizado después de eliminar inscripción:", updatedUser);
+                    //console.log("Usuario actualizado después de eliminar inscripción:", updatedUser);
                     Swal.fire('Actualizado', 'Se eliminó la inscripción en ' + this.category.name + '.', 'success');
                     this.onClose(); // Cerrar el modal
                   },

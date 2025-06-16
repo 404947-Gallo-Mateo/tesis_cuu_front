@@ -26,7 +26,7 @@ export class TeacherDisciplinesComponent {
   selectedDisciplineId = '';
 
   openInscriptionsModal(disciplineId: string): void {
-    console.log("openInscriptionsModal");
+    //console.log("openInscriptionsModal");
     this.selectedDisciplineId = disciplineId;
     this.showInscriptionsModal = true;
   }
@@ -37,7 +37,7 @@ export class TeacherDisciplinesComponent {
 
   onInscriptionsUpdated(): void {
     // Lógica para actualizar datos si es necesario
-    console.log('Inscripciones actualizadas');
+    //console.log('Inscripciones actualizadas');
   }
 
   // En el componente padre
@@ -216,7 +216,7 @@ onDisciplineUpdated(updatedDiscipline: DisciplineDto): void {
     ).subscribe({
       next: (disciplines) => {
         this.currentUserDisciplines = disciplines;
-        console.log("Disciplinas iniciales del profesor:", disciplines);
+        //console.log("Disciplinas iniciales del profesor:", disciplines);
       },
       error: (error) => {
         console.error('Error al cargar datos iniciales:', error);
@@ -248,7 +248,7 @@ onDisciplineUpdated(updatedDiscipline: DisciplineDto): void {
     ).subscribe({
       next: (disciplines) => {
         this.currentUserDisciplines = disciplines;
-        console.log("Disciplinas actualizadas:", disciplines);
+        //console.log("Disciplinas actualizadas:", disciplines);
       },
       error: (error) => {
         console.error('Error en actualización en tiempo real:', error);

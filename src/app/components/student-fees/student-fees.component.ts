@@ -51,7 +51,7 @@ export class StudentFeesComponent {
 
     this.mpService.createPreference(mpFeeDTO).subscribe({
         next: (response) => {
-            console.log("response: ",response);
+            //console.log("response: ",response);
             window.location.href = response.initPoint;
         },
         error: (err: {message: string, status?: number}) => {

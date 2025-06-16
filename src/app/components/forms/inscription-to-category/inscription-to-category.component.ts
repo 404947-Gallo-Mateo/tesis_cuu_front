@@ -91,11 +91,11 @@ export class InscriptionToCategoryComponent {
     const disciplineId: string = this.category.disciplineId;
     const categoryId: string = this.category.id;
 
-    console.log("CREATE studentInscription params:", {
-        studentKeycloakId,
-        disciplineId,
-        categoryId
-    });
+    // console.log("CREATE studentInscription params:", {
+    //     studentKeycloakId,
+    //     disciplineId,
+    //     categoryId
+    // });
 
     //true
     // si es una NUEVA inscripcion a una category de una Discipline donde NO se tiene una inscripcion, se CREA la studentInscription sin consultar
@@ -115,7 +115,7 @@ export class InscriptionToCategoryComponent {
                             }).then(() => {
                                 this.backUserService.refreshCurrentUser().subscribe({
                                     next: (updatedUser) => {
-                                        console.log("Usuario actualizado:", updatedUser);
+                                        //console.log("Usuario actualizado:", updatedUser);
                                         this.onClose();
                                     },
                                     error: (refreshError) => {
@@ -170,7 +170,7 @@ export class InscriptionToCategoryComponent {
                             }).then(() => {
                                 this.backUserService.refreshCurrentUser().subscribe({
                                     next: (updatedUser) => {
-                                        console.log("Usuario actualizado:", updatedUser);
+                                        //console.log("Usuario actualizado:", updatedUser);
                                         this.onClose();
                                     },
                                     error: (refreshError) => {

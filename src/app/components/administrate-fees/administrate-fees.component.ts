@@ -84,6 +84,8 @@ disciplineInscriptions: {
         this.disciplines = user.teacherDisciplines || [];
         this.initializeDisciplineData();
         this.isLoaded = true;
+
+        //console.log('disciplines del teacher', this.disciplines);
       },
       error: (error) => console.error('Error al obtener usuario:', error)
     });
@@ -154,11 +156,11 @@ initializeDisciplineData(): void {
       })
     ).subscribe(inscriptions => {
       //console.log("inscriptions: ", inscriptions);
-            console.log("inscriptions: ", inscriptions);
+      //console.log("inscriptions: ", inscriptions);
 
       this.debtorInscriptions = inscriptions.filter(ins => ins.isDebtor);
       this.loadingDebtors = false;
-      console.log("debtorInscriptions: ", this.debtorInscriptions);
+      //console.log("debtorInscriptions: ", this.debtorInscriptions);
       //console.log("disciplineID: ", disciplineId, " | inscriptions: ", disciplineData.inscriptions)
     });
     

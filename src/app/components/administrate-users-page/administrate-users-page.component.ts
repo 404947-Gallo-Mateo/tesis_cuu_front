@@ -11,12 +11,13 @@ import { UserDTOFormComponent } from '../forms/user-dto-form/user-dto-form.compo
 import { firstValueFrom } from 'rxjs';
 import { AdminUserDtoFormComponent } from "../forms/admin-user-dto-form/admin-user-dto-form.component";
 import { Role } from '../../models/backend/embeddables/Role';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-administrate-users-page',
-  imports: [CommonModule, NgxPaginationModule, AgePipe, GenrePipe, RolePipe, AdminUserDtoFormComponent],
+  imports: [CommonModule, NgxPaginationModule, AgePipe, GenrePipe, RolePipe, AdminUserDtoFormComponent, RouterLink, RouterLinkActive],
   templateUrl: './administrate-users-page.component.html',
   styleUrl: './administrate-users-page.component.css'
 })
