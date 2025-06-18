@@ -14,10 +14,11 @@ import { FormsModule } from '@angular/forms';
 import { AgePipe } from '../../CustomPipes/age.pipe';
 import { GenrePipe } from '../../CustomPipes/genre.pipe';
 import { ModalStudentFeesComponent } from "../forms/modal-student-fees/modal-student-fees.component";
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-administrate-fees',
-  imports: [CommonModule, NgxPaginationModule, FormsModule, AgePipe, GenrePipe, ModalStudentFeesComponent],
+  imports: [RouterLink, RouterLinkActive, CommonModule, NgxPaginationModule, FormsModule, AgePipe, GenrePipe, ModalStudentFeesComponent],
   templateUrl: './administrate-fees.component.html',
   styleUrl: './administrate-fees.component.css'
 })

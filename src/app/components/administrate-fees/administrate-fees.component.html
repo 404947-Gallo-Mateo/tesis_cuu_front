@@ -13,6 +13,12 @@
     </div>
   </div>
 
+  <a class="btn btn-primary rounded-circle text-center position-fixed shadow-lg" 
+   style="width: 60px; height: 60px; bottom: 30px; right: 30px; z-index: 1000;"
+   routerLink="/reporte-mis-disciplinas" routerLinkActive="active">
+    <i class="bi bi-info-circle fs-3"></i>
+</a>
+
   <!-- Modo Normal: Lista de Disciplinas -->
   <div *ngIf="!debtorMode">
     <div *ngFor="let discipline of disciplines" class="card mb-3">
