@@ -12,8 +12,9 @@ import { ExpandedStudentInscriptionDTO } from '../../../models/backend/ExpandedS
 import { BackUserService } from '../../../services/backend-helpers/user/back-user.service';
 import { KeycloakHelperService } from '../../../services/backend-helpers/keycloak/keycloak-helper.service';
 import { BackStudentInscriptionService } from '../../../services/backend-helpers/student-inscription/back-student-inscription.service';
-import { catchError, filter, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { catchError, filter, finalize, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { DisciplineSummaryDTO } from '../../../models/backend/DisciplineSummaryDTO';
+import { BackDisciplineService } from '../../../services/backend-helpers/discipline/back-discipline.service';
 
 @Component({
   selector: 'app-disciplines-report',
@@ -142,10 +143,12 @@ filterBySearchTerm(inscriptions: ExpandedStudentInscriptionDTO[], term: string):
   private userService = inject(BackUserService);
   private keycloakHelper = inject(KeycloakHelperService);
   private inscriptionService = inject(BackStudentInscriptionService);
+  private disciplineService = inject(BackDisciplineService);
   private destroy$ = new Subject<void>();
 
   ngOnInit(): void {    
     this.loadCurrentUser();
+    this.loadInitialData();
   }
 
   loadCurrentUser(): void {
@@ -164,6 +167,39 @@ filterBySearchTerm(inscriptions: ExpandedStudentInscriptionDTO[], term: string):
       error: (error) => console.error('Error al obtener usuario:', error)
     });
   }
+
+   private loadInitialData(): void {
+      this.keycloakHelper.isReady$.pipe(
+        filter(isReady => isReady),
+        tap(() => this.isLoaded = true),
+        switchMap(() => this.userService.getCurrentUser()),
+        switchMap(() => this.userService.currentUserValid$),
+        tap(user => this.currentUser = user),
+        switchMap(user => {
+          if(user.role !== 'STUDENT' && ( user.role == 'ADMIN_CUU' || user.role == 'SUPER_ADMIN_CUU') ){
+            return this.disciplineService.getAllSummary().pipe(
+              finalize(() => this.isLoaded = true)
+            );
+  
+          } else {
+            return of([]); // Retorna array vacío si no es profesor
+          }
+        }),
+        takeUntil(this.destroy$)
+      ).subscribe({
+        next: (disciplines) => {
+          if(disciplines.length > 0){
+            this.disciplines = disciplines;
+            this.initializeDisciplineData();
+          }        
+          console.log("TODAS las disciplinas:", disciplines);
+        },
+        error: (error) => {
+          console.error('Error al cargar datos iniciales:', error);
+          this.isLoaded = false;
+        }
+      });
+    }
 
  initializeDisciplineData(): void {
     let startexpanded: boolean = this.disciplines.length <= 2;

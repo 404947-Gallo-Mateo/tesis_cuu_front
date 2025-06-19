@@ -5,6 +5,7 @@ import { catchError, delay, firstValueFrom, Observable, retry, take } from 'rxjs
 import { throwError as observableThrowError } from 'rxjs';
 import { PostDisciplineDTO, PutDisciplineDTO } from '../../../models/backend/PostDisciplineDTO';
 import { DisciplineDto } from '../../../models/backend/DisciplineDTO';
+import { DisciplineSummaryDTO } from '../../../models/backend/DisciplineSummaryDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -127,6 +128,20 @@ putDiscipline(disciplineDTO: PutDisciplineDTO): Observable<DisciplineDto> {
   //llama al back, trae todos los usuarios de la DB del MS
   getAll(): Observable<DisciplineDto[]> {
     return this.http.get<DisciplineDto[]>(`${this.API_URL}/get-all`).pipe(
+      retry({
+      count: 3,
+      delay: 1000,
+      resetOnSuccess: true
+    }),
+      catchError(error => {
+        console.error('No se pudo obtener las disciplinas.');
+        return observableThrowError(() => error);
+      })
+    );
+  }
+
+  getAllSummary(): Observable<DisciplineSummaryDTO[]> {
+    return this.http.get<DisciplineSummaryDTO[]>(`${this.API_URL}/get-all`).pipe(
       retry({
       count: 3,
       delay: 1000,
