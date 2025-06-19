@@ -10,11 +10,12 @@ import { PutDisciplineFormComponent } from '../../forms/put-discipline-form/put-
 import Swal from 'sweetalert2';
 import { PostDisciplineFormComponent } from '../../forms/post-discipline-form/post-discipline-form.component';
 import { AdministrateStudentInscriptionsComponent } from "../administrate-student-inscriptions/administrate-student-inscriptions.component";
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-teacher-disciplines',
   standalone: true,
-  imports: [CommonModule, PutDisciplineFormComponent, PostDisciplineFormComponent, AdministrateStudentInscriptionsComponent],
+  imports: [RouterLink, RouterLinkActive, CommonModule, PutDisciplineFormComponent, PostDisciplineFormComponent, AdministrateStudentInscriptionsComponent],
   templateUrl: './teacher-disciplines.component.html',
   styleUrl: './teacher-disciplines.component.css'
 })

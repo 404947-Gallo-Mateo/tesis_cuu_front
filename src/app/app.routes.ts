@@ -13,6 +13,7 @@ import { MpPendingPaymentPageComponent } from './components/small-components/mp/
 import { UsersReportComponent } from './components/reports/users-report/users-report.component';
 import { FeesReportComponent } from './components/reports/fees-report/fees-report.component';
 import { SocialFeesReportComponent } from './components/reports/social-fees-report/social-fees-report.component';
+import { DisciplinesReportComponent } from './components/reports/disciplines-report/disciplines-report.component';
 
 export const routes: Routes = [
     { path: '', component: LandingPageComponent },            
@@ -26,9 +27,9 @@ export const routes: Routes = [
     { path: 'cancelado', component: MpCancelledPaymentPageComponent},
     { path: 'pendiente', component: MpPendingPaymentPageComponent},
     { path: 'reporte-usuarios', component: UsersReportComponent},
-    { path: 'reporte-mis-disciplinas', component: FeesReportComponent},
+    { path: 'reporte-cuotas-mis-disciplinas', component: FeesReportComponent},
     { path: 'reporte-cuotas-sociales', component: SocialFeesReportComponent},
-
+    { path: 'reporte-disciplinas', component: DisciplinesReportComponent},
     { path: '**', redirectTo: '', pathMatch: 'full' }
     
 ];

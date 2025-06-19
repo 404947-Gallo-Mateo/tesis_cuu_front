@@ -12,57 +12,70 @@
     <div class="row"> <!-- Elimina mb-3 para evitar márgenes duplicados -->
       
       <!-- Filtro Estado Deudor (mismo contenido) -->
-      <div class="col-md-4">
+      <div class="col-md-2">
         <h6>Estado de pago:</h6>
-        <div class="form-check">
-          <input #checkboxEl 
-          class="form-check-input" 
-                 type="checkbox" 
-                 id="debtor-true"
-                 (change)="updateDebtorFilter(true, checkboxEl.checked)">
-          <label class="form-check-label" for="debtor-true">
-            Deudor
-          </label>
-        </div>
-        <div class="form-check">
-          <input #checkboxEl 
-          class="form-check-input" 
-                 type="checkbox" 
-                 id="debtor-false"
-                 (change)="updateDebtorFilter(false, checkboxEl.checked)">
-          <label class="form-check-label" for="debtor-false">
-            Al día
-          </label>
+        <div class="border rounded p-2 bg-light">
+            <div class="d-flex flex-wrap gap-3">
+
+            <div class="form-check">
+              <input #checkboxEl 
+              class="form-check-input" 
+                    type="checkbox" 
+                    id="debtor-true"
+                    (change)="updateDebtorFilter(true, checkboxEl.checked)">
+              <label class="form-check-label" for="debtor-true">
+                Deudor
+              </label>
+            </div>
+            <div class="form-check">
+              <input #checkboxEl 
+              class="form-check-input" 
+                    type="checkbox" 
+                    id="debtor-false"
+                    (change)="updateDebtorFilter(false, checkboxEl.checked)">
+              <label class="form-check-label" for="debtor-false">
+                Al día
+              </label>
+            </div>
         </div>
       </div>
+    </div>
       
       <!-- Filtro Género (mismo contenido) -->
-      <div class="col-md-4">
+      <div class="col-md-3">
         <h6>Género:</h6>
-        <div *ngFor="let genre of genres" class="form-check">
-          <input #checkboxEl 
-          class="form-check-input" 
-                 type="checkbox" 
-                 [id]="'genre-' + genre.value"
-                 (change)="updateGenreFilter(genre.value, checkboxEl.checked)">
-          <label class="form-check-label" [for]="'genre-' + genre.value">
-            {{ genre.label }}
-          </label>
+        <div class="border rounded p-2 bg-light">
+            <div class="d-flex flex-wrap gap-3">
+              <div *ngFor="let genre of genres" class="form-check">
+                <input #checkboxEl 
+                class="form-check-input" 
+                      type="checkbox" 
+                      [id]="'genre-' + genre.value"
+                      (change)="updateGenreFilter(genre.value, checkboxEl.checked)">
+                <label class="form-check-label" [for]="'genre-' + genre.value">
+                  {{ genre.label }}
+                </label>
+                </div>
+            </div>
         </div>
       </div>
       
       <!-- Filtro Roles (mismo contenido) -->
-      <div class="col-md-4">
+      <div class="col-md-5">
         <h6>Roles:</h6>
-        <div *ngFor="let role of roles" class="form-check">
-          <input #checkboxEl 
-          class="form-check-input" 
-                 type="checkbox" 
-                 [id]="'role-' + role.value"
-                 (change)="updateRoleFilter(role.value, checkboxEl.checked)">
-          <label class="form-check-label" [for]="'role-' + role.value">
-            {{ role.label }}
-          </label>
+        <div class="border rounded p-2 bg-light">
+            <div class="d-flex flex-wrap gap-3">
+              <div *ngFor="let role of roles" class="form-check">
+                <input #checkboxEl 
+                class="form-check-input" 
+                      type="checkbox" 
+                      [id]="'role-' + role.value"
+                      (change)="updateRoleFilter(role.value, checkboxEl.checked)">
+                <label class="form-check-label" [for]="'role-' + role.value">
+                  {{ role.label }}
+                </label>
+              </div>
+          </div>
         </div>
       </div>
       
