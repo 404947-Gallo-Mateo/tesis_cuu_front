@@ -1,0 +1,80 @@
+<div class="modal fade" id="faqModal" tabindex="-1" aria-labelledby="faqModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="termsModalLabel">Preguntas Frecuentes</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+         @if (isLoggedIn$ | async) {
+            @if (currentRole == "STUDENT") { 
+              <h5>Qué puedo hacer como Alumno del Club?</h5>
+
+              <h6>En <a class="fw-semibold" href="/principal">Disciplinas del Club</a></h6>
+                <p>Podés inscribirte en cualquier Categoría de cualquier Disciplina del Club, mientras cumplas los requisitos, allí tambien podés cambiarte a otra Categoría si ya estás inscripto en esa Disciplina.</p>
+
+              <h6>En <a class="fw-semibold" href="/mis-inscripciones">Mis Inscripciones</a></h6>
+                <p>Podés gestionar tus inscripciones de cualquier Categoría y desinscribirte si así lo necesitas.</p>
+
+              <h6>En <a class="fw-semibold" href="/mis-cuotas">Mis Cuotas</a></h6>
+                <p>Podés pagar a través de Mercado Pago las Cuotas Sociales del Club o las Cuotas de las Disciplinas donde estas inscripto, allí también podrás ver las Cuotas que ya pagaste haciendo click en <button class="btn btn-primary">Mostrar Pagadas</button></p>
+                <div class="bg-secondary fw-medium text-light p-2 rounded">
+                    <p>Todavía se puede pagar en efectivo, para eso andá con un Administrador del Club o con tu Profe, según quieras pagar una Cuota Social o la Cuota de tu Disciplina.</p>
+                </div>  
+            }
+            @else if (currentRole == "TEACHER") { 
+              <h5>Qué puedo hacer como Profesor del Club?</h5>
+
+              <h6>En <a class="fw-semibold" href="/gestion-disciplinas">Gestión Disciplinas</a></h6>
+                <p>Podés gestionar tus Disciplinas, crear nuevas y editar las existentes.</p>
+
+                <p class="mb-0">Al hacer click en <button style="background-color: rgb(30, 30, 157);" class="btn border-0 p-0"> <i class="bi bi-three-dots-vertical text-light fs-5"></i></button> te aparecerán tres opciones</p>
+                <ol class="mt-0 pt-0">
+                    <li><span class="fw-semibold">Gestionar Inscripciones</span>, allí podrás gestionar la inscripción de todos los Alumnos inscriptos en esa Disciplina.</li>
+                    <li><span class="fw-semibold">Actualizar Información</span>, allí podras actualizar la Info de la Disciplina que selecciones, incluyendo sus Profesores, cada Categoría, teniendo la opción de eliminar o agregar una, como el horario individual de cada Categoría.</li>
+                    <li><span class="fw-semibold text-danger">Eliminar Disciplina</span>, confirmando esta acción, eliminarás permanentemente la Disciplina seleccionada.</li>
+                </ol>
+
+                <p>Al hacer click en <button class="btn btn-primary rounded-circle shadow-lg" style="width: 40px; height: 40px; z-index: 1000;"><i class="bi bi-plus fs-6"></i></button>
+                  podras crear una Disciplina, seleccionar sus Profesores y crear cada Categoría, como también asignar el horario individual de cada una.
+                </p>
+
+                <p>Al hacer click en <button class="btn btn-primary rounded-circle shadow-lg" style="width: 40px; height: 40px; z-index: 1000;"><i class="bi bi-info-circle fs-6"></i></button>
+                  accederás al panel <a class="fw-medium" href="/reporte-disciplinas">Reporte de mis Disciplinas</a>, donde tenés a disposición una gran cantidad de filtros para aplicar a cada Disciplina, obteniendo la información que buscas fácilmente.
+                </p>
+
+              <h6>En <a class="fw-semibold" href="/gestion-cuotas-disciplinas">Gestión Cuotas</a></h6>
+                <p>Podés gestionar las Cuotas de cada Alumno, en cada Disciplina donde seas Profesor</p>
+                
+                <p>Al hacer click en <button class="btn btn-primary">Mostrar Deudores</button> solo se mostraran aquellos Alumnos que tenga al menos una Cuota vencida sin pagar.</p>
+                <div class="bg-secondary fw-medium text-light p-2 rounded">
+                    <p>Todavía se puede pagar en efectivo, en ese caso, seleccioná la Disciplina correspondiente, y luego busca el Alumno según su nombre o email en la barra de búsqueda, </p>
+                    <p class="mt-0">luego hace click en <button class="btn btn-sm btn-success"><i class="bi bi-cash-stack"></i></button> y marcá como pagadas las Cuotas correspondientes con <button class="btn btn-sm btn-primary">Marcar como Pagada</button> y listo!</p>
+                </div>
+                
+            }
+            @else if (currentRole == "SUPER_ADMIN_CUU" || currentRole == "ADMIN_CUU") { 
+              <p>rol admin</p>
+            }    
+            @else {
+              <h5>Qué puedo hacer sin estar logueado?</h5>
+                    <p>Podés ver todas las Disciplinas disponibles y la información de sus respectivas Categorías en <a class="fw-semibold" href="/principal">Disciplinas del Club</a>.</p>
+                    <p>Podes ver si cumplis los requisitos para inscribirte en la Categoría de cualquier Disciplina.</p>
+                    <p>Si queres hacer mucho más, solo tenés que crearte una cuenta! </p>
+                    <p>Para crearte una cuenta hace click en <button class="btn btn-primary" (click)="login()"><i class="bi fs-6 me-1 bi-box-arrow-in-right fw-medium"></i> Iniciar sesión</button> y luego hace click en <span class="fw-semibold">New user? <span class="text-primary">Register</span></span>.</p> 
+            }        
+        }
+        @else {
+                <h5>Qué puedo hacer sin estar logueado?</h5>
+                    <p>Podés ver todas las Disciplinas disponibles y la información de sus respectivas Categorías en <a class="fw-semibold" href="/principal">Disciplinas del Club</a>.</p>
+                    <p>Podes ver si cumplis los requisitos para inscribirte en la Categoría de cualquier Disciplina.</p>
+                    <p>Si queres hacer mucho más, solo tenés que crearte una cuenta! </p>
+                    <p>Para crearte una cuenta hace click en <button class="btn btn-primary" (click)="login()"><i class="bi fs-6 me-1 bi-box-arrow-in-right fw-medium"></i> Iniciar sesión</button> y luego hace click en <span class="fw-semibold">New user? <span class="text-primary">Register</span></span>.</p>            
+        }
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

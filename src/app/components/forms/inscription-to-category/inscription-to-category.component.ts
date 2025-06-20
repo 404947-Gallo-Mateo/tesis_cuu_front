@@ -17,16 +17,26 @@ import { combineLatest, filter, switchMap, tap } from 'rxjs';
   templateUrl: './inscription-to-category.component.html',
   styleUrl: './inscription-to-category.component.css'
 })
-export class InscriptionToCategoryComponent {
+export class InscriptionToCategoryComponent implements OnInit {
+  ngOnInit(): void {
+    
+    this.backUserService.currentRole$.subscribe(role => {
+      this.currentRole = role;
+      //console.log('Rol actualizado:', role);
+    });
+  }
+  
   private backUserService = inject(BackUserService);
   private backStudentInscriptionService = inject(BackStudentInscriptionService);
   private keycloakHelper = inject(KeycloakHelperService);
-  
+
   @Input() category!: CategoryDTO;
   @Input() show: boolean = false;
   @Output() close = new EventEmitter<void>();
 
   isLoggedIn$ = this.keycloakHelper.isLoggedIn$;
+  currentRole$ = this.backUserService.currentRole$;
+  currentRole: string | null = null; 
 
   onClose(): void {
     this.close.emit();
