@@ -204,7 +204,7 @@ onSubmit(): void {
       },
       error: (err: {message: string, status?: number}) => {
                           Swal.hideLoading();
-                          console.error('Error completo en componente:', err);
+                          //error('Error completo en componente:', err);
                           
                           Swal.fire({
                               title: `Error`,

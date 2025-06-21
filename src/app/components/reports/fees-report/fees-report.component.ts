@@ -234,7 +234,7 @@ initializeDisciplineData(): void {
       })
     ).subscribe(inscriptions => {
 
-      console.log("loadInscriptionsForDiscipline: ", inscriptions);
+      //console.log("loadInscriptionsForDiscipline: ", inscriptions);
 
       disciplineData.inscriptions = inscriptions;
 
@@ -245,7 +245,7 @@ initializeDisciplineData(): void {
           categoryMap.set(ins.category.id, ins.category);
         }
       });
-      console.log("categoryMap.values(): ", categoryMap.values())
+      //console.log("categoryMap.values(): ", categoryMap.values())
       this.uniqueCategories[disciplineId] = Array.from(categoryMap.values());
 
       disciplineData.loading = false;

@@ -94,7 +94,7 @@ private userService = inject(BackUserService);
     error: (err) => {
       this.error.set('Error al cargar los usuarios');
       this.loading.set(false);
-      console.error(err);
+      //console.error(err);
     }
   });
 }
@@ -133,7 +133,7 @@ private userService = inject(BackUserService);
               'No se pudo eliminar el usuario',
               'error'
             );
-            console.error(err);
+            //console.error(err);
           }
         });
       }

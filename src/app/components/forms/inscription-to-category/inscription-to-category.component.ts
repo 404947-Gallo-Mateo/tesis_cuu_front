@@ -92,7 +92,7 @@ export class InscriptionToCategoryComponent implements OnInit {
     const currentUser = this.backUserService.getCurrentUserSnapshot();
     
     if (!currentUser) {
-        console.error('No hay usuario actual disponible');
+        //console.error('No hay usuario actual disponible');
         Swal.fire('Error', 'No se pudo obtener la información del usuario.', 'error');
         return;
     }
@@ -129,7 +129,7 @@ export class InscriptionToCategoryComponent implements OnInit {
                                         this.onClose();
                                     },
                                     error: (refreshError) => {
-                                        console.error('Error al actualizar usuario:', refreshError);
+                                        //console.error('Error al actualizar usuario:', refreshError);
                                         this.onClose();
                                     }
                                 });
@@ -140,7 +140,7 @@ export class InscriptionToCategoryComponent implements OnInit {
                     },
                 error: (err: {message: string, status?: number}) => {
                     Swal.hideLoading();
-                    console.error('Error completo en componente:', err);
+                    //console.error('Error completo en componente:', err);
                     
                     Swal.fire({
                         title: `Error`,
@@ -184,7 +184,7 @@ export class InscriptionToCategoryComponent implements OnInit {
                                         this.onClose();
                                     },
                                     error: (refreshError) => {
-                                        console.error('Error al actualizar usuario:', refreshError);
+                                        //console.error('Error al actualizar usuario:', refreshError);
                                         this.onClose();
                                     }
                                 });
@@ -195,7 +195,7 @@ export class InscriptionToCategoryComponent implements OnInit {
                     },
                 error: (err: {message: string, status?: number}) => {
                     Swal.hideLoading();
-                    console.error('Error completo en componente:', err);
+                    //console.error('Error completo en componente:', err);
                     
                     Swal.fire({
                         title: `Error`,

@@ -59,7 +59,7 @@ export class ModalSocialFeesComponent {
   updateFeePaidState(fee: FeeDTO): void {
 
     if (fee.paid) {
-      console.warn('La cuota ya está marcada como pagada');
+      //console.warn('La cuota ya está marcada como pagada');
       return;
     }
 
@@ -91,7 +91,7 @@ export class ModalSocialFeesComponent {
         // La cuota desaparecerá automáticamente por el nuevo filtro
       },
       error: (error) => {
-        console.error('Error al actualizar cuota social:', error);
+        //console.error('Error al actualizar cuota social:', error);
         this.errorMessage = 'Error al actualizar el estado de pago';
         this.isLoading = false;
       }

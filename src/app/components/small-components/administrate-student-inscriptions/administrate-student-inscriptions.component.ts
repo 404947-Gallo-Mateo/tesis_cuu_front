@@ -89,7 +89,7 @@ private inscriptionService = inject(BackStudentInscriptionService);
       error: (err) => {
         this.error.set('Error al cargar las inscripciones');
         this.loading.set(false);
-        console.error(err);
+        //console.error(err);
       }
     });
   }
@@ -138,7 +138,7 @@ removeInscription(studentKeycloakId: string, disciplineId: string, categoryId: s
           );
         },
         error: (err) => {
-          console.error('Error eliminando inscripción:', err);
+          //console.error('Error eliminando inscripción:', err);
           this.error.set('Error al eliminar la inscripción');
           
           // Mostrar error

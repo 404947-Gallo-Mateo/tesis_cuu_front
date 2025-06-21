@@ -9,7 +9,7 @@
                     </div>
                     <div class="image-overlay"></div>
                     <div class="welcome-content">
-                        @if (isLoggedIn$ && getUserName() != null) {
+                        @if (getUserName() != null) {
                             <h1>Bienvenido al Club Unión {{getUserName()}}!</h1>
                         }
                         @else {

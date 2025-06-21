@@ -69,7 +69,7 @@ export class CategoryDtoFormComponent {
     const currentUser = this.backUserService.getCurrentUserSnapshot();
     
     if (!currentUser) {
-      console.error('No hay usuario actual disponible');
+      //console.error('No hay usuario actual disponible');
       Swal.fire('Error', 'No se pudo obtener la información del usuario.', 'error');
       return;
     }
@@ -104,7 +104,7 @@ export class CategoryDtoFormComponent {
                     this.onClose(); // Cerrar el modal
                   },
                   error: (refreshError) => {
-                    console.error('Error al actualizar información del usuario:', refreshError);
+                    //console.error('Error al actualizar información del usuario:', refreshError);
                     // Mostrar éxito de la eliminación aunque falle la actualización
                     Swal.fire('Actualizado', 'Se eliminó la inscripción en ' + this.category.name + '.', 'success');
                     this.onClose();
@@ -116,7 +116,7 @@ export class CategoryDtoFormComponent {
             },
             error: (err: {message: string, status?: number}) => {
                                 Swal.hideLoading();
-                                console.error('Error completo en componente:', err);
+                                //console.error('Error completo en componente:', err);
                                 
                                 Swal.fire({
                                     title: `Error`,

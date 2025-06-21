@@ -80,7 +80,7 @@ export class MainPageComponent {
       ).subscribe({
         next: (disciplines) => {
           this.allDisciplines = disciplines;
-          console.log('Disciplinas cargadas:', this.allDisciplines);
+          //console.log('Disciplinas cargadas:', this.allDisciplines);
         },
         error: (error) => {
           console.error('Error al cargar disciplinas:', error);

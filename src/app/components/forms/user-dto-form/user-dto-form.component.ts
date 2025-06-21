@@ -145,7 +145,7 @@ submitUpdatedKeycloakUser(): void {
             Swal.fire('Actualizado', 'El usuario fue actualizado correctamente.', 'success');
           },
           error: (err) => {
-            console.error('Error actualizando usuario:', err);
+            //console.error('Error actualizando usuario:', err);
             Swal.fire('Error', 'Hubo un problema al actualizar el usuario.', 'error');
           }
         });
@@ -182,7 +182,7 @@ deleteKeycloakUser(): void {
           }
         },
         error: (err) => {
-          console.error('Error eliminando usuario:', err);
+          //console.error('Error eliminando usuario:', err);
           Swal.fire('Error', 'Hubo un problema en Keycloak al eliminar el usuario.', 'error');
         }
       });

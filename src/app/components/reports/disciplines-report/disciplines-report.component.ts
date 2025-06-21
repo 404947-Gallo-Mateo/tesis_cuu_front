@@ -192,10 +192,10 @@ filterBySearchTerm(inscriptions: ExpandedStudentInscriptionDTO[], term: string):
             this.disciplines = disciplines;
             this.initializeDisciplineData();
           }        
-          console.log("TODAS las disciplinas:", disciplines);
+          //console.log("TODAS las disciplinas:", disciplines);
         },
         error: (error) => {
-          console.error('Error al cargar datos iniciales:', error);
+          //console.error('Error al cargar datos iniciales:', error);
           this.isLoaded = false;
         }
       });
@@ -309,7 +309,7 @@ filterBySearchTerm(inscriptions: ExpandedStudentInscriptionDTO[], term: string):
       })
     ).subscribe(inscriptions => {
 
-      console.log("loadInscriptionsForDiscipline: ", inscriptions);
+      //console.log("loadInscriptionsForDiscipline: ", inscriptions);
 
       disciplineData.inscriptions = inscriptions;
 
@@ -320,7 +320,7 @@ filterBySearchTerm(inscriptions: ExpandedStudentInscriptionDTO[], term: string):
           categoryMap.set(ins.category.id, ins.category);
         }
       });
-      console.log("categoryMap.values(): ", categoryMap.values())
+      //console.log("categoryMap.values(): ", categoryMap.values())
       this.uniqueCategories[disciplineId] = Array.from(categoryMap.values());
 
       disciplineData.loading = false;

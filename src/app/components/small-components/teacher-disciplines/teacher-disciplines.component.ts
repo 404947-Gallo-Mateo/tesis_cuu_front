@@ -109,7 +109,7 @@ toggleMenu(disciplineId: string): void {
             }
           },
           error: (err) => {
-            console.error('Error eliminando disciplina:', err);
+            //console.error('Error eliminando disciplina:', err);
             Swal.fire('Error', 'Hubo un problema externo al eliminar la Disciplina.', 'error');
           }
         });
