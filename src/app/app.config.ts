@@ -5,6 +5,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { DatePipe, registerLocaleData } from '@angular/common';
 import localeEsExtra from '@angular/common/locales/extra/es';
 import localeEs from '@angular/common/locales/es';
+import { provideGoogleCharts } from 'angular-google-charts';
 
 registerLocaleData(localeEs, 'es', localeEsExtra);
 
@@ -14,6 +15,9 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(),
     DatePipe,
-    { provide: LOCALE_ID, useValue: 'es' }
+    { provide: LOCALE_ID, useValue: 'es' },
+    provideGoogleCharts({
+      //mapsApiKey: '' // Solo si usas mapas, sino déjalo vacío
+    })
   ]
 };

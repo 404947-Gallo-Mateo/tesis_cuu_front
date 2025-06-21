@@ -9,10 +9,12 @@ import { ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
 import { Role } from '../../../models/backend/embeddables/Role';
 import { UserGenre } from '../../../models/backend/embeddables/UserGenre';
 import { FormsModule } from '@angular/forms';
+import { GoogleChartsModule } from 'angular-google-charts';
+import { UsersDashboardComponent } from "../kpis/users-dashboard/users-dashboard.component";
 
 @Component({
   selector: 'app-users-report',
-  imports: [CommonModule, NgxPaginationModule, AgePipe, GenrePipe, RolePipe, FormsModule],
+  imports: [GoogleChartsModule, CommonModule, NgxPaginationModule, AgePipe, GenrePipe, RolePipe, FormsModule, UsersDashboardComponent],
   templateUrl: './users-report.component.html',
   styleUrl: './users-report.component.css'
 })

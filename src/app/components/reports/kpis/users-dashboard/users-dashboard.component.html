@@ -1,0 +1,42 @@
+<div class="filters">
+  <label class="me-5 fs-2 fw-semibold text-dark" for="">KPIs de Usuarios</label>
+  <label class="fw-semibold text-dark">Desde:</label>
+  <input type="date" [(ngModel)]="fromDate" (change)="updateCharts()">
+  
+  <label class="fw-semibold text-dark">Hasta:</label>
+  <input type="date" [(ngModel)]="toDate" (change)="updateCharts()">
+</div>
+
+<div class="charts-container">
+  <div class="chart">
+    <h4 class="fw-semibold text-dark">Distribución de Edades</h4>
+    <google-chart
+      *ngIf="ageChartData().data.length > 0"
+      [type]="ageChartData().type"
+      [data]="ageChartData().data"
+      [columns]="ageChartData().columns"
+      [options]="ageChartData().options">
+    </google-chart>
+  </div>
+  
+  <div class="chart">
+    <h4 class="fw-semibold text-dark">Total de Usuarios</h4>
+    <google-chart
+      *ngIf="totalUsersChartData().data.length > 0"
+      [type]="totalUsersChartData().type"
+      [data]="totalUsersChartData().data"
+      [options]="totalUsersChartData().options">
+    </google-chart>
+  </div>
+  
+<div class="chart">
+  <h4 class="fw-semibold text-dark">Distribución por Género</h4>
+  <google-chart 
+    *ngIf="genderChartData().data.length > 0"
+    [type]="genderChartData().type"
+    [data]="genderChartData().data"
+    [columns]="genderChartData().columns"
+    [options]="genderChartData().options">
+  </google-chart>
+</div>
+</div>
