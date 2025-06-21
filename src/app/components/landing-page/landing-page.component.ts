@@ -75,7 +75,7 @@ export class LandingPageComponent implements OnInit{
   // Este método ahora depende de si `currentUser` fue seteado.
   getUserName(): string | null {
     if (this.currentUser) {
-      return this.currentUser.firstName;
+      return " " + this.currentUser.firstName;
     } else {
       //console.log("No se puede obtener username porque no está cargado el usuario");
       return null;
