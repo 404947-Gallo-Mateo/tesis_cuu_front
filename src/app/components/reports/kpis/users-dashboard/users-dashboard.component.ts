@@ -3,6 +3,7 @@ import { BackKpiService } from '../../../../services/backend-helpers/kpi/back-kp
 import { CommonModule, DatePipe } from '@angular/common';
 import { GoogleChartsModule } from 'angular-google-charts';
 import { FormsModule } from '@angular/forms';
+import { max } from 'rxjs';
 
 @Component({
   selector: 'app-users-dashboard',
@@ -37,11 +38,13 @@ private kpiService = inject(BackKpiService);
       title: 'Total de Usuarios',
       width: 400,
       height: 300,
+      max: 2000,
+      min: 0,
       greenFrom: 0,
-      greenTo: 1000,
-      yellowFrom: 1001,
-      yellowTo: 1500,
-      redFrom: 1501,
+      greenTo: 1500,
+      yellowFrom: 1501,
+      yellowTo: 1750,
+      redFrom: 1751,
       redTo: 2000,
       minorTicks: 5
     }

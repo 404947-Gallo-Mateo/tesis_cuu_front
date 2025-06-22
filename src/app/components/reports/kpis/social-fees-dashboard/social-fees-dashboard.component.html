@@ -1,1 +1,42 @@
-<p>social-fees-dashboard works!</p>
+<div class="filters">
+  <label class="me-5 fs-2 fw-semibold text-dark" for="">KPIs de Cuotas Sociales</label>
+  <label class="fw-semibold text-dark">Desde:</label>
+  <input type="date" [(ngModel)]="fromDate" (change)="updateCharts()">
+  
+  <label class="fw-semibold text-dark">Hasta:</label>
+  <input type="date" [(ngModel)]="toDate" (change)="updateCharts()">
+</div>
+
+<div class="charts-container">
+  <div class="chart">
+    <h4 class="fw-semibold text-dark">Cantidad de Deudores y Al día</h4>
+    <google-chart
+      *ngIf="debtorsChartData().data.length > 0"
+      [type]="debtorsChartData().type"
+      [data]="debtorsChartData().data"
+      [columns]="debtorsChartData().columns"
+      [options]="debtorsChartData().options">
+    </google-chart>
+  </div>
+  
+  <div class="chart">
+    <h4 class="fw-semibold text-dark">Total de Ingresos</h4>
+    <google-chart
+      *ngIf="totalRevenueChartData().data.length > 0"
+      [type]="totalRevenueChartData().type"
+      [data]="totalRevenueChartData().data"
+      [options]="totalRevenueChartData().options">
+    </google-chart>
+  </div>
+  
+<div class="chart">
+  <h4 class="fw-semibold text-dark">Distribución de Ingresos</h4>
+  <google-chart 
+    *ngIf="revenuePerPeriodChartData().data.length > 0"
+    [type]="revenuePerPeriodChartData().type"
+    [data]="revenuePerPeriodChartData().data"
+    [columns]="revenuePerPeriodChartData().columns"
+    [options]="revenuePerPeriodChartData().options">
+  </google-chart>
+</div>
+</div>

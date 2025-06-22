@@ -13,10 +13,11 @@ import { AgePipe } from '../../../CustomPipes/age.pipe';
 import { GenrePipe } from '../../../CustomPipes/genre.pipe';
 import { Role } from '../../../models/backend/embeddables/Role';
 import { UserGenre } from '../../../models/backend/embeddables/UserGenre';
+import { SocialFeesDashboardComponent } from '../kpis/social-fees-dashboard/social-fees-dashboard.component';
 
 @Component({
   selector: 'app-social-fees-report',
-  imports: [CommonModule, NgxPaginationModule, FormsModule, RolePipe, AgePipe, GenrePipe],
+  imports: [SocialFeesDashboardComponent ,CommonModule, NgxPaginationModule, FormsModule, RolePipe, AgePipe, GenrePipe],
   templateUrl: './social-fees-report.component.html',
   styleUrl: './social-fees-report.component.css'
 })
