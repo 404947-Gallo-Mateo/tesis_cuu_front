@@ -132,7 +132,7 @@ export class BackKpiService {
   kpiFeeDisciplineGetDebtorsAndUpToDateQuantities(disciplineId: string, startLocalDate: string, endLocalDate: string): Observable<KpiDebtorsQuantity> {
     //url ej: http://localhost:8090/kpi/fee-discipline/get-debtor-and-uptodate/22222222-2222-2222-2222-222222222222?start=2020-10-10&end=2021-10-10
     const url = `${this.API_URL}/fee-discipline/get-debtor-and-uptodate/${encodeURIComponent(disciplineId)}?start=${encodeURIComponent(startLocalDate)}&end=${encodeURIComponent(endLocalDate)}`;
-  
+
     return this.http.get<KpiDebtorsQuantity>(url).pipe(
         retry({
           count: 3,

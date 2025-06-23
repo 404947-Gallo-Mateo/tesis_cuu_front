@@ -30,6 +30,5 @@ export const routes: Routes = [
     { path: 'reporte-cuotas-mis-disciplinas', component: FeesReportComponent},
     { path: 'reporte-cuotas-sociales', component: SocialFeesReportComponent},
     { path: 'reporte-disciplinas', component: DisciplinesReportComponent},
-    { path: '**', redirectTo: '', pathMatch: 'full' }
-    
+    { path: '**', redirectTo: '', pathMatch: 'full' }    
 ];

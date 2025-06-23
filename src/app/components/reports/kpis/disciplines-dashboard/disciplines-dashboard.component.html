@@ -1,0 +1,67 @@
+<div class="filters row m-1 mb-2 align-items-center">
+    <div class="col-md-3">
+        <label class="fs-3 fw-semibold text-dark">KPIs de Disciplinas</label>
+    </div>
+
+    <div class="col-md-5 d-flex align-items-center gap-3">
+        <label class="fw-semibold text-dark">Desde:</label>
+        <input type="date" class="form-control" [(ngModel)]="fromDate" (change)="updateCharts()">
+        
+        <label class="fw-semibold text-dark">Hasta:</label>
+        <input type="date" class="form-control" [(ngModel)]="toDate" (change)="updateCharts()">
+    </div>
+  
+    <div class="col-md-3">
+        <div class="d-flex align-items-center gap-2">
+            <label for="form-select-discipline" class="fw-semibold text-dark">Disciplina:</label>
+            <select class="form-select flex-grow-1" id="form-select-discipline" [(ngModel)]="disciplineId" (change)="updateCharts()">
+                <option *ngFor="let d of disciplines" [value]="d.id">{{ d.name }}</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="charts-container mx-1">
+  <div class="chart">
+    <h4 class="fw-semibold text-dark">Distribución por Género</h4>
+      @if (gendersDistributionChartData().data.at(0) != undefined && gendersDistributionChartData().data.at(1) != undefined) { 
+        <google-chart
+          *ngIf="gendersDistributionChartData().data.at(0).at(1) > 0 || gendersDistributionChartData().data.at(1).at(1) > 0"
+          [type]="gendersDistributionChartData().type"
+          [data]="gendersDistributionChartData().data"
+          [columns]="gendersDistributionChartData().columns"
+          [options]="gendersDistributionChartData().options">
+        </google-chart>
+        <div class="alert alert-info mt-3" *ngIf="gendersDistributionChartData().data.at(0).at(1) == 0 && gendersDistributionChartData().data.at(1).at(1) == 0">
+            No hay información disponible para mostrar 
+        </div>       
+      }
+  </div>
+  
+  <div class="chart">
+    <h4 class="fw-semibold text-dark">Total de Inscripciones</h4>
+    <google-chart
+      *ngIf="totalInscriptionsChartData().data.length > 0"
+      [type]="totalInscriptionsChartData().type"
+      [data]="totalInscriptionsChartData().data"
+      [options]="totalInscriptionsChartData().options">
+    </google-chart>
+    <div class="alert alert-info mt-3" *ngIf="totalInscriptionsChartData().data.length <= 0">
+        No hay información disponible para mostrar
+    </div>
+  </div>
+  
+<div class="chart">
+  <h4 class="fw-semibold text-dark">Distribución de Edades</h4>
+  <google-chart 
+    *ngIf="ageDistributionChartData().data.length > 0"
+    [type]="ageDistributionChartData().type"
+    [data]="ageDistributionChartData().data"
+    [columns]="ageDistributionChartData().columns"
+    [options]="ageDistributionChartData().options">
+  </google-chart>
+  <div class="alert alert-info mt-3" *ngIf="ageDistributionChartData().data.length <= 0">
+        No hay información disponible para mostrar
+    </div>
+</div>
+</div>

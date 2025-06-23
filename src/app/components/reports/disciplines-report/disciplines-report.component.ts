@@ -15,10 +15,11 @@ import { BackStudentInscriptionService } from '../../../services/backend-helpers
 import { catchError, filter, finalize, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { DisciplineSummaryDTO } from '../../../models/backend/DisciplineSummaryDTO';
 import { BackDisciplineService } from '../../../services/backend-helpers/discipline/back-discipline.service';
+import { DisciplinesDashboardComponent } from '../kpis/disciplines-dashboard/disciplines-dashboard.component';
 
 @Component({
   selector: 'app-disciplines-report',
-  imports: [CommonModule, NgxPaginationModule, FormsModule, AgePipe, GenrePipe],
+  imports: [DisciplinesDashboardComponent, CommonModule, NgxPaginationModule, FormsModule, AgePipe, GenrePipe],
   templateUrl: './disciplines-report.component.html',
   styleUrl: './disciplines-report.component.css'
 })

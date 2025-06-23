@@ -1,22 +1,27 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, Input, signal } from '@angular/core';
 import { BackKpiService } from '../../../../services/backend-helpers/kpi/back-kpi.service';
 import { CommonModule, DatePipe } from '@angular/common';
 import { GoogleChartsModule } from 'angular-google-charts';
 import { FormsModule } from '@angular/forms';
+import { DisciplineSummaryDTO } from '../../../../models/backend/DisciplineSummaryDTO';
 
 @Component({
-  selector: 'app-social-fees-dashboard',
+  selector: 'app-discipline-fees-dashboard',
   imports: [FormsModule, GoogleChartsModule, CommonModule],
   providers: [DatePipe],
-  templateUrl: './social-fees-dashboard.component.html',
-  styleUrl: './social-fees-dashboard.component.css'
+  templateUrl: './discipline-fees-dashboard.component.html',
+  styleUrl: './discipline-fees-dashboard.component.css'
 })
-export class SocialFeesDashboardComponent {
-private kpiService = inject(BackKpiService);
+export class DisciplineFeesDashboardComponent {
+
+  @Input() disciplines: DisciplineSummaryDTO[] = [];
+
+  private kpiService = inject(BackKpiService);
   private datePipe = inject(DatePipe);
 
   fromDate!: string;
   toDate!: string;
+  disciplineId!: string;
 
   // Señales para los datos de los gráficos
   revenuePerPeriodChartData = signal<any>({
@@ -37,14 +42,10 @@ private kpiService = inject(BackKpiService);
       title: 'Ingresos',
       width: 400,
       height: 300,
-      max: 3500000,
+      max: 1000000,
       min: 0,
-      greenFrom: 2000001,
-      greenTo:   3500000,
-      yellowFrom: 1000001,
-      yellowTo:   2000000,
-      redFrom: 0,
-      redTo: 1000000,
+      greenFrom: 0,
+      greenTo:   1000000,
       minorTicks: 5
     }
   });
@@ -66,13 +67,15 @@ private kpiService = inject(BackKpiService);
   });
 
   ngOnInit() {
+    //console.log("this.disciplines: ", this.disciplines);
     this.setDefaultDates();
+    this.disciplineId = this.disciplines.at(0)?.id || "";
     this.updateCharts();
   }
 
   private setDefaultDates() {
     const from = new Date();
-    from.setFullYear(from.getFullYear() - 5);
+    from.setFullYear(from.getFullYear() - 1);
     this.fromDate = this.formatDate(from);
     this.toDate = this.formatDate(new Date());
   }
@@ -82,18 +85,18 @@ private kpiService = inject(BackKpiService);
   }
 
   updateCharts() {
-    // Actualizar gráfico de edades
-    this.kpiService.kpiFeeSocialGetRevenuePerPeriod(this.fromDate, this.toDate)
+    //console.log("disciplineId", this.disciplineId);
+
+    this.kpiService.kpiFeeDisciplineGetRevenuePerPeriod(this.disciplineId, this.fromDate, this.toDate)
       .subscribe({
         next: (data) => {
           const chartData = data.map(item => [item.period, item.revenue]);
           this.revenuePerPeriodChartData.update(prev => ({ ...prev, data: chartData }));
         },
-        error: (err) => console.error('Error loading age distribution', err)
+        error: (err) => console.error('Error loading revenue per period distribution', err)
       });
 
-    // Actualizar total de usuarios
-    this.kpiService.kpiFeeSocialGetRevenueAmount(this.fromDate, this.toDate)
+    this.kpiService.kpiFeeDisciplineGetRevenueAmount(this.disciplineId, this.fromDate, this.toDate)
       .subscribe({
         next: (total) => {
           this.totalRevenueChartData.update(prev => ({
@@ -101,11 +104,10 @@ private kpiService = inject(BackKpiService);
             data: [['Ingresos', total]]
           }));
         },
-        error: (err) => console.error('Error loading total users', err)
+        error: (err) => console.error('Error loading total revenue', err)
       });
 
-    // Actualizar distribución por género
-    this.kpiService.kpiFeeSocialGetDebtorsAndUpToDateQuantities(this.fromDate, this.toDate)
+    this.kpiService.kpiFeeDisciplineGetDebtorsAndUpToDateQuantities(this.disciplineId, this.fromDate, this.toDate)
       .subscribe({
         next: (data) => {
           this.debtorsChartData.update(prev => ({
@@ -116,7 +118,8 @@ private kpiService = inject(BackKpiService);
             ]
           }));
         },
-        error: (err) => console.error('Error loading gender distribution', err)
+        error: (err) => console.error('Error loading debtors distribution', err)
       });
   }
+
 }

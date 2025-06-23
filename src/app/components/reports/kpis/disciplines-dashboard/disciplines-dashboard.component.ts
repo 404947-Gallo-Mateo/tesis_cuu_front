@@ -1,56 +1,53 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, Input, signal } from '@angular/core';
 import { BackKpiService } from '../../../../services/backend-helpers/kpi/back-kpi.service';
 import { CommonModule, DatePipe } from '@angular/common';
 import { GoogleChartsModule } from 'angular-google-charts';
 import { FormsModule } from '@angular/forms';
-import { max } from 'rxjs';
+import { DisciplineSummaryDTO } from '../../../../models/backend/DisciplineSummaryDTO';
 
 @Component({
-  selector: 'app-users-dashboard',
+  selector: 'app-disciplines-dashboard',
   imports: [FormsModule, GoogleChartsModule, CommonModule],
   providers: [DatePipe],
-  templateUrl: './users-dashboard.component.html',
-  styleUrl: './users-dashboard.component.css'
+  templateUrl: './disciplines-dashboard.component.html',
+  styleUrl: './disciplines-dashboard.component.css'
 })
-export class UsersDashboardComponent {
-private kpiService = inject(BackKpiService);
+export class DisciplinesDashboardComponent {
+
+  @Input() disciplines: DisciplineSummaryDTO[] = [];
+
+  private kpiService = inject(BackKpiService);
   private datePipe = inject(DatePipe);
 
   fromDate!: string;
   toDate!: string;
+  disciplineId!: string;
 
-  // Señales para los datos de los gráficos
-  ageChartData = signal<any>({
+  ageDistributionChartData = signal<any>({
     type: 'ColumnChart',
     data: [],
     columns: ['Edad', 'Cantidad'],
     options: {
-      title: 'Distribución por Edades',
       legend: { position: 'none' },
       animation: { duration: 500, easing: 'out' }
     }
   });
 
-  totalUsersChartData = signal<any>({
+  totalInscriptionsChartData = signal<any>({
     type: 'Gauge',
-    data: [['Usuarios', 0]],
+    data: [['Inscripciones', 0]],
     options: {
-      title: 'Total de Usuarios',
       width: 400,
       height: 300,
-      max: 2000,
+      max: 100,
       min: 0,
       greenFrom: 0,
-      greenTo: 1500,
-      yellowFrom: 1501,
-      yellowTo: 1750,
-      redFrom: 1751,
-      redTo: 2000,
+      greenTo:   100,
       minorTicks: 5
     }
   });
 
-  genderChartData = signal<any>({
+  gendersDistributionChartData = signal<any>({
     type: 'PieChart',
     data: [],
     columns: ['Género', 'Cantidad'],
@@ -67,13 +64,15 @@ private kpiService = inject(BackKpiService);
   });
 
   ngOnInit() {
+    //console.log("this.disciplines: ", this.disciplines);
     this.setDefaultDates();
+    this.disciplineId = this.disciplines.at(0)?.id || "";
     this.updateCharts();
   }
 
   private setDefaultDates() {
     const from = new Date();
-    from.setFullYear(from.getFullYear() - 5);
+    from.setFullYear(from.getFullYear() - 1);
     this.fromDate = this.formatDate(from);
     this.toDate = this.formatDate(new Date());
   }
@@ -83,36 +82,31 @@ private kpiService = inject(BackKpiService);
   }
 
   updateCharts() {
-    // Actualizar gráfico de edades
-    this.kpiService.kpiUserGetAgeDistribution(this.fromDate, this.toDate)
+    this.kpiService.kpiDisciplineGetAgeDistribution(this.disciplineId, this.fromDate, this.toDate)
       .subscribe({
         next: (data) => {
-          //console.log("kpiUserGetAgeDistribution: ", data);
           const chartData = data.map(item => [item.age, item.count]);
-          this.ageChartData.update(prev => ({ ...prev, data: chartData }));
+          this.ageDistributionChartData.update(prev => ({ ...prev, data: chartData }));
         },
         error: (err) => console.error('Error loading age distribution', err)
       });
 
-    // Actualizar total de usuarios
-    this.kpiService.kpiUserGetQuantity(this.fromDate, this.toDate)
+    this.kpiService.kpiDisciplineGetInscriptionsQuantity(this.disciplineId, this.fromDate, this.toDate)
       .subscribe({
         next: (total) => {
-          //console.log("kpiUserGetQuantity: ", total);
-          this.totalUsersChartData.update(prev => ({
+          this.totalInscriptionsChartData.update(prev => ({
             ...prev,
-            data: [['Usuarios', total]]
+            data: [['Inscripciones', total]]
           }));
         },
-        error: (err) => console.error('Error loading total users', err)
+        error: (err) => console.error('Error loading total inscriptions', err)
       });
 
-    // Actualizar distribución por género
-    this.kpiService.kpiUserGetQuantityForeachGender(this.fromDate, this.toDate)
+    this.kpiService.kpiDisciplineGetInscriptionsQuantityForeachGender(this.disciplineId, this.fromDate, this.toDate)
       .subscribe({
         next: (data) => {
-          //console.log("kpiUserGetQuantityForeachGender: ", data);
-          this.genderChartData.update(prev => ({
+          //console.log("kpiDisciplineGetInscriptionsQuantityForeachGender: ", data);
+          this.gendersDistributionChartData.update(prev => ({
             ...prev,
             data: [
               ['Masculino', data.maleQuantity],
@@ -123,4 +117,5 @@ private kpiService = inject(BackKpiService);
         error: (err) => console.error('Error loading gender distribution', err)
       });
   }
+
 }

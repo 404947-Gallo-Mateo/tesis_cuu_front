@@ -38,7 +38,7 @@
             [disabled]="isLoading && selectedFee === fee"
             (click)="updateFeePaidState(fee)">
             <span *ngIf="isLoading && selectedFee === fee" class="spinner-border spinner-border-sm"></span>
-            {{ fee.paid ? 'Marcar como No Pagada' : 'Marcar como Pagada' }}
+            {{ fee.paid ? 'En proceso...' : 'Marcar como Pagada' }}
           </button>
         </td>
       </tr>

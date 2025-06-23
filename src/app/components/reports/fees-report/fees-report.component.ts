@@ -15,10 +15,11 @@ import { Role } from '../../../models/backend/embeddables/Role';
 import { UserGenre } from '../../../models/backend/embeddables/UserGenre';
 import { FeeDTO } from '../../../models/backend/FeeDTO';
 import { CategorySummaryDTO } from '../../../models/backend/CategorySummaryDTO';
+import { DisciplineFeesDashboardComponent } from '../kpis/discipline-fees-dashboard/discipline-fees-dashboard.component';
 
 @Component({
   selector: 'app-fees-report',
-  imports: [CommonModule, NgxPaginationModule, FormsModule, AgePipe, GenrePipe],
+  imports: [DisciplineFeesDashboardComponent, CommonModule, NgxPaginationModule, FormsModule, AgePipe, GenrePipe],
   templateUrl: './fees-report.component.html',
   styleUrl: './fees-report.component.css'
 })
@@ -132,6 +133,7 @@ filterBySearchTerm(inscriptions: ExpandedStudentInscriptionDTO[], term: string):
       next: (user) => {
         this.currentUser = user;
         this.disciplines = user.teacherDisciplines || [];
+        //console.log("disciplines en report: ", this.disciplines);
         this.initializeDisciplineData();
         this.isLoaded = true;
       },
@@ -164,7 +166,6 @@ initializeDisciplineData(): void {
     });
 
 }
-
 
     updateDebtorFilter(disciplineId: string, value: boolean, isChecked: boolean): void {
     const filterArray = this.disciplineInscriptions[disciplineId].filters.isDebtor;

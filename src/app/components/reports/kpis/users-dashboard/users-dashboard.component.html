@@ -1,13 +1,20 @@
-<div class="filters">
-  <label class="me-5 fs-2 fw-semibold text-dark" for="">KPIs de Usuarios</label>
-  <label class="fw-semibold text-dark">Desde:</label>
-  <input type="date" [(ngModel)]="fromDate" (change)="updateCharts()">
-  
-  <label class="fw-semibold text-dark">Hasta:</label>
-  <input type="date" [(ngModel)]="toDate" (change)="updateCharts()">
+<div class="filters row m-1 mb-2">
+  <div class="col-md-3">
+    <label class="me-5 fs-3 fw-semibold text-dark" for="">KPIs de Usuarios</label>
+  </div>
+
+  <div class="col-md-3">
+    <label class="fw-semibold text-dark">Desde:</label>
+    <input type="date" [(ngModel)]="fromDate" (change)="updateCharts()">
+  </div>
+
+  <div class="col-md-3">
+    <label class="fw-semibold text-dark">Hasta:</label>
+    <input type="date" [(ngModel)]="toDate" (change)="updateCharts()">
+  </div>
 </div>
 
-<div class="charts-container">
+<div class="charts-container mx-1">
   <div class="chart">
     <h4 class="fw-semibold text-dark">Distribución de Edades</h4>
     <google-chart
@@ -17,6 +24,9 @@
       [columns]="ageChartData().columns"
       [options]="ageChartData().options">
     </google-chart>
+    <div class="alert alert-info mt-3" *ngIf="ageChartData().data.length <= 0">
+      No hay información disponible para mostrar
+    </div>
   </div>
   
   <div class="chart">
@@ -27,16 +37,25 @@
       [data]="totalUsersChartData().data"
       [options]="totalUsersChartData().options">
     </google-chart>
+    <div class="alert alert-info mt-3" *ngIf="totalUsersChartData().data.length <= 0">
+      No hay información disponible para mostrar
+    </div>
   </div>
   
 <div class="chart">
   <h4 class="fw-semibold text-dark">Distribución por Género</h4>
+  @if (genderChartData().data.at(0) != undefined && genderChartData().data.at(1) != undefined && genderChartData().data.at(0).at(0) != undefined && genderChartData().data.at(1).at(1) != undefined) {
   <google-chart 
-    *ngIf="genderChartData().data.length > 0"
+    *ngIf="genderChartData().data.at(1).at(1) > 0 || genderChartData().data.at(0).at(1) > 0"
     [type]="genderChartData().type"
     [data]="genderChartData().data"
     [columns]="genderChartData().columns"
     [options]="genderChartData().options">
   </google-chart>
+    <div class="alert alert-info mt-3" *ngIf="genderChartData().data.at(1).at(1) == 0 && genderChartData().data.at(0).at(1) == 0">
+        No hay información disponible para mostrar 
+    </div>
+  }
+
 </div>
 </div>
