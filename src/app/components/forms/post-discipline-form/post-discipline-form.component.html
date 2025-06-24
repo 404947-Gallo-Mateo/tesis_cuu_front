@@ -12,11 +12,19 @@
           <div class="mb-3">
             <label class="form-label">Nombre de la Disciplina</label>
             <input type="text" placeholder="Ingrese el nombre..." maxlength="100" class="form-control" formControlName="name" required>
+            <div *ngIf="getFormControl('name')?.invalid && (getFormControl('name')?.dirty || getFormControl('name')?.touched)" class="text-danger">
+              <small *ngIf="getFormControl('name')?.errors?.['required']">El nombre es requerido</small>
+              <small *ngIf="getFormControl('name')?.errors?.['maxlength']">El nombre no puede exceder los 100 caracteres</small>
+            </div>
           </div>
 
           <div class="mb-3">
             <label class="form-label">Descripción</label>
             <textarea class="form-control" formControlName="description" maxlength="1000" rows="3"></textarea>
+            <div *ngIf="getFormControl('description')?.invalid && (getFormControl('description')?.dirty || getFormControl('description')?.touched)" class="text-danger">
+              <small *ngIf="getFormControl('description')?.errors?.['required']">La descripción es requerida</small>
+              <small *ngIf="getFormControl('description')?.errors?.['maxlength']">La descripción no puede exceder los 1000 caracteres</small>
+            </div>            
           </div>
 
           <hr>
@@ -36,6 +44,12 @@
                   <i class="bi bi-trash"></i>
                 </button>
               </div>
+              <div *ngIf="teacherControl.invalid && (teacherControl.dirty || teacherControl.touched)" class="text-danger">
+                <small *ngIf="teacherControl.errors?.['required']">Seleccione un profesor</small>
+              </div>
+            </div>
+            <div *ngIf="teacherIds.invalid && (teacherIds.dirty || teacherIds.touched)" class="text-danger">
+              <small *ngIf="teacherIds.errors?.['required']">Debe agregar al menos un profesor</small>
             </div>
             <button class="btn btn-outline-primary btn-sm" type="button" (click)="addTeacher()">
               <i class="bi bi-plus"></i> Añadir Profesor
@@ -43,118 +57,151 @@
           </div>
 
           <hr>
-<!-- Categorías -->
-<h4 class="mt-4">Categorías</h4>
-<div formArrayName="categories">
-  <div *ngFor="let categoryGroup of categories.controls; let i = index" [formGroupName]="i" class="card mb-3">
-    <div class="card-header d-flex justify-content-between align-items-center" 
-         (click)="toggleCategory(i)" 
-         style="cursor: pointer;">
-      <h5 class="mb-0">Categoría {{i + 1}} <span class="badge bg-primary ms-3">
-          {{ isCategoryExpanded(i) ? 'Ocultar' : 'Mostrar' }}
-        </span></h5>
-      <div>        
-        <button class="btn btn-sm btn-outline-danger" type="button" (click)="removeCategory(i); $event.stopPropagation()">
-          <i class="bi bi-trash"></i> Eliminar
-        </button>
-      </div>
-    </div>
-    
-    <div class="card-body" [class.collapse]="!isCategoryExpanded(i)" [id]="'categoryCollapse'+i">
-      <div class="row g-3 mb-3">
-        <div class="col-md-4">
-          <label class="form-label">Nombre de categoría</label>
-          <input type="text" placeholder="Ingrese el nombre..." class="form-control" maxlength="100" formControlName="name" required>
-        </div>
-
-        <div class="col-md-8">
-          <label class="form-label">Descripción</label>
-          <input type="text" placeholder="Ingrese el nombre..." class="form-control" maxlength="1000" formControlName="description" required>
-        </div>
-      </div>
-
-      <div class="row g-3 mb-3">
-        <div class="col-md-4">
-          <label class="form-label">Tarifa mensual</label>
-          <input min="1" type="number" class="form-control" formControlName="monthlyFee" required>
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">Género permitido</label>
-          <select class="form-select" formControlName="allowedGenre">
-            <option *ngFor="let genre of genres" [value]="genre.value">
-              {{ genre.label }}
-            </option>
-          </select>
-        </div>
-        <div class="col-md-4">
-          <label class="form-label">Espacios disponibles</label>
-          <input type="number" min="0" class="form-control" formControlName="availableSpaces" required>
-        </div>
-      </div>
-
-      <!-- Rango de edad -->
-      <div class="row g-3 mb-3" formGroupName="ageRange">
-        <div class="col-md-6">
-          <label class="form-label">Edad mínima</label>
-          <input type="number" min="1" max="100" class="form-control" formControlName="minAge" required>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Edad máxima</label>
-          <input type="number" min="1" max="100" class="form-control" formControlName="maxAge" required>
-        </div>
-      </div>
-
-      <!-- Horarios con toggle -->
-      <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
-        <h5 class="mb-0">Horarios</h5>
-        <button class="btn btn-sm btn-secondary" 
-                type="button" 
-                (click)="toggleSchedules(i); $event.stopPropagation()">
-          <i class="bi" [class.bi-chevron-down]="!areSchedulesExpanded(i)" [class.bi-chevron-up]="areSchedulesExpanded(i)"></i>
-          {{ areSchedulesExpanded(i) ? 'Ocultar' : 'Mostrar' }}
-        </button>
-      </div>
-
-      <div [class.collapse]="!areSchedulesExpanded(i)" id="schedulesCollapse{{i}}">
-        <div formArrayName="schedules">
-          <div *ngFor="let scheduleGroup of getSchedules(i).controls; let j = index" [formGroupName]="j" class="card mb-2">
-            <div class="card-body">
-              <div class="row g-3 align-items-center">
-                <div class="col-md-4">
-                  <label class="form-label">Día</label>
-                  <select class="form-select" formControlName="dayOfWeek">
-                    <option *ngFor="let day of daysOfWeek" [value]="day.value">
-                      {{ day.label }}
-                    </option>
-                  </select>
-                </div>
-                <div class="col-md-3">
-                  <label class="form-label">Hora inicio</label>
-                  <input type="time" step="1" class="form-control" formControlName="startHour" required>
-                </div>
-                <div class="col-md-3">
-                  <label class="form-label">Hora fin</label>
-                  <input type="time" step="1" class="form-control" formControlName="endHour" required>
-                </div>
-                <div class="col-md-2 d-flex align-items-end">
-                  <button class="btn btn-outline-danger" type="button" (click)="removeSchedule(i, j); $event.stopPropagation()">
-                    <i class="bi bi-trash"></i>
+          <!-- Categorías -->
+          <h4 class="mt-4">Categorías</h4>
+          <div formArrayName="categories">
+            <div *ngFor="let categoryGroup of categories.controls; let i = index" [formGroupName]="i" class="card mb-3">
+              <div class="card-header d-flex justify-content-between align-items-center" 
+                  (click)="toggleCategory(i)" 
+                  style="cursor: pointer;">
+                <h5 class="mb-0">Categoría {{i + 1}} <span class="badge bg-primary ms-3">
+                    {{ isCategoryExpanded(i) ? 'Ocultar' : 'Mostrar' }}
+                  </span></h5>
+                <div>        
+                  <button class="btn btn-sm btn-outline-danger" type="button" (click)="removeCategory(i); $event.stopPropagation()">
+                    <i class="bi bi-trash"></i> Eliminar
                   </button>
                 </div>
               </div>
+              
+              <div class="card-body" [class.collapse]="!isCategoryExpanded(i)" [id]="'categoryCollapse'+i">
+                <div class="row g-3 mb-3">
+                  <div class="col-md-4">
+                    <label class="form-label">Nombre de categoría</label>
+                    <input type="text" placeholder="Ingrese el nombre..." class="form-control" maxlength="100" formControlName="name" required>
+                    <div *ngIf="getCategoryControl(i, 'name')?.invalid && (getCategoryControl(i, 'name')?.dirty || getCategoryControl(i, 'name')?.touched)" class="text-danger">
+                        <small *ngIf="getCategoryControl(i, 'name')?.errors?.['required']">El nombre es requerido</small>
+                        <small *ngIf="getCategoryControl(i, 'name')?.errors?.['maxlength']">El nombre no puede exceder los 100 caracteres</small>
+                    </div>          
+                  </div>
+
+                  <div class="col-md-8">
+                    <label class="form-label">Descripción</label>
+                    <input type="text" placeholder="Ingrese el nombre..." class="form-control" maxlength="1000" formControlName="description" required>
+                    <div *ngIf="getCategoryControl(i, 'description')?.invalid && (getCategoryControl(i, 'description')?.dirty || getCategoryControl(i, 'description')?.touched)" class="text-danger">
+                      <small *ngIf="getCategoryControl(i, 'description')?.errors?.['required']">La descripción es requerida</small>
+                      <small *ngIf="getCategoryControl(i, 'description')?.errors?.['maxlength']">La descripción no puede exceder los 1000 caracteres</small>
+                    </div>                    
+                  </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                  <div class="col-md-4">
+                    <label class="form-label">Tarifa mensual</label>
+                    <input min="1" type="number" class="form-control" formControlName="monthlyFee" required>
+                    <div *ngIf="getCategoryControl(i, 'monthlyFee')?.invalid && (getCategoryControl(i, 'monthlyFee')?.dirty || getCategoryControl(i, 'monthlyFee')?.touched)" class="text-danger">
+                      <small *ngIf="getCategoryControl(i, 'monthlyFee')?.errors?.['required']">La tarifa es requerida</small>
+                      <small *ngIf="getCategoryControl(i, 'monthlyFee')?.errors?.['min']">La tarifa debe ser mayor o igual a 0</small>
+                    </div>                    
+                  </div>
+
+                  <div class="col-md-4">
+                    <label class="form-label">Género permitido</label>
+                    <select class="form-select" formControlName="allowedGenre">
+                      <option *ngFor="let genre of genres" [value]="genre.value">
+                        {{ genre.label }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-4">
+                    <label class="form-label">Espacios disponibles</label>
+                    <input type="number" min="0" class="form-control" formControlName="availableSpaces" required>
+                  </div>
+                </div>
+
+                <!-- Rango de edad -->
+                <div class="row g-3 mb-3" formGroupName="ageRange">
+                  <div class="col-md-6">
+                    <label class="form-label">Edad mínima</label>
+                    <input type="number" min="1" max="100" class="form-control" formControlName="minAge" required>
+                    <div *ngIf="getNestedCategoryControl(i, 'ageRange', 'minAge')?.invalid && (getNestedCategoryControl(i, 'ageRange', 'minAge')?.dirty || getNestedCategoryControl(i, 'ageRange', 'minAge')?.touched)" class="text-danger">
+                      <small *ngIf="getNestedCategoryControl(i, 'ageRange', 'minAge')?.errors?.['required']">La edad mínima es requerida</small>
+                      <small *ngIf="getNestedCategoryControl(i, 'ageRange', 'minAge')?.errors?.['min']">La edad mínima debe ser mayor o igual a 0</small>
+                      <small *ngIf="getNestedCategoryControl(i, 'ageRange', 'minAge')?.errors?.['max']">La edad mínima no puede ser mayor a 100</small>
+                    </div>                    
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Edad máxima</label>
+                    <input type="number" min="1" max="100" class="form-control" formControlName="maxAge" required>
+                    <div *ngIf="getNestedCategoryControl(i, 'ageRange', 'maxAge')?.invalid && (getNestedCategoryControl(i, 'ageRange', 'maxAge')?.dirty || getNestedCategoryControl(i, 'ageRange', 'maxAge')?.touched)" class="text-danger">
+                      <small *ngIf="getNestedCategoryControl(i, 'ageRange', 'maxAge')?.errors?.['required']">La edad máxima es requerida</small>
+                      <small *ngIf="getNestedCategoryControl(i, 'ageRange', 'maxAge')?.errors?.['min']">La edad máxima debe ser mayor o igual a 0</small>
+                      <small *ngIf="getNestedCategoryControl(i, 'ageRange', 'maxAge')?.errors?.['max']">La edad máxima no puede ser mayor a 100</small>
+                    </div>                    
+                  </div>
+                </div>
+
+                <!-- Horarios con toggle -->
+                <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
+                  <h5 class="mb-0">Horarios</h5>
+                  <button class="btn btn-sm btn-secondary" 
+                          type="button" 
+                          (click)="toggleSchedules(i); $event.stopPropagation()">
+                    <i class="bi" [class.bi-chevron-down]="!areSchedulesExpanded(i)" [class.bi-chevron-up]="areSchedulesExpanded(i)"></i>
+                    {{ areSchedulesExpanded(i) ? 'Ocultar' : 'Mostrar' }}
+                  </button>
+                </div>
+
+                <div [class.collapse]="!areSchedulesExpanded(i)" id="schedulesCollapse{{i}}">
+                  <div formArrayName="schedules">
+                    <div *ngFor="let scheduleGroup of getSchedules(i).controls; let j = index" [formGroupName]="j" class="card mb-2">
+                      <div class="card-body">
+                        <div class="row g-3 align-items-center">
+                          <div class="col-md-4">
+                            <label class="form-label">Día</label>
+                            <select class="form-select" formControlName="dayOfWeek">
+                              <option *ngFor="let day of daysOfWeek" [value]="day.value">
+                                {{ day.label }}
+                              </option>
+                            </select>
+                          </div>
+                          <div class="col-md-3">
+                            <label class="form-label">Hora inicio</label>
+                            <input type="time" step="1" class="form-control" formControlName="startHour" required>
+                            <div *ngIf="getScheduleControl(i, j, 'startHour')?.invalid && (getScheduleControl(i, j, 'startHour')?.dirty || getScheduleControl(i, j, 'startHour')?.touched)" class="text-danger">
+                              <small *ngIf="getScheduleControl(i, j, 'startHour')?.errors?.['required']">La hora de inicio es requerida</small>
+                            </div>                            
+                          </div>
+                          <div class="col-md-3">
+                            <label class="form-label">Hora fin</label>
+                            <input type="time" step="1" class="form-control" formControlName="endHour" required>
+                            <div *ngIf="getScheduleControl(i, j, 'endHour')?.invalid && (getScheduleControl(i, j, 'endHour')?.dirty || getScheduleControl(i, j, 'endHour')?.touched)" class="text-danger">
+                              <small *ngIf="getScheduleControl(i, j, 'endHour')?.errors?.['required']">La hora de fin es requerida</small>
+                            </div>                            
+                          </div>
+                          <div class="col-md-2 d-flex align-items-end">
+                            <button class="btn btn-outline-danger" type="button" (click)="removeSchedule(i, j); $event.stopPropagation()">
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="categories.invalid && (categories.dirty || categories.touched)" class="text-danger">
+                        <small *ngIf="categories.errors?.['required']">Debe agregar al menos una Categoría</small>
+                    </div>
+                    <button class="btn btn-outline-primary btn-sm" type="button" (click)="addSchedule(i); $event.stopPropagation()">
+                      <i class="bi bi-plus"></i> Añadir Horario
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
+            <button class="btn btn-outline-primary" type="button" (click)="addCategory()">
+              <i class="bi bi-plus"></i> Añadir Categoría
+            </button>
           </div>
-          <button class="btn btn-outline-primary btn-sm" type="button" (click)="addSchedule(i); $event.stopPropagation()">
-            <i class="bi bi-plus"></i> Añadir Horario
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <button class="btn btn-outline-primary" type="button" (click)="addCategory()">
-    <i class="bi bi-plus"></i> Añadir Categoría
-  </button>
-</div>
 
         </div>
         
