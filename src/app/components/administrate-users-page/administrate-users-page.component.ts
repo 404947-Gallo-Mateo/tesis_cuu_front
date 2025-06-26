@@ -80,6 +80,9 @@ private userService = inject(BackUserService);
 
   this.userService.getAllUsers().subscribe({
     next: (users) => {
+
+      console.log("loadUsers(): ", users);
+
       const filteredUsers = users.filter(user => {
         if (user.role === Role.SUPER_ADMIN_CUU) {
           return false;

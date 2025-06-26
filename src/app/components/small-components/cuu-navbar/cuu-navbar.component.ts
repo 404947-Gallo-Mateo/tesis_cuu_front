@@ -47,7 +47,6 @@ export class CuuNavbarComponent implements OnInit {
   ngOnInit(): void {
     this.keycloakHelper.init().subscribe({
       next: (authenticated) => {
-        
       },
       error: (error) => {
         console.error('Error al inicializar Keycloak:', error);
@@ -69,6 +68,7 @@ export class CuuNavbarComponent implements OnInit {
       })
     ).subscribe({
       next: (user) => {
+        console.log("currentUser: ", user);
         this.currentUser = user;
       },
       error: (error) => {

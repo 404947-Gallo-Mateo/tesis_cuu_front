@@ -20,7 +20,7 @@
 
                   <div class="mb-3">
                     <label>Email:</label>
-                    <input type="email" formControlName="email" class="form-control" readonly/>
+                    <input type="email" formControlName="email" class="form-control" readonly="readonly" style="background-color: rgb(177, 177, 177);"/>
                   </div>
 
                   <div class="mb-3">
@@ -62,8 +62,8 @@
               </div>             
               
               <div class="d-flex justify-content-between mt-3">
-                <button type="button" class="btn btn-danger" [disabled]="!form.valid" (click)="deleteKeycloakUser()">Eliminar mi Usuario</button>
-                <button type="submit" class="btn btn-primary">Actualizar mi Usuario</button>
+                <button type="button" class="btn btn-danger" (click)="deleteKeycloakUser()">Eliminar mi Usuario</button>
+                <button type="submit" class="btn btn-primary" [disabled]="!form.valid">Actualizar mi Usuario</button>
               </div>
             </form>
         </div>

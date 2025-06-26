@@ -42,7 +42,7 @@ export class KeycloakHelperService {
       }),
       map(authenticated => {
         if (authenticated) {
-          //console.log("usuario logueado:", this.keycloak);
+          console.log("usuario logueado:", this.keycloak);
         } else {
           console.warn('Usuario no autenticado');
         }

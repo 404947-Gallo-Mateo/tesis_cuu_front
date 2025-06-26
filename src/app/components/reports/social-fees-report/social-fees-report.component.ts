@@ -83,6 +83,7 @@ export class SocialFeesReportComponent {
       takeUntil(this.destroy$)
     ).subscribe({
       next: (users) => {
+        //console.log("users", users);
         this.allUsers = users;
         this.updateFilteredUsers();
       },
@@ -140,6 +141,8 @@ export class SocialFeesReportComponent {
     } else if (!isChecked && index !== -1) {
       this.filters.isDebtor.splice(index, 1);
     }
+
+    console.log("updateDebtorFilter filters debtor: ", this.filters.isDebtor);
     
     this.applyFilter();
   }

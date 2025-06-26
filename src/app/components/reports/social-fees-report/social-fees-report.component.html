@@ -20,21 +20,21 @@
             <div class="d-flex flex-wrap gap-3">
 
             <div class="form-check">
-              <input #checkboxEl 
+              <input #checkboxEl1 
               class="form-check-input" 
                     type="checkbox" 
                     id="debtor-true"
-                    (change)="updateDebtorFilter(true, checkboxEl.checked)">
+                    (change)="updateDebtorFilter(true, checkboxEl1.checked)">
               <label class="form-check-label" for="debtor-true">
                 Deudor
               </label>
             </div>
             <div class="form-check">
-              <input #checkboxEl 
+              <input #checkboxEl2 
               class="form-check-input" 
                     type="checkbox" 
                     id="debtor-false"
-                    (change)="updateDebtorFilter(false, checkboxEl.checked)">
+                    (change)="updateDebtorFilter(false, checkboxEl2.checked)">
               <label class="form-check-label" for="debtor-false">
                 Al día
               </label>

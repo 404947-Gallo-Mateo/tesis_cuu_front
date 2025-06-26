@@ -15,7 +15,7 @@
 
         <div class="mb-3">
           <label>Email:</label>
-          <input type="email" formControlName="email" class="form-control" style="background-color: rgb(177, 177, 177);" readonly="readonly"/>          
+          <input type="email" formControlName="email" class="form-control" readonly="readonly" style="background-color: rgb(177, 177, 177);"/>          
             <div *ngIf="getFormControl('email')?.invalid && (getFormControl('email')?.dirty || getFormControl('email')?.touched)" class="text-danger">
               <small *ngIf="getFormControl('email')?.errors?.['required']">El email es requerido</small>
             </div>            

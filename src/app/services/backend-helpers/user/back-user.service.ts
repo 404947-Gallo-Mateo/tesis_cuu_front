@@ -112,7 +112,9 @@ export class BackUserService {
   }
 
   deleteKeycloakUser(keycloakId: string): Observable<boolean> {
-    return this.http.delete<boolean>(`${this.API_URL}/delete/${encodeURIComponent(keycloakId)}`).pipe(
+    let url = `${this.API_URL}/delete/${encodeURIComponent(keycloakId)}`;
+    console.log("deleteKeycloakUser url: ",url);
+    return this.http.delete<boolean>(url).pipe(
       retry({
       count: 3,
       delay: 1000,
