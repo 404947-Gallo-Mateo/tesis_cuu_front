@@ -7,16 +7,26 @@
         <div class="mb-3">
           <label>Nombre:</label>
           <input type="text" formControlName="firstName" class="form-control" />
+            <div *ngIf="getFormControl('firstName')?.invalid && (getFormControl('firstName')?.dirty || getFormControl('firstName')?.touched)" class="text-danger">
+              <small *ngIf="getFormControl('firstName')?.errors?.['required']">El nombre es requerido</small>
+              <small *ngIf="getFormControl('firstName')?.errors?.['maxlength']">El nombre no puede exceder los 100 caracteres</small>
+            </div>
         </div>
 
         <div class="mb-3">
           <label>Email:</label>
-          <input type="email" formControlName="email" class="form-control" readonly/>
+          <input type="email" formControlName="email" class="form-control" style="background-color: rgb(177, 177, 177);" readonly="readonly"/>          
+            <div *ngIf="getFormControl('email')?.invalid && (getFormControl('email')?.dirty || getFormControl('email')?.touched)" class="text-danger">
+              <small *ngIf="getFormControl('email')?.errors?.['required']">El email es requerido</small>
+            </div>            
         </div>
 
         <div class="mb-3">
           <label>Fecha de nacimiento:</label>
           <input type="date" formControlName="birthDate" class="form-control" />
+            <div *ngIf="getFormControl('birthDate')?.invalid && (getFormControl('birthDate')?.dirty || getFormControl('birthDate')?.touched)" class="text-danger">
+              <small *ngIf="getFormControl('birthDate')?.errors?.['required']">La fecha de nacimiento es requerida</small>
+            </div>          
         </div>
       </div>
 
@@ -25,6 +35,10 @@
         <div class="mb-3">
           <label>Apellido:</label>
           <input type="text" formControlName="lastName" class="form-control" />
+            <div *ngIf="getFormControl('lastName')?.invalid && (getFormControl('lastName')?.dirty || getFormControl('lastName')?.touched)" class="text-danger">
+              <small *ngIf="getFormControl('lastName')?.errors?.['required']">El apellido es requerido</small>
+              <small *ngIf="getFormControl('lastName')?.errors?.['maxlength']">El apellido no puede exceder los 100 caracteres</small>
+            </div>
         </div>                
 
         <div class="mb-3">
@@ -32,6 +46,9 @@
           <select formControlName="genre" class="form-select">
             <option *ngFor="let g of genres" [value]="g.value">{{ g.label }}</option>
           </select>
+            <div *ngIf="getFormControl('genre')?.invalid && (getFormControl('genre')?.dirty || getFormControl('genre')?.touched)" class="text-danger">
+              <small *ngIf="getFormControl('genre')?.errors?.['required']">El género es requerido</small>
+            </div>               
         </div>
 
         <div class="mb-3">
@@ -39,12 +56,15 @@
           <select formControlName="role" class="form-select">
             <option *ngFor="let r of roles" [value]="r.value">{{ r.label }}</option>
           </select>
+            <div *ngIf="getFormControl('role')?.invalid && (getFormControl('role')?.dirty || getFormControl('role')?.touched)" class="text-danger">
+              <small *ngIf="getFormControl('role')?.errors?.['required']">El rol es requerido</small>
+            </div>                
         </div>
       </div>
     </div>             
     
     <div class="d-flex justify-content-end mt-3">
-      <button type="submit" class="btn btn-primary">Actualizar Usuario</button>
+      <button type="submit" [disabled]="!form.valid" class="btn btn-primary">Actualizar Usuario</button>
     </div>
   </form>
 </div>

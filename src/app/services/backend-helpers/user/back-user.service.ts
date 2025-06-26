@@ -125,7 +125,7 @@ export class BackUserService {
     );
   }
 
-  updateInfoOfKeycloakUser(keycloakId: string, userDTO: UserDTO): Observable<ExpandedUserDTO> {
+  selfUpdateInfoOfKeycloakUser(keycloakId: string, userDTO: UserDTO): Observable<ExpandedUserDTO> {
     return this.http.put<ExpandedUserDTO>(`${this.API_URL}/update/${encodeURIComponent(keycloakId)}`, userDTO).pipe(
       retry({
       count: 3,
@@ -136,6 +136,25 @@ export class BackUserService {
         // Actualizar automáticamente el usuario en cache cuando se actualiza
         //console.log("Usuario actualizado via API:", updatedUser);
         this.currentUserSubject.next(updatedUser);
+      }),
+      catchError(error => {
+        console.error('No se pudo actualizar la información del usuario luego de 3 intentos.');
+        return observableThrowError(() => error);
+      })
+    );
+  }
+
+    adminsUpdateInfoOfKeycloakUser(keycloakId: string, userDTO: UserDTO): Observable<ExpandedUserDTO> {
+    return this.http.put<ExpandedUserDTO>(`${this.API_URL}/update/${encodeURIComponent(keycloakId)}`, userDTO).pipe(
+      retry({
+      count: 3,
+      delay: 1000,
+      resetOnSuccess: true
+    }),
+      tap(updatedUser => {
+        // Actualizar automáticamente el usuario en cache cuando se actualiza
+        //console.log("Usuario actualizado via API:", updatedUser);
+        //this.currentUserSubject.next(updatedUser);
       }),
       catchError(error => {
         console.error('No se pudo actualizar la información del usuario luego de 3 intentos.');

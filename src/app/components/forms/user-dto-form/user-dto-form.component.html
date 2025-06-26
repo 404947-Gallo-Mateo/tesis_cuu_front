@@ -62,7 +62,7 @@
               </div>             
               
               <div class="d-flex justify-content-between mt-3">
-                <button type="button" class="btn btn-danger" (click)="deleteKeycloakUser()">Eliminar mi Usuario</button>
+                <button type="button" class="btn btn-danger" [disabled]="!form.valid" (click)="deleteKeycloakUser()">Eliminar mi Usuario</button>
                 <button type="submit" class="btn btn-primary">Actualizar mi Usuario</button>
               </div>
             </form>

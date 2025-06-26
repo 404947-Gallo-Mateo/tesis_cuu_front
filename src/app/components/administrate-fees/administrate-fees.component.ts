@@ -140,33 +140,32 @@ initializeDisciplineData(): void {
       disciplineData.inscriptions = inscriptions;
       disciplineData.loading = false;
       //console.log("disciplineID: ", disciplineId, " | inscriptions: ", disciplineData.inscriptions)
-    });
-
-    
+    });    
   }
 
-  loadDebtorInscriptions(): void {
-    this.loadingDebtors = true;
-    this.debtorInscriptions = [];
+loadDebtorInscriptions(): void {
+  this.loadingDebtors = true;
+  this.debtorInscriptions = [];
 
-    this.inscriptionService.getAllWithFees().pipe(
-      catchError(error => {
-        console.error('Error cargando inscripciones:', error);
-        this.loadingDebtors = false;
-        return of([]);
-      })
-    ).subscribe(inscriptions => {
-      //console.log("inscriptions: ", inscriptions);
-      //console.log("inscriptions: ", inscriptions);
-
-      this.debtorInscriptions = inscriptions.filter(ins => ins.isDebtor);
+  this.inscriptionService.getAllWithFees().pipe(
+    catchError(error => {
+      console.error('Error cargando inscripciones:', error);
       this.loadingDebtors = false;
-      //console.log("debtorInscriptions: ", this.debtorInscriptions);
-      //console.log("disciplineID: ", disciplineId, " | inscriptions: ", disciplineData.inscriptions)
-    });
+      return of([]);
+    })
+  ).subscribe(inscriptions => {
+    // Extraemos los IDs de las disciplinas permitidas
+    const allowedDisciplineIds = this.disciplines.map(d => d.id);
     
+    // Filtramos usando los IDs
+    this.debtorInscriptions = inscriptions.filter(ins => 
+      ins.isDebtor && 
+      allowedDisciplineIds.includes(ins.discipline.id)
+    );
     
-  }
+    this.loadingDebtors = false;
+  });      
+}
 
   ngOnDestroy(): void {
     this.destroy$.next();

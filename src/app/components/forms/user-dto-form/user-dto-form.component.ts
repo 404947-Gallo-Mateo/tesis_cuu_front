@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, Input, SimpleChanges, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Role } from '../../../models/backend/embeddables/Role';
 import { Genre } from '../../../models/backend/embeddables/Genre';
 import { DisciplineSummaryDTO } from '../../../models/backend/DisciplineSummaryDTO';
@@ -99,6 +99,10 @@ private parseDateString(dateStr: string): string {
     });
   }
 
+    getFormControl(controlName: string): AbstractControl | null {
+      return this.form.get(controlName);
+    }
+
 submitUpdatedKeycloakUser(): void {
   if (this.form.valid) {
     const form = this.form.value;
@@ -136,7 +140,7 @@ submitUpdatedKeycloakUser(): void {
       cancelButtonText: 'Cancelar'
     }).then(result => {
       if (result.isConfirmed) {
-        this.backUserService.updateInfoOfKeycloakUser(
+        this.backUserService.selfUpdateInfoOfKeycloakUser(
           expandedUserDTO.keycloakId,
           expandedUserDTO
         ).subscribe({
