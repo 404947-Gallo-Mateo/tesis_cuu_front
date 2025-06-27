@@ -5,7 +5,7 @@
       <!-- Columna izquierda -->
       <div class="col-md-6">
         <div class="mb-3">
-          <label>Nombre:</label>
+          <label class="form-label">Nombre</label>
           <input type="text" formControlName="firstName" class="form-control" />
             <div *ngIf="getFormControl('firstName')?.invalid && (getFormControl('firstName')?.dirty || getFormControl('firstName')?.touched)" class="text-danger">
               <small *ngIf="getFormControl('firstName')?.errors?.['required']">El nombre es requerido</small>
@@ -14,7 +14,7 @@
         </div>
 
         <div class="mb-3">
-          <label>Email:</label>
+          <label class="form-label">Email</label>
           <input type="email" formControlName="email" class="form-control" readonly="readonly" style="background-color: rgb(177, 177, 177);"/>          
             <div *ngIf="getFormControl('email')?.invalid && (getFormControl('email')?.dirty || getFormControl('email')?.touched)" class="text-danger">
               <small *ngIf="getFormControl('email')?.errors?.['required']">El email es requerido</small>
@@ -22,7 +22,7 @@
         </div>
 
         <div class="mb-3">
-          <label>Fecha de nacimiento:</label>
+          <label class="form-label">Fecha de nacimiento</label>
           <input type="date" formControlName="birthDate" class="form-control" />
             <div *ngIf="getFormControl('birthDate')?.invalid && (getFormControl('birthDate')?.dirty || getFormControl('birthDate')?.touched)" class="text-danger">
               <small *ngIf="getFormControl('birthDate')?.errors?.['required']">La fecha de nacimiento es requerida</small>
@@ -33,7 +33,7 @@
       <!-- Columna derecha -->
       <div class="col-md-6">
         <div class="mb-3">
-          <label>Apellido:</label>
+          <label class="form-label">Apellido</label>
           <input type="text" formControlName="lastName" class="form-control" />
             <div *ngIf="getFormControl('lastName')?.invalid && (getFormControl('lastName')?.dirty || getFormControl('lastName')?.touched)" class="text-danger">
               <small *ngIf="getFormControl('lastName')?.errors?.['required']">El apellido es requerido</small>
@@ -42,7 +42,7 @@
         </div>                
 
         <div class="mb-3">
-          <label>Género:</label>
+          <label class="form-label">Género</label>
           <select formControlName="genre" class="form-select">
             <option *ngFor="let g of genres" [value]="g.value">{{ g.label }}</option>
           </select>
@@ -52,7 +52,7 @@
         </div>
 
         <div class="mb-3">
-          <label>Rol:</label>
+          <label class="form-label">Rol</label>
           <select formControlName="role" class="form-select">
             <option *ngFor="let r of roles" [value]="r.value">{{ r.label }}</option>
           </select>

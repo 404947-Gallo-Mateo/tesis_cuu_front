@@ -40,15 +40,15 @@
                        (click)="$event.stopPropagation()">
                     <button class="dropdown-item d-block w-100 text-start px-3 py-2 text-dark"
                             (click)="openInscriptionsModal(discipline.id)">
-                      Gestionar Inscripciones
+                      <i class="me-2 bi bi-bar-chart-line"></i> Gestionar Inscripciones 
                     </button>
                     <button class="dropdown-item d-block w-100 text-start px-3 py-2 text-dark" 
                             (click)="openDisciplineModal(discipline)">
-                      Actualizar Información
+                      <i class="me-2 bi bi-info-lg"></i> Actualizar Información 
                     </button>
                     <button class="dropdown-item fw-semibold d-block w-100 text-start px-3 py-2 text-danger"
                             (click)="deleteDiscipline(discipline)">
-                      Eliminar Disciplina 
+                      <i class="me-2 bi bi-trash"></i> Eliminar Disciplina 
                     </button>                    
                   </div>
                 }
