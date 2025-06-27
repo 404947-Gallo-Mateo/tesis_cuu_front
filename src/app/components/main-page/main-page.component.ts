@@ -102,5 +102,11 @@ export class MainPageComponent {
       this.showModal = false;
       this.selectedCategory = undefined;
     }
+
+      translateAllowedGenre(genreEnum: string): string {
+    if (genreEnum === "MALE") return "♂ Masculino";
+    if (genreEnum === "FEMALE") return "♀ Femenino";
+    return "♂♀ Ambos";
+  }
   
 }

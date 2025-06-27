@@ -131,7 +131,7 @@ submitUpdatedKeycloakUser(): void {
 
     Swal.fire({
       title: '¿Confirmar actualización?',
-      text: 'Se actualizarán los datos de usuario.',
+      text: 'Se actualizarán los datos de su usuario.',
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -146,11 +146,11 @@ submitUpdatedKeycloakUser(): void {
         ).subscribe({
           next: (resp) => {
             this.backUserService.setCurrentUser(resp);
-            Swal.fire('Actualizado', 'El usuario fue actualizado correctamente.', 'success');
+            Swal.fire('Actualizado', 'Su usuario fue actualizado correctamente.', 'success');
           },
           error: (err) => {
             //console.error('Error actualizando usuario:', err);
-            Swal.fire('Error', 'Hubo un problema al actualizar el usuario.', 'error');
+            Swal.fire('Error', 'Hubo un problema al actualizar su usuario.', 'error');
           }
         });
       }
@@ -165,7 +165,7 @@ deleteKeycloakUser(): void {
 
   Swal.fire({
     title: '¿Estás seguro?',
-    text: 'Esta acción eliminará el Usuario permanentemente.',
+    text: 'Esta acción eliminará su Usuario permanentemente.',
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#d33',
@@ -179,15 +179,15 @@ deleteKeycloakUser(): void {
           //console.log("resp deleteKeycloakUser(): ", resp);
 
           if (resp) {
-            Swal.fire('Eliminado', 'El usuario fue eliminado correctamente.', 'success');
+            Swal.fire('Eliminado', 'Su usuario fue eliminado correctamente.', 'success');
             this.keycloakHelper.logout();
           } else {
-            Swal.fire('Error', 'Hubo un problema en la Base de Datos al eliminar el usuario.', 'error');
+            Swal.fire('Error', 'Hubo un problema en la Base de Datos al eliminar su usuario.', 'error');
           }
         },
         error: (err) => {
           //console.error('Error eliminando usuario:', err);
-          Swal.fire('Error', 'Hubo un problema en Keycloak al eliminar el usuario.', 'error');
+          Swal.fire('Error', 'Hubo un problema en Keycloak al eliminar su usuario.', 'error');
         }
       });
     }

@@ -72,4 +72,68 @@ export class CuuStudentDisciplinesComponent implements OnInit, OnDestroy {
     this.showModal = false;
     this.selectedCategory = undefined;
   }
+
+  // Nuevo método para obtener el próximo horario
+  getNextSchedule(category: CategoryDTO): string {
+    if (!category.schedules || category.schedules.length === 0) {
+      return 'Sin horarios programados';
+    }
+
+    const today = new Date();
+    const currentDay = today.getDay(); // 0 (domingo) - 6 (sábado)
+    const dayMap: { [key: string]: number } = {
+      'SUNDAY': 0, 
+      'MONDAY': 1,
+      'TUESDAY': 2,
+      'WEDNESDAY': 3,
+      'THURSDAY': 4,
+      'FRIDAY': 5,
+      'SATURDAY': 6
+    };
+
+    // Encontrar el próximo horario
+    const upcomingSchedules = category.schedules
+      .map(schedule => ({
+        ...schedule,
+        dayNumber: dayMap[schedule.dayOfWeek],
+        startTime: schedule.startHour.substring(0, 5)
+      }))
+      .filter(schedule => {
+        // Si el día es hoy o en el futuro
+        return schedule.dayNumber > currentDay || 
+               (schedule.dayNumber === currentDay && 
+                schedule.startHour > today.toTimeString().substring(0, 5));
+      })
+      .sort((a, b) => {
+        // Ordenar por proximidad
+        if (a.dayNumber !== b.dayNumber) return a.dayNumber - b.dayNumber;
+        return a.startHour.localeCompare(b.startHour);
+      });
+
+    if (upcomingSchedules.length === 0) {
+      // Si no hay horarios futuros esta semana, tomar el primero de la próxima semana
+      const firstSchedule = category.schedules
+        .map(s => ({...s, dayNumber: dayMap[s.dayOfWeek]}))
+        .sort((a, b) => a.dayNumber - b.dayNumber)[0];
+        
+      return `${this.translateDay(firstSchedule.dayOfWeek)} ${firstSchedule.startHour.substring(0, 5)}`;
+    }
+
+    const next = upcomingSchedules[0];
+    return `${this.translateDay(next.dayOfWeek)} ${next.startTime}`;
+  }
+
+  // Traducir días al español
+  translateDay(dayOfWeek: string): string {
+    const days: {[key: string]: string} = {
+      'MONDAY': 'Lunes',
+      'TUESDAY': 'Martes',
+      'WEDNESDAY': 'Miércoles',
+      'THURSDAY': 'Jueves',
+      'FRIDAY': 'Viernes',
+      'SATURDAY': 'Sábado',
+      'SUNDAY': 'Domingo'
+    };
+    return days[dayOfWeek] || dayOfWeek;
+  }
 }

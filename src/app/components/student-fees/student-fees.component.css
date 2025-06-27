@@ -19,3 +19,7 @@
 .border-success {
   border-left: 4px solid #28a745 !important;
 }
+
+h4 {
+  color: rgb(200, 200, 200);
+}
