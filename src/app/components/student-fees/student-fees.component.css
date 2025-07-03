@@ -1,0 +1,21 @@
+.card {
+  transition: transform 0.2s;
+  height: 100%;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.card-title {
+  font-weight: 600;
+}
+
+.border-danger {
+  border-left: 4px solid #dc3545 !important;
+}
+
+.border-success {
+  border-left: 4px solid #28a745 !important;
+}

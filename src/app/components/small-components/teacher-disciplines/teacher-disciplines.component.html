@@ -34,13 +34,13 @@
                        (click)="$event.stopPropagation()">
                     <button class="dropdown-item d-block w-100 text-start px-3 py-2 text-dark"
                             (click)="openInscriptionsModal(discipline.id)">
-                      Gestionar Alumnos
+                      Gestionar Inscripciones
                     </button>
                     <button class="dropdown-item d-block w-100 text-start px-3 py-2 text-dark" 
                             (click)="openDisciplineModal(discipline)">
-                      Actualizar Disciplina
+                      Actualizar Información
                     </button>
-                    <button class="dropdown-item d-block w-100 text-start px-3 py-2 text-danger"
+                    <button class="dropdown-item fw-semibold d-block w-100 text-start px-3 py-2 text-danger"
                             (click)="deleteDiscipline(discipline)">
                       Eliminar Disciplina 
                     </button>                    
@@ -49,7 +49,7 @@
               </div>
 
               <div class="card-body text-light p-5">
-                <h5 class="card-title mb-1">{{ discipline.name }}</h5>
+                <h3 class="card-title mb-1">{{ discipline.name }}</h3>
               </div>
             </div>
           </div>

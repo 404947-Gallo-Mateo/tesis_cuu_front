@@ -1,0 +1,13 @@
+/* student-fees.component.css */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.card-header {
+  background-color: #f8f9fa;
+  transition: background-color 0.3s;
+}
+
+.card-header:hover {
+  background-color: #e9ecef;
+}
