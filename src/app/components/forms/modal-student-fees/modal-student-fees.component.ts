@@ -72,7 +72,7 @@ export class ModalStudentFeesComponent {
       this.isLoading = false;
     },
     error: (error) => {
-      console.error('Error al actualizar cuota:', error);
+      //console.error('Error al actualizar cuota:', error);
       this.errorMessage = 'Error al actualizar el estado de pago';
       this.isLoading = false;
     }

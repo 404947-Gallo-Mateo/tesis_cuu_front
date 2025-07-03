@@ -10,11 +10,12 @@ import { PutDisciplineFormComponent } from '../../forms/put-discipline-form/put-
 import Swal from 'sweetalert2';
 import { PostDisciplineFormComponent } from '../../forms/post-discipline-form/post-discipline-form.component';
 import { AdministrateStudentInscriptionsComponent } from "../administrate-student-inscriptions/administrate-student-inscriptions.component";
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-teacher-disciplines',
   standalone: true,
-  imports: [CommonModule, PutDisciplineFormComponent, PostDisciplineFormComponent, AdministrateStudentInscriptionsComponent],
+  imports: [RouterLink, RouterLinkActive, CommonModule, PutDisciplineFormComponent, PostDisciplineFormComponent, AdministrateStudentInscriptionsComponent],
   templateUrl: './teacher-disciplines.component.html',
   styleUrl: './teacher-disciplines.component.css'
 })
@@ -26,7 +27,7 @@ export class TeacherDisciplinesComponent {
   selectedDisciplineId = '';
 
   openInscriptionsModal(disciplineId: string): void {
-    console.log("openInscriptionsModal");
+    //console.log("openInscriptionsModal");
     this.selectedDisciplineId = disciplineId;
     this.showInscriptionsModal = true;
   }
@@ -37,7 +38,7 @@ export class TeacherDisciplinesComponent {
 
   onInscriptionsUpdated(): void {
     // Lógica para actualizar datos si es necesario
-    console.log('Inscripciones actualizadas');
+    //console.log('Inscripciones actualizadas');
   }
 
   // En el componente padre
@@ -108,7 +109,7 @@ toggleMenu(disciplineId: string): void {
             }
           },
           error: (err) => {
-            console.error('Error eliminando disciplina:', err);
+            //console.error('Error eliminando disciplina:', err);
             Swal.fire('Error', 'Hubo un problema externo al eliminar la Disciplina.', 'error');
           }
         });
@@ -216,7 +217,7 @@ onDisciplineUpdated(updatedDiscipline: DisciplineDto): void {
     ).subscribe({
       next: (disciplines) => {
         this.currentUserDisciplines = disciplines;
-        console.log("Disciplinas iniciales del profesor:", disciplines);
+        //console.log("Disciplinas iniciales del profesor:", disciplines);
       },
       error: (error) => {
         console.error('Error al cargar datos iniciales:', error);
@@ -248,7 +249,7 @@ onDisciplineUpdated(updatedDiscipline: DisciplineDto): void {
     ).subscribe({
       next: (disciplines) => {
         this.currentUserDisciplines = disciplines;
-        console.log("Disciplinas actualizadas:", disciplines);
+        //console.log("Disciplinas actualizadas:", disciplines);
       },
       error: (error) => {
         console.error('Error en actualización en tiempo real:', error);

@@ -1,88 +1,112 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg navbar-dark cuu-navbar ">
   <div class="container-fluid">
-    <a class="navbar-brand" href="">Club Unión Unquillo</a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNav"
-      aria-controls="navbarNav"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
+    <a class="navbar-brand" href="">
+      <img src="/assets/images/cuu-logo.jpeg" alt="cuu-logo" class="navbar-logo">
+      <span class="navbar-brand-text d-none d-md-inline">CUU</span>
+    </a>
+    
+    <button class="navbar-toggler" type="button" 
+            (click)="toggleNavbar()" 
+            [attr.aria-expanded]="!isCollapsed"
+            aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarNav">
+    <div class="collapse navbar-collapse" [ngClass]="{'show': !isCollapsed}" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/principal">Disciplinas</a>
+          <a class="nav-link" [routerLink]="['/principal']" 
+             routerLinkActive="active-link" 
+             [routerLinkActiveOptions]="{exact: true}"
+             (click)="closeNavbar()">
+            <i class="bi bi-trophy me-1"></i>Disciplinas del Club
+          </a>
         </li>
 
-          @if (isLoggedIn$ | async) {
-            @if (currentRole == "STUDENT" || currentRole == "SUPER_ADMIN_CUU") { 
-              <li class="nav-item">
-                <a class="nav-link" href="/mis-inscripciones">Mis Inscripciones</a>
-              </li>
-            }
-            @if (currentRole == "STUDENT" || currentRole == "SUPER_ADMIN_CUU") { 
-              <li class="nav-item">
-                <a class="nav-link" href="/mis-cuotas">Mis Cuotas</a>
-              </li>
-            }
-            @if (currentRole == "SUPER_ADMIN_CUU" || currentRole == "ADMIN_CUU" || currentRole == "TEACHER") {
-              <li class="nav-item">
-                <a class="nav-link" href="/gestion-disciplinas">Gestión Disciplinas</a>
-              </li>
-            }
-            @if (currentRole == "SUPER_ADMIN_CUU" || currentRole == "ADMIN_CUU") {
-              <li class="nav-item">
-                <a class="nav-link" href="/gestion-usuarios">Gestión Usuarios</a>
-              </li>
-            }
-            @if (currentRole == "TEACHER") {
-              <li class="nav-item">
-                <a class="nav-link" href="/gestion-cuotas-disciplinas">Gestión Cuotas</a>
-              </li>
-            }
-
-            @if (currentRole == "SUPER_ADMIN_CUU" || currentRole == "ADMIN_CUU") {
-              <li class="nav-item">
-                <a class="nav-link" href="/gestion-cuotas-club">Gestión Cuotas</a>
-              </li>
-            }
-            
+        @if (isLoggedIn$ | async) {
+          @if (currentRole == "STUDENT") { 
+            <li class="nav-item">
+              <a class="nav-link" [routerLink]="['/mis-inscripciones']" 
+                 routerLinkActive="active-link"
+                 (click)="closeNavbar()">
+                <i class="bi bi-card-checklist me-1"></i>Mis Inscripciones
+              </a>
+            </li>
           }
-        
+          @if (currentRole == "STUDENT") { 
+            <li class="nav-item">
+              <a class="nav-link" [routerLink]="['/mis-cuotas']" 
+                 routerLinkActive="active-link"
+                 (click)="closeNavbar()">
+                <i class="bi bi-wallet2 me-1"></i>Mis Cuotas
+              </a>
+            </li>
+          }
+          @if (currentRole == "SUPER_ADMIN_CUU" || currentRole == "ADMIN_CUU" || currentRole == "TEACHER") {
+            <li class="nav-item">
+              <a class="nav-link" [routerLink]="['/gestion-disciplinas']" 
+                 routerLinkActive="active-link"
+                 (click)="closeNavbar()">
+                <i class="bi bi-gear me-1"></i>Gestión Disciplinas
+              </a>
+            </li>
+          }
+          @if (currentRole == "SUPER_ADMIN_CUU" || currentRole == "ADMIN_CUU") {
+            <li class="nav-item">
+              <a class="nav-link" [routerLink]="['/gestion-usuarios']" 
+                 routerLinkActive="active-link"
+                 (click)="closeNavbar()">
+                <i class="bi bi-people me-1"></i>Gestión Usuarios
+              </a>
+            </li>
+          }
+          @if (currentRole == "TEACHER") {
+            <li class="nav-item">
+              <a class="nav-link" [routerLink]="['/gestion-cuotas-disciplinas']" 
+                 routerLinkActive="active-link"
+                 (click)="closeNavbar()">
+                <i class="bi bi-cash-coin me-1"></i>Gestión Cuotas
+              </a>
+            </li>
+          }
+
+          @if (currentRole == "SUPER_ADMIN_CUU" || currentRole == "ADMIN_CUU") {
+            <li class="nav-item">
+              <a class="nav-link" [routerLink]="['/gestion-cuotas-club']" 
+                 routerLinkActive="active-link"
+                 (click)="closeNavbar()">
+                <i class="bi bi-cash-stack me-1"></i>Gestión Cuotas Club
+              </a>
+            </li>
+          }
+        }
       </ul>
 
-      <!-- Botones alineados a la derecha -->
-      <div class="d-flex ms-auto align-items-center gap-2">
-          @if (isLoggedIn$ | async) {
-            <!-- Botón configuración (icono engranaje) -->
-            <button 
-              class="btn btn-outline-secondary" 
-              title="Configuración"
-              (click)="openUserFormModal()"
-            >
-              <i class="bi bi-gear"></i>
-            </button>
+      <div class="d-flex ms-auto align-items-center gap-2 navbar-actions">
+        @if (isLoggedIn$ | async) {
+          <button class="btn btn-settings" 
+                  title="Configuración"
+                  (click)="openUserFormModal()">
+            <i class="bi bi-gear"></i>
+          </button>
 
-            <!-- Cerrar sesión -->
-            <button class="btn btn-outline-primary" (click)="logout()">Cerrar sesión</button>
-          }      
-          @else {
-            <!-- Iniciar sesión -->
-            <button class="btn btn-primary" (click)="login()">Iniciar sesión</button>
-          }    
-        
-       
+          <button class="btn btn-logout" (click)="logout()">
+            <i class="bi fs-6 me-1 bi-box-arrow-in-left"></i> 
+            <span class="d-none d-md-inline">Cerrar sesión</span>
+          </button>
+        }      
+        @else {
+          <button class="btn btn-login" (click)="login()">
+            <i class="bi fs-6 me-1 bi-box-arrow-in-right"></i> 
+            <span class="d-none d-md-inline">Iniciar sesión</span>
+          </button>
+        }    
       </div>
     </div>
   </div>
 </nav>
 
 <app-user-dto-form 
-[userData]="currentUser" 
-[currentRole]="currentRole"
+  [userData]="currentUser" 
+  [currentRole]="currentRole"
 />

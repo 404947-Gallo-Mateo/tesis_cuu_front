@@ -1,0 +1,280 @@
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #2a4a7c, #3a6a9c);
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .landing-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Primera fila */
+        .first-row {
+            height: 50vh;
+            min-height: 400px;
+            margin-bottom: 20px;
+        }
+        
+        .welcome-container {
+            position: relative;
+            height: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(25, 55, 109, 0.7) 0%, rgba(15, 35, 79, 0.8) 100%);
+            z-index: 1;
+        }
+        
+        .background-images {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .background-image {
+            position: absolute;
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+        }
+        
+        .image-top {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background-image: url('/assets/images/los-pibes.png');
+        }
+        
+        .image-bottom {
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background-image: url('/assets/images/las-pibas-2.png');
+        }
+        
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+            padding: 30px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .welcome-content h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #ffffff, #a8d0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { background-position: -500%; }
+            100% { background-position: 500%; }
+        }
+        
+        .club-info {
+            max-width: 600px;
+            background: rgba(0, 20, 50, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .club-info p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 0;
+        }
+        
+        .map-container {
+            height: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* Segunda fila */
+        .second-row {
+            height: 40vh;
+            min-height: 300px;
+            margin-bottom: 20px;
+        }
+        
+        .club-container {
+            position: relative;
+            height: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .club-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/assets/images/cuu-entrada-cut2.jpeg');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .club-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(15, 35, 79, 0.85) 0%, rgba(25, 55, 109, 0.9) 100%);
+            z-index: 1;
+        }
+        
+        .club-content {
+            position: relative;
+            z-index: 2;
+            padding: 40px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .club-content h4 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .club-content h4:after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, #4da0ff, #a8d0ff);
+            border-radius: 2px;
+        }
+        
+        /* Footer */
+        .footer {
+            background: rgba(0, 15, 40, 0.9);
+            padding: 30px 0;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .social-icons a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            margin-left: 10px;
+            color: #a8d0ff;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background: #4da0ff;
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .club-logo {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #ffffff, #a8d0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .first-row {
+                height: auto;
+            }
+            
+            .welcome-content h1 {
+                font-size: 2.8rem;
+            }
+            
+            .club-content h4 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .welcome-content {
+                padding: 20px;
+            }
+            
+            .welcome-content h1 {
+                font-size: 2.3rem;
+            }
+            
+            .club-content {
+                padding: 20px;
+            }
+            
+            .club-content h4 {
+                font-size: 1.3rem;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .social-icons {
+                margin-top: 20px;
+            }
+        }

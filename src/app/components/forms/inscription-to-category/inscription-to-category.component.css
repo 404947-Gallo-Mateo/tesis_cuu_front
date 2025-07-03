@@ -1,0 +1,81 @@
+/* inscription-to-category.component.css */
+:host {
+  --primary-blue: #002d71;       /* Azul oscuro principal */
+  --secondary-blue: #0d3290;     /* Azul medio */
+  --tertiary-blue: #0030a1;      /* Azul claro */
+  --light-bg: #f8fafc;           /* Fondo claro */
+}
+
+.custom-modal .modal-content {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(4, 19, 63, 0.2);
+}
+
+.bg-primary-blue {
+  background-color: var(--primary-blue);
+}
+
+.bg-secondary-blue {
+  background-color: var(--secondary-blue);
+}
+
+.bg-light-blue {
+  background-color: var(--light-bg);
+}
+
+.border-secondary-blue {
+  border-color: var(--tertiary-blue) !important;
+}
+
+/* Estilos para los botones */
+.btn-inscribe {
+  background-color: var(--primary-blue);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 6px;
+  transition: all 0.3s;
+}
+
+.btn-inscribe:hover {
+  background-color: #05233d;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(3, 4, 60, 0.3);
+}
+
+.btn-close-modal {
+  background-color: var(--tertiary-blue);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 6px;
+  transition: all 0.3s;
+}
+
+.btn-close-modal:hover {
+  background-color: #052546;
+}
+
+/* Lista de horarios */
+.schedule-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.bullet-point {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 7px;
+}
+
+/* Mejoras de tipografía */
+.modal-title {
+  letter-spacing: 0.5px;
+}
+
+p.d-flex {
+  line-height: 1.6;
+}

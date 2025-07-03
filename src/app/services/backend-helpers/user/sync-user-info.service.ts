@@ -23,7 +23,7 @@ export class SyncUserInfoService {
             tap(user => {
               //console.log("Usuario actualizado desde servidor: ", user);
               // IMPORTANTE: Actualizar el BehaviorSubject para notificar a todos los suscriptores
-              console.log("user:", user);
+              //console.log("user:", user);
             }),
             catchError(error => {
               console.error('No se pudo sincronizar la información del usuario luego de 3 intentos.');

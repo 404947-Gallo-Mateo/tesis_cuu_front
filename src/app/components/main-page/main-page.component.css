@@ -1,0 +1,43 @@
+/* Agregar en tu CSS */
+.bg-dark-blue {
+  background-color: rgba(0, 0, 50, 0.7);
+}
+
+.bg-primary-blue {
+  background-color: #0d3b66;
+}
+
+.bg-light-blue {
+  background-color: #e6f0ff;
+}
+
+.category-card {
+  cursor: pointer;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.hover-grow {
+  transition: all 0.3s ease;
+}
+
+.hover-grow:hover {
+  transform: scale(1.02);
+}
+
+.text-truncate {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

@@ -16,10 +16,11 @@ import { RolePipe } from '../../CustomPipes/role.pipe';
 import { AgePipe } from '../../CustomPipes/age.pipe';
 import { Genre } from '../../models/backend/embeddables/Genre';
 import { GenrePipe } from '../../CustomPipes/genre.pipe';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-administrate-social-fees',
-  imports: [CommonModule, NgxPaginationModule, FormsModule, ModalSocialFeesComponent, RolePipe, AgePipe, GenrePipe],
+  imports: [RouterLink, RouterLinkActive, CommonModule, NgxPaginationModule, FormsModule, ModalSocialFeesComponent, RolePipe, AgePipe, GenrePipe],
   templateUrl: './administrate-social-fees.component.html',
   styleUrl: './administrate-social-fees.component.css'
 })

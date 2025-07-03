@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, Input, SimpleChanges, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Role } from '../../../models/backend/embeddables/Role';
 import { Genre } from '../../../models/backend/embeddables/Genre';
 import { DisciplineSummaryDTO } from '../../../models/backend/DisciplineSummaryDTO';
@@ -45,12 +45,12 @@ export class UserDTOFormComponent {
 
 ngOnChanges(changes: SimpleChanges): void {
 
-  console.log("roles: ", this.roles);
-  console.log("genres: :", this.genres);
+  //console.log("roles: ", this.roles);
+  //console.log("genres: :", this.genres);
 
   if (changes['userData'] && this.userData) {
     const birthDateParsed = this.parseDateString(this.userData.birthDate);
-    console.log("birthDateParsed con fecha en yyyy-MM-dd: ", birthDateParsed);
+    //console.log("birthDateParsed con fecha en yyyy-MM-dd: ", birthDateParsed);
 
     this.userData.birthDate = birthDateParsed;
 
@@ -81,7 +81,7 @@ private parseDateString(dateStr: string): string {
     stringMonth = month.toString();
   }
 
-  console.log("[day, month, year]= ", [day, month, year]);
+  //console.log("[day, month, year]= ", [day, month, year]);
   return year+"-"+ stringMonth + "-" + stringDay;
 }
 
@@ -99,11 +99,15 @@ private parseDateString(dateStr: string): string {
     });
   }
 
+    getFormControl(controlName: string): AbstractControl | null {
+      return this.form.get(controlName);
+    }
+
 submitUpdatedKeycloakUser(): void {
   if (this.form.valid) {
     const form = this.form.value;
 
-    console.log("asi sale del form el birthDate: ", form.birthDate);
+    //console.log("asi sale del form el birthDate: ", form.birthDate);
 
     const expandedUserDTO: ExpandedUserDTO = {
       keycloakId: form.keycloakId,
@@ -127,7 +131,7 @@ submitUpdatedKeycloakUser(): void {
 
     Swal.fire({
       title: '¿Confirmar actualización?',
-      text: 'Se actualizarán los datos de usuario.',
+      text: 'Se actualizarán los datos de su usuario.',
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -136,17 +140,17 @@ submitUpdatedKeycloakUser(): void {
       cancelButtonText: 'Cancelar'
     }).then(result => {
       if (result.isConfirmed) {
-        this.backUserService.updateInfoOfKeycloakUser(
+        this.backUserService.selfUpdateInfoOfKeycloakUser(
           expandedUserDTO.keycloakId,
           expandedUserDTO
         ).subscribe({
           next: (resp) => {
             this.backUserService.setCurrentUser(resp);
-            Swal.fire('Actualizado', 'El usuario fue actualizado correctamente.', 'success');
+            Swal.fire('Actualizado', 'Su usuario fue actualizado correctamente.', 'success');
           },
           error: (err) => {
-            console.error('Error actualizando usuario:', err);
-            Swal.fire('Error', 'Hubo un problema al actualizar el usuario.', 'error');
+            //console.error('Error actualizando usuario:', err);
+            Swal.fire('Error', 'Hubo un problema al actualizar su usuario.', 'error');
           }
         });
       }
@@ -161,7 +165,7 @@ deleteKeycloakUser(): void {
 
   Swal.fire({
     title: '¿Estás seguro?',
-    text: 'Esta acción eliminará el Usuario permanentemente.',
+    text: 'Esta acción eliminará su Usuario permanentemente.',
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#d33',
@@ -172,18 +176,18 @@ deleteKeycloakUser(): void {
     if (result.isConfirmed) {
       this.backUserService.deleteKeycloakUser(userKeycloakId).subscribe({
         next: (resp: boolean) => {
-          console.log("resp deleteKeycloakUser(): ", resp);
+          //console.log("resp deleteKeycloakUser(): ", resp);
 
           if (resp) {
-            Swal.fire('Eliminado', 'El usuario fue eliminado correctamente.', 'success');
+            Swal.fire('Eliminado', 'Su usuario fue eliminado correctamente.', 'success');
             this.keycloakHelper.logout();
           } else {
-            Swal.fire('Error', 'Hubo un problema en la Base de Datos al eliminar el usuario.', 'error');
+            Swal.fire('Error', 'Hubo un problema en la Base de Datos al eliminar su usuario.', 'error');
           }
         },
         error: (err) => {
-          console.error('Error eliminando usuario:', err);
-          Swal.fire('Error', 'Hubo un problema en Keycloak al eliminar el usuario.', 'error');
+          //console.error('Error eliminando usuario:', err);
+          Swal.fire('Error', 'Hubo un problema en Keycloak al eliminar su usuario.', 'error');
         }
       });
     }

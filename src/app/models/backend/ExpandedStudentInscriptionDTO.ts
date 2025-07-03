@@ -10,5 +10,8 @@ export interface ExpandedStudentInscriptionDTO {
     category: CategorySummaryDTO,
     createdDate: string, //yyyy-MM-dd
     updatedDate: string, //yyyy-MM-dd
-    inscriptionFees: FeeDTO[]
+    inscriptionFees: FeeDTO[],
+    paidFeesQuantity: number,
+    unPaidFeesQuantity: number,
+    latePaidFeesQuantity: number
 }

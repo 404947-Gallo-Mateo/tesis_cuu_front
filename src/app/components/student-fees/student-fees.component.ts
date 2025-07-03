@@ -51,12 +51,12 @@ export class StudentFeesComponent {
 
     this.mpService.createPreference(mpFeeDTO).subscribe({
         next: (response) => {
-            console.log("response: ",response);
+            //console.log("response: ",response);
             window.location.href = response.initPoint;
         },
         error: (err: {message: string, status?: number}) => {
-            console.error('Error completo:', err);
-            console.error('Error msj:', err.message);                                      
+            // console.error('Error completo:', err);
+            // console.error('Error msj:', err.message);                                      
             //TODO si el msj es q la 'cuota ya fue pagada' mostrar un alert
         }
     });    

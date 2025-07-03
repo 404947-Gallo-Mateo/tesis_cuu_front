@@ -1,0 +1,190 @@
+@if (disciplines.length > 0 && isLoaded) {
+    <app-discipline-fees-dashboard
+    [disciplines]="disciplines"
+    >
+    </app-discipline-fees-dashboard>
+}
+
+<div class="container-fluid p-3" *ngIf="isLoaded">
+
+  <div class="row pt-3 mb-3 d-flex align-items-center">
+    <div class="col">
+        <h2 class="mb-0">Reportes de Cuotas de mis Disciplinas</h2> 
+    </div>
+  </div>
+
+  <!-- Modo Normal: Lista de Disciplinas -->
+  <div>
+    <div *ngFor="let discipline of disciplines" class="card mb-3">
+      <div 
+        class="card-header d-flex justify-content-between align-items-center cursor-pointer"
+        (click)="toggleDiscipline(discipline.id)">
+        <h5 class="mb-0">{{ discipline.name }}</h5>
+        <span>
+          {{ disciplineInscriptions[discipline.id].expanded ? '▲' : '▼' }}
+        </span>
+      </div>
+
+      <div *ngIf="disciplineInscriptions[discipline.id].expanded" class="card-body">
+        <div *ngIf="disciplineInscriptions[discipline.id].loading" class="text-center">
+          Cargando inscripciones...
+        </div>
+
+        <div *ngIf="!disciplineInscriptions[discipline.id].loading">
+
+             <!-- SECCIÓN DE FILTROS NUEVA -->
+            <div class="row mb-3">
+            <!-- Filtro Estado Deudor -->
+            <div class="col-md-2">
+                <h6>Estado de pago:</h6>
+                <div class="border rounded p-2 bg-light">
+                    <div class="d-flex flex-wrap gap-3">
+                      <div *ngFor="let state of debtorStates" class="form-check">
+                          <input #checkboxEl 
+                              class="form-check-input" 
+                              type="checkbox" 
+                              [id]="'debtorState-' + discipline.id + state.value"
+                              (change)="updateDebtorFilter(discipline.id, state.value, checkboxEl.checked)">
+                          <label class="form-check-label" [for]="'debtorState-' + discipline.id + state.value">
+                              {{ state.label }}
+                          </label>                  
+                      </div>
+                    </div>
+                </div>                
+            </div>
+            
+            <!-- Filtro Género -->
+            <div class="col-md-3">
+                <h6>Género:</h6>
+                <div class="border rounded p-2 bg-light">
+                    <div class="d-flex flex-wrap gap-3">
+                    <div *ngFor="let genre of genres" class="form-check">
+                        <input #checkboxEl 
+                            class="form-check-input" 
+                            type="checkbox" 
+                            [id]="'genre-' + discipline.id + genre.value"
+                            (change)="updateGenreFilter(discipline.id, genre.value, checkboxEl.checked)">
+                        <label class="form-check-label" [for]="'genre-' + discipline.id + genre.value">
+                            {{ genre.label }}
+                        </label>
+                    </div>
+                  </div>
+              </div>
+            </div>
+
+            <!-- Filtro Roles -->
+            <div class="col-md-3">
+                <h6>Roles:</h6>
+                <div class="border rounded p-2 bg-light">
+                    <div class="d-flex flex-wrap gap-3">
+                      <div *ngFor="let role of roles" class="form-check">
+                          <input #checkboxEl 
+                              class="form-check-input" 
+                              type="checkbox" 
+                              [id]="'role-' + discipline.id + role.value"
+                              (change)="updateRoleFilter(discipline.id, role.value, checkboxEl.checked)">
+                          <label class="form-check-label" style="min-width: 87.3px;" [for]="'role-' + discipline.id + role.value">
+                              {{ role.label }}
+                          </label>
+                      </div>
+                  </div>
+              </div>
+            </div>
+
+            <!-- Nuevo filtro: Categorías -->
+            <div class="col-md-4">
+              <h6>Categorías:</h6>
+                <div class="border rounded p-2 bg-light">
+                    <div class="d-flex flex-wrap gap-3">
+
+                    <div *ngFor="let category of uniqueCategories[discipline.id]" class="form-check">
+                      <input #checkboxEl 
+                          class="form-check-input" 
+                          type="checkbox" 
+                          [id]="'category-' + discipline.id + category.id"
+                          (change)="updateCategoryFilter(discipline.id, category.id, checkboxEl.checked)">
+                      <label class="form-check-label" [for]="'category-' + discipline.id + category.id">
+                          {{ category.name }}
+                      </label>
+                    </div>
+                  </div>
+              </div>
+            </div>
+
+            </div>
+            <!-- FIN SECCIÓN FILTROS -->
+
+        <!-- Barra de búsqueda -->
+        <!-- <div class="row mb-3">
+          <div class="col-md-12">
+            <input type="text" class="form-control" placeholder="Buscar por nombre o email..." 
+                  [(ngModel)]="searchTerm" (input)="applyFilter()">
+          </div>
+        </div> -->
+
+        <div *ngIf="disciplineInscriptions[discipline.id].inscriptions.length === 0" 
+            class="alert alert-info">
+        No hay inscripciones para esta disciplina
+        </div>
+
+
+        <table *ngIf="getFilteredInscriptions(discipline.id).length > 0" 
+                class="table table-striped">
+            <thead class="table-dark">
+              <tr>
+                <th>Deudor</th>
+                <th>Pagadas</th>
+                <th>Sin Pagar</th>
+                <!-- <th>Pagos tardíos</th> -->
+                <th>Estudiante</th>
+                <th>Email</th>
+                <th>Edad</th>
+                <th>Género</th>
+                <th>Disciplina</th>
+                <th>Categoría</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let ins of getFilteredInscriptions(discipline.id) | 
+                    paginate: { 
+                        id: discipline.id, 
+                        itemsPerPage: itemsPerPage, 
+                        currentPage: disciplineInscriptions[discipline.id].page 
+                    }">
+                    <td>
+                    <span *ngIf="ins.isDebtor" class="badge bg-danger">Deudor</span>
+                    <span *ngIf="!ins.isDebtor" class="badge bg-success">Al día</span>
+                    </td>      
+                    <td>{{ins.paidFeesQuantity}}</td>          
+                    <td>{{ins.unPaidFeesQuantity}}</td>
+                    <!-- <td>{{ins.latePaidFeesQuantity}}</td> -->
+                    <td>
+                    {{ ins.student.firstName }} {{ ins.student.lastName }}                  
+                    </td>
+                    <td>{{ ins.student.email }}</td>
+                    <td>{{ ins.student.birthDate | age }} años</td>
+                    <td>{{ ins.student.genre | genre }}</td>
+                    <td>{{ ins.discipline.name }}</td>
+                    <td>{{ ins.category.name }}</td>                
+              </tr>
+            </tbody>
+          </table>
+          <pagination-controls 
+                [id]="discipline.id"
+                (pageChange)="disciplineInscriptions[discipline.id].page = $event">
+          </pagination-controls>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div *ngIf="!isLoaded" class="text-center">
+  Cargando datos del usuario...
+</div>
+
+
+
+
