@@ -14,21 +14,83 @@ import { UsersReportComponent } from './components/reports/users-report/users-re
 import { FeesReportComponent } from './components/reports/fees-report/fees-report.component';
 import { SocialFeesReportComponent } from './components/reports/social-fees-report/social-fees-report.component';
 import { DisciplinesReportComponent } from './components/reports/disciplines-report/disciplines-report.component';
+import { RoleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
-    { path: '', component: LandingPageComponent },            
-    { path: 'principal', component: MainPageComponent },    
-    { path: 'mis-inscripciones', component: CuuStudentDisciplinesComponent},
-    { path: 'gestion-disciplinas', component: TeacherDisciplinesComponent},
-    { path: 'gestion-usuarios', component: AdministrateUsersPageComponent},
-    { path: 'mis-cuotas', component: StudentFeesComponent},
-    { path: 'gestion-cuotas-disciplinas', component: AdministrateFeesComponent},
-    { path: 'gestion-cuotas-club', component: AdministrateSocialFeesComponent},
-    { path: 'cancelado', component: MpCancelledPaymentPageComponent},
-    { path: 'pendiente', component: MpPendingPaymentPageComponent},
-    { path: 'reporte-usuarios', component: UsersReportComponent},
-    { path: 'reporte-cuotas-mis-disciplinas', component: FeesReportComponent},
-    { path: 'reporte-cuotas-sociales', component: SocialFeesReportComponent},
-    { path: 'reporte-disciplinas', component: DisciplinesReportComponent},
-    { path: '**', redirectTo: '', pathMatch: 'full' }    
+    { path: '', component: LandingPageComponent },              
+    { path: 'principal', component: MainPageComponent},    
+    { 
+        path: 'cancelado', 
+        component: MpCancelledPaymentPageComponent,
+        canActivate: [RoleGuard], 
+        data: { roles: ['STUDENT', 'TEACHER', 'ADMIN_CUU', 'SUPER_ADMIN_CUU'] }
+    },
+    { 
+        path: 'pendiente', 
+        component: MpPendingPaymentPageComponent, 
+        canActivate: [RoleGuard], 
+        data: { roles: ['STUDENT', 'TEACHER', 'ADMIN_CUU', 'SUPER_ADMIN_CUU'] }
+    },
+
+    { 
+        path: 'mis-inscripciones', 
+        component: CuuStudentDisciplinesComponent,
+        canActivate: [RoleGuard], 
+        data: { roles: ['STUDENT'] }
+    },
+    { 
+        path: 'gestion-disciplinas', 
+        component: TeacherDisciplinesComponent,
+        canActivate: [RoleGuard], 
+        data: { roles: ['TEACHER', 'ADMIN_CUU', 'SUPER_ADMIN_CUU'] }
+    },
+    { 
+        path: 'gestion-usuarios', 
+        component: AdministrateUsersPageComponent,
+        canActivate: [RoleGuard], 
+        data: { roles: ['ADMIN_CUU', 'SUPER_ADMIN_CUU'] }
+    },
+    { 
+        path: 'mis-cuotas', 
+        component: StudentFeesComponent,
+        canActivate: [RoleGuard], 
+        data: { roles: ['STUDENT'] }
+    },
+    { 
+        path: 'gestion-cuotas-disciplinas', 
+        component: AdministrateFeesComponent,
+        canActivate: [RoleGuard], 
+        data: { roles: ['TEACHER'] }
+    },
+    { 
+        path: 'gestion-cuotas-club', 
+        component: AdministrateSocialFeesComponent,
+        canActivate: [RoleGuard], 
+        data: { roles: ['ADMIN_CUU', 'SUPER_ADMIN_CUU'] }
+    },
+    { 
+        path: 'reporte-usuarios', 
+        component: UsersReportComponent,
+        canActivate: [RoleGuard], 
+        data: { roles: ['ADMIN_CUU', 'SUPER_ADMIN_CUU'] }
+    },
+    { 
+        path: 'reporte-cuotas-mis-disciplinas', 
+        component: FeesReportComponent,
+        canActivate: [RoleGuard], 
+        data: { roles: ['TEACHER'] }
+    },
+    { 
+        path: 'reporte-cuotas-sociales', 
+        component: SocialFeesReportComponent,
+        canActivate: [RoleGuard], 
+        data: { roles: ['ADMIN_CUU', 'SUPER_ADMIN_CUU'] }
+    },
+    { 
+        path: 'reporte-disciplinas', 
+        component: DisciplinesReportComponent,
+        canActivate: [RoleGuard], 
+        data: { roles: ['TEACHER', 'ADMIN_CUU', 'SUPER_ADMIN_CUU'] }
+    },
+    { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
