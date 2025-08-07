@@ -72,7 +72,7 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "host": "0.0.0.0",
-            "allowedHosts": ["https://d1d6-177-37-40-2.ngrok-free.app", "d1d6-177-37-40-2.ngrok-free.app"]
+            "allowedHosts": ["https://b189f4a1f62b.ngrok-free.app", "b189f4a1f62b.ngrok-free.app"]
           },
           "configurations": {
             "production": {
