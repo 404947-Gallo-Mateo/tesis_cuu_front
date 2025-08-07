@@ -1,0 +1,131 @@
+<app-social-fees-dashboard></app-social-fees-dashboard>
+
+<div class="container-fluid p-3" *ngIf="isLoaded">
+
+  <div class="row pt-3 mb-3 d-flex align-items-center">
+    <div class="col">
+      <h2 class="mb-0">Reporte de Cuotas Sociales</h2>
+    </div>      
+  </div>
+
+  <!-- SECCIÓN DE FILTROS - ESTRUCTURA CORREGIDA -->
+<div class="card mb-3"> <!-- Contenedor principal tipo card -->
+  <div class="card-body"> <!-- Aquí aplica el fondo y estilos correctos -->
+    <div class="row"> <!-- Elimina mb-3 para evitar márgenes duplicados -->
+      
+      <!-- Filtro Estado Deudor (mismo contenido) -->
+      <div class="col-md-2">
+        <h6>Estado de pago:</h6>
+        <div class="border rounded p-2 bg-light">
+            <div class="d-flex flex-wrap gap-3">
+
+            <div class="form-check">
+              <input #checkboxEl1 
+              class="form-check-input" 
+                    type="checkbox" 
+                    id="debtor-true"
+                    (change)="updateDebtorFilter(true, checkboxEl1.checked)">
+              <label class="form-check-label" for="debtor-true">
+                Deudor
+              </label>
+            </div>
+            <div class="form-check">
+              <input #checkboxEl2 
+              class="form-check-input" 
+                    type="checkbox" 
+                    id="debtor-false"
+                    (change)="updateDebtorFilter(false, checkboxEl2.checked)">
+              <label class="form-check-label" for="debtor-false">
+                Al día
+              </label>
+            </div>
+        </div>
+      </div>
+    </div>
+      
+      <!-- Filtro Género (mismo contenido) -->
+      <div class="col-md-3">
+        <h6>Género:</h6>
+        <div class="border rounded p-2 bg-light">
+            <div class="d-flex flex-wrap gap-3">
+              <div *ngFor="let genre of genres" class="form-check">
+                <input #checkboxEl 
+                class="form-check-input" 
+                      type="checkbox" 
+                      [id]="'genre-' + genre.value"
+                      (change)="updateGenreFilter(genre.value, checkboxEl.checked)">
+                <label class="form-check-label" [for]="'genre-' + genre.value">
+                  {{ genre.label }}
+                </label>
+                </div>
+            </div>
+        </div>
+      </div>
+      
+      <!-- Filtro Roles (mismo contenido) -->
+      <div class="col-md-5">
+        <h6>Roles:</h6>
+        <div class="border rounded p-2 bg-light">
+            <div class="d-flex flex-wrap gap-3">
+              <div *ngFor="let role of roles" class="form-check">
+                <input #checkboxEl 
+                class="form-check-input" 
+                      type="checkbox" 
+                      [id]="'role-' + role.value"
+                      (change)="updateRoleFilter(role.value, checkboxEl.checked)">
+                <label class="form-check-label" [for]="'role-' + role.value">
+                  {{ role.label }}
+                </label>
+              </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+  
+  <!-- Barra de búsqueda -->
+  <!-- <div class="row mb-3">
+    <div class="col-md-12">
+      <input type="text" class="form-control" placeholder="Buscar por nombre o email..." 
+             [(ngModel)]="searchTerm" (input)="applyFilter()">
+    </div>
+  </div> -->
+
+  <div *ngIf="filteredUsers.length === 0" class="alert alert-info">
+    'No hay usuarios'
+  </div>
+
+  <table *ngIf="filteredUsers.length > 0" class="table table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>Deudor</th>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Rol</th>        
+        <th>Edad</th>
+        <th>Género</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of filteredUsers | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+        <td>
+          <span *ngIf="user.isDebtor" class="badge bg-danger">Deudor</span>
+          <span *ngIf="!user.isDebtor" class="badge bg-success">Al día</span>
+        </td>
+        <td>{{ user.firstName }} {{ user.lastName }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.role | role }}</td>
+        <td>{{ user.birthDate | age }} años</td>
+        <td>{{ user.genre | genre }}</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <pagination-controls (pageChange)="page = $event"></pagination-controls>
+</div>
+
+<div *ngIf="!isLoaded" class="text-center">
+  Cargando datos del usuario...
+</div>

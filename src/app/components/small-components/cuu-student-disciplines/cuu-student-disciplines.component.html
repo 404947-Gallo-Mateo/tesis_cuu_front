@@ -4,25 +4,33 @@
   @if (currentUser) {
     <div class="row justify-content-center p-3">
       @for (category of currentUser.studentCategories; track $index) {
-        <div
-          class="col-12 col-md-6 d-flex justify-content-center mb-2 p-4 text-light"
-          style="max-width: 45%;"
-        >
-          <div
-            class="card shadow-sm border-0 h-100 text-light"
-            style="width: 100%; cursor: pointer; transition: transform 0.2s; background-color: rgb(30, 30, 157);"
-            (click)="openModal(category)"
-            onmouseover="this.style.transform='scale(1.02)'"
-            onmouseout="this.style.transform='scale(1)'"
-          >
-            <img
-              src=""
-              class="card-img-top rounded-top"
-              alt="Imagen categoría"
-            />
-            <div class="card-body text-light p-5">
-              <h5 class="card-title mb-1">{{ category.disciplineName }}</h5>
-              <h6 class="card-subtitle">{{ category.name }}</h6>
+        <div class="col-12 col-md-6 col-lg-4 mb-4">
+          <div class="card shadow-sm border-0 h-100 category-card"
+               (click)="openModal(category)">
+            <div class="card-body p-4">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                  <h5 class="card-title mb-0">{{ category.disciplineName }}</h5>
+                  <h6 class="card-subtitle mt-1 text-accent">{{ category.name }}</h6>
+                </div>
+                <!-- <div class="badge bg-primary-blue">{{ category.remainingSpaces }} cupos</div> -->
+              </div>
+              
+              <div class="category-info">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="bi bi-cash-coin me-2 text-primary"></i>
+                  <span class="fw-medium">Cuota: ${{ category.monthlyFee }}/mes</span>
+                </div>
+                
+                <!-- Nuevo: Próximo horario -->
+                <div class="d-flex align-items-center">
+                  <i class="bi bi-clock me-2 text-primary"></i>
+                  <div>
+                    <div class="fw-medium">Próxima clase:</div>
+                    <div>{{ getNextSchedule(category) }}</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

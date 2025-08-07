@@ -9,6 +9,7 @@ export interface CategoryDTO{
     disciplineId: string; //UUID
     disciplineName: string;
     availableSpaces: number; // Long
+    remainingSpaces: number;
     ageRange: AgeRange;
     schedules: Schedule[];
     allowedGenre: string; // enum Genre

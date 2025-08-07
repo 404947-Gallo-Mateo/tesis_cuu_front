@@ -7,13 +7,16 @@ import { ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
 import { BackUserService } from '../../../services/backend-helpers/user/back-user.service';
 import { filter, of, switchMap, take, tap, timer, combineLatest, firstValueFrom } from 'rxjs';
 import { SyncUserInfoService } from '../../../services/backend-helpers/user/sync-user-info.service';
+import { RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-cuu-navbar',
   standalone: true,
-  imports: [CommonModule, UserDTOFormComponent],
+  imports: [CommonModule, UserDTOFormComponent, CommonModule, 
+    UserDTOFormComponent, 
+    RouterModule],
   templateUrl: './cuu-navbar.component.html',
   styleUrl: './cuu-navbar.component.css'
 })
@@ -27,72 +30,69 @@ export class CuuNavbarComponent implements OnInit {
   currentUser!: ExpandedUserDTO;
   isLoggedIn$ = this.keycloakHelper.isLoggedIn$;
   currentRole$ = this.userService.currentRole$;
-  currentRole: string | null = null; // Variable para almacenar el valor
+  currentRole: string | null = null; 
 
+  isCollapsed = true;
 
   constructor() {}
 
+    toggleNavbar() {
+    this.isCollapsed = !this.isCollapsed;
+  }
+
+  closeNavbar() {
+    this.isCollapsed = true;
+  }
+
   ngOnInit(): void {
-    //console.log("Inicializando navbar component...");
-    // IMPORTANTE: Primero inicializar Keycloak
     this.keycloakHelper.init().subscribe({
       next: (authenticated) => {
-        
       },
       error: (error) => {
         console.error('Error al inicializar Keycloak:', error);
       }
     });
 
-    // Escuchar cuando Keycloak esté listo Y el usuario esté autenticado
     combineLatest([
       this.keycloakHelper.isReady$,
       this.keycloakHelper.isLoggedIn$
     ]).pipe(
-      filter(([isReady, isLoggedIn]) => isReady), // Solo proceder cuando esté listo
+      filter(([isReady, isLoggedIn]) => isReady),
       tap(([isReady, isLoggedIn]) => {
-        //console.log('Estado:', { isReady, isLoggedIn });
         this.isLoaded = true;
       }),
-      filter(([isReady, isLoggedIn]) => isLoggedIn), // Solo cargar usuario si está logueado
+      filter(([isReady, isLoggedIn]) => isLoggedIn), 
       switchMap(() => this.userService.getCurrentUser()),
       switchMap(() => {
-        // Suscribirse a los cambios del usuario de forma reactiva
         return this.userService.currentUserValid$;
       })
     ).subscribe({
       next: (user) => {
+        console.log("currentUser: ", user);
         this.currentUser = user;
-        //console.log("Usuario actual cargado/actualizado en navbar:", this.currentUser);
       },
       error: (error) => {
         console.error('Error al cargar usuario:', error);
-        this.isLoaded = true; // Marcar como cargado incluso si hay error
+        this.isLoaded = true;
       }
     });
 
-    // Debug: Monitorear cambios en el estado de login
     this.isLoggedIn$.subscribe(isLoggedIn => {
-      console.log('Estado de login cambió:', isLoggedIn);
     });
 
     if(this.isLoggedIn$){
-      console.log("se llamo a this.syncUserInfoService.syncInfoOfCurrentUser()");
       this.syncUserInfoService.syncInfoOfCurrentUser();
     }
 
     this.userService.currentRole$.subscribe(role => {
       this.currentRole = role;
-      console.log('Rol actualizado:', role);
     });
   }
 
   async openUserFormModal() {
     try {
-      // Obtener el valor actual del rol
       this.currentRole = await firstValueFrom(this.userService.currentRole$);
       
-      // Abrir el modal
       const modalElement = document.getElementById('userFormModal');
       if (modalElement) {
         const modal = new bootstrap.Modal(modalElement);

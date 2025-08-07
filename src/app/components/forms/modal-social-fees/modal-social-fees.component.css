@@ -1,0 +1,30 @@
+/* Estilos para el modal */
+.modal-backdrop {
+  opacity: 0.5;
+}
+
+.modal {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-dialog {
+  max-width: 90%;
+}
+
+/* Estilos para la tabla */
+.table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+/* Estilos para botones */
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+/* Estilos para el spinner de carga */
+.spinner-border {
+  vertical-align: middle;
+  margin-right: 5px;
+}

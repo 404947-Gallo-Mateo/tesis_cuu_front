@@ -1,7 +1,7 @@
 import { Component, EventEmitter, inject, Input, Output, SimpleChanges } from '@angular/core';
 import Swal from 'sweetalert2';
 import { ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { BackUserService } from '../../../services/backend-helpers/user/back-user.service';
 import { KeycloakHelperService } from '../../../services/backend-helpers/keycloak/keycloak-helper.service';
@@ -42,11 +42,15 @@ export class AdminUserDtoFormComponent {
       role: [null, Validators.required],
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      birthDate: [null],
-      genre: [null],
+      firstName: ['', [Validators.required, Validators.maxLength(150)]],
+      lastName: ['', [Validators.required, Validators.maxLength(150)]],
+      birthDate: [null, [Validators.required]],
+      genre: [null , [Validators.required]],
     });
+  }
+
+  getFormControl(controlName: string): AbstractControl | null {
+    return this.form.get(controlName);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -69,11 +73,19 @@ export class AdminUserDtoFormComponent {
     if (this.form.valid) {
       const form = this.form.value;
       const expandedUserDTO: ExpandedUserDTO = {
-        ...form,
+        keycloakId: form.keycloakId,
+        role: form.role,
+        username: form.username,
+        email: form.email,        
+        firstName: form.firstName,
+        lastName: form.lastName,
         birthDate: formatDate(form.birthDate, 'dd-MM-yyyy', 'en-US').toString(),
+        genre: form.genre,        
         teacherDisciplines: [],
         studentCategories: []
       };
+
+      console.log("expandedUserDTO: ", expandedUserDTO);
 
       Swal.fire({
         title: '¿Confirmar actualización?',
@@ -86,12 +98,13 @@ export class AdminUserDtoFormComponent {
         cancelButtonText: 'Cancelar'
       }).then(result => {
         if (result.isConfirmed) {
-          this.backUserService.updateInfoOfKeycloakUser(
+          this.backUserService.adminsUpdateInfoOfKeycloakUser(
             expandedUserDTO.keycloakId,
             expandedUserDTO
           ).subscribe({
             next: (resp) => {
-              this.backUserService.setCurrentUser(resp);
+              console.log("resp del endpoint q actualiza: ", resp);
+              //this.backUserService.setCurrentUser(resp);
               Swal.fire('Actualizado', 'El usuario fue actualizado correctamente.', 'success');
               this.modalClosed.emit(true);
             },

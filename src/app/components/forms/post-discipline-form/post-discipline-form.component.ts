@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DisciplineDto } from '../../../models/backend/DisciplineDTO';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
 import { CommonModule } from '@angular/common';
 import { DayOfWeek } from '../../../models/backend/embeddables/DayOfWeek';
@@ -77,12 +77,42 @@ export class PostDisciplineFormComponent {
     private disciplineService: BackDisciplineService
   ) {
     this.disciplineForm = this.fb.group({
-      name: ['', Validators.required],
-      description: [''],
-      teacherIds: this.fb.array([]),
-      categories: this.fb.array([])
+      name: ['', [Validators.required, Validators.maxLength(100)]],
+      description: ['', [Validators.required, Validators.maxLength(1000)]],
+      teacherIds: this.fb.array([], Validators.required),
+      categories: this.fb.array([], Validators.required)
     });
   }
+
+  
+  // Métodos para categories
+private createCategoryFormGroup(category?: PostCategoryDTO): FormGroup {
+  return this.fb.group({
+    name: [category?.name || '', [Validators.required, Validators.maxLength(100)]],
+    description: [category?.description || '', [Validators.required, Validators.maxLength(1000)]],
+    monthlyFee: [category?.monthlyFee || 0, [Validators.required, Validators.min(0)]],
+    availableSpaces: [category?.availableSpaces || 0, [Validators.required, Validators.min(0)]],
+    ageRange: this.fb.group({
+      minAge: [category?.ageRange?.minAge || 0, [Validators.required, Validators.min(0), Validators.max(100)]],
+      maxAge: [category?.ageRange?.maxAge || 0, [Validators.required, Validators.min(0), Validators.max(100)]]
+    }),
+    schedules: this.createSchedulesArray(category?.schedules),
+    allowedGenre: [category?.allowedGenre || Genre.MIXED, Validators.required]
+  });
+}
+
+private createSchedulesArray(schedules?: Schedule[]): FormArray {
+  const formGroups = schedules?.map(schedule => 
+    this.fb.group({
+      dayOfWeek: [schedule.dayOfWeek, Validators.required],
+      startHour: [schedule.startHour, Validators.required],
+      endHour: [schedule.endHour, Validators.required]
+    })
+  ) || [];
+  
+  return this.fb.array(formGroups);
+}
+
 
   ngOnInit(): void {
     this.loadTeachers();
@@ -95,6 +125,26 @@ export class PostDisciplineFormComponent {
       //this.initializeTeachers();
     });
   }
+
+  getFormControl(controlName: string): AbstractControl | null {
+  return this.disciplineForm.get(controlName);
+}
+
+getCategoryControl(categoryIndex: number, controlName: string): AbstractControl | null {
+  const category = this.categories.at(categoryIndex) as FormGroup;
+  return category.get(controlName);
+}
+
+getNestedCategoryControl(categoryIndex: number, groupName: string, controlName: string): AbstractControl | null {
+  const category = this.categories.at(categoryIndex) as FormGroup;
+  const group = category.get(groupName) as FormGroup;
+  return group?.get(controlName) || null;
+}
+
+getScheduleControl(categoryIndex: number, scheduleIndex: number, controlName: string): AbstractControl | null {
+  const scheduleGroup = this.getSchedules(categoryIndex).at(scheduleIndex) as FormGroup;
+  return scheduleGroup.get(controlName);
+}
 
   // Getters para los FormArrays
   get teacherIds(): FormArray {
@@ -113,34 +163,6 @@ export class PostDisciplineFormComponent {
   removeTeacher(index: number): void {
     this.teacherIds.removeAt(index);
   }
-
-  // Métodos para categories
-private createCategoryFormGroup(category?: PostCategoryDTO): FormGroup {
-  return this.fb.group({
-    name: [category?.name || '', Validators.required],
-    description: [category?.description || ''],
-    monthlyFee: [category?.monthlyFee || 0, [Validators.required, Validators.min(0)]],
-    availableSpaces: [category?.availableSpaces || 0, [Validators.required, Validators.min(0)]],
-    ageRange: this.fb.group({
-      minAge: [category?.ageRange?.minAge || 0, [Validators.required, Validators.min(0)]],
-      maxAge: [category?.ageRange?.maxAge || 0, [Validators.required, Validators.min(0)]]
-    }),
-    schedules: this.createSchedulesArray(category?.schedules),
-    allowedGenre: [category?.allowedGenre || Genre.MIXED, Validators.required]
-  });
-}
-
-private createSchedulesArray(schedules?: Schedule[]): FormArray {
-  const formGroups = schedules?.map(schedule => 
-    this.fb.group({
-      dayOfWeek: [schedule.dayOfWeek, Validators.required],
-      startHour: [schedule.startHour, Validators.required],
-      endHour: [schedule.endHour, Validators.required]
-    })
-  ) || [];
-  
-  return this.fb.array(formGroups);
-}
 
   addCategory(): void {
     this.categories.push(this.createCategoryFormGroup());
@@ -172,7 +194,10 @@ getSchedules(categoryIndex: number): FormArray {
   }
 
 // En PutDisciplineFormComponent
+submitted = false;
+
 onSubmit(): void {
+  this.submitted = true;
   if (this.disciplineForm.valid) {
     const formValue = this.disciplineForm.value;
     const postDiscipline: PostDisciplineDTO = {
@@ -193,7 +218,7 @@ onSubmit(): void {
       }))
     };
 
-    console.log("postDiscipline: ", postDiscipline);
+    //console.log("postDiscipline: ", postDiscipline);
 
     this.disciplineService.postDiscipline(postDiscipline).subscribe({
       next: (createdDisicpline) => {
@@ -204,8 +229,7 @@ onSubmit(): void {
       },
       error: (err: {message: string, status?: number}) => {
                           Swal.hideLoading();
-                          console.error('Error completo en componente:', err);
-                          
+                          //error('Error completo en componente:', err);                          
                           Swal.fire({
                               title: `Error`,
                               text: err.message,

@@ -11,12 +11,13 @@ import { UserDTOFormComponent } from '../forms/user-dto-form/user-dto-form.compo
 import { firstValueFrom } from 'rxjs';
 import { AdminUserDtoFormComponent } from "../forms/admin-user-dto-form/admin-user-dto-form.component";
 import { Role } from '../../models/backend/embeddables/Role';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-administrate-users-page',
-  imports: [CommonModule, NgxPaginationModule, AgePipe, GenrePipe, RolePipe, AdminUserDtoFormComponent],
+  imports: [CommonModule, NgxPaginationModule, AgePipe, GenrePipe, RolePipe, AdminUserDtoFormComponent, RouterLink, RouterLinkActive],
   templateUrl: './administrate-users-page.component.html',
   styleUrl: './administrate-users-page.component.css'
 })
@@ -79,6 +80,9 @@ private userService = inject(BackUserService);
 
   this.userService.getAllUsers().subscribe({
     next: (users) => {
+
+      console.log("loadUsers(): ", users);
+
       const filteredUsers = users.filter(user => {
         if (user.role === Role.SUPER_ADMIN_CUU) {
           return false;
@@ -93,7 +97,7 @@ private userService = inject(BackUserService);
     error: (err) => {
       this.error.set('Error al cargar los usuarios');
       this.loading.set(false);
-      console.error(err);
+      //console.error(err);
     }
   });
 }
@@ -132,7 +136,7 @@ private userService = inject(BackUserService);
               'No se pudo eliminar el usuario',
               'error'
             );
-            console.error(err);
+            //console.error(err);
           }
         });
       }

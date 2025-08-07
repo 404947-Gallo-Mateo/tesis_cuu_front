@@ -1,6 +1,6 @@
 <div class="container mt-4">
   <!-- Botón para alternar vista -->
-  <div class="row pt-3 mb-3 d-flex align-items-center">
+  <div class="row pt-3 mb-1 d-flex align-items-center">
     <div class="col">
         <h2 class="mb-0">Cuotas Sociales</h2>
     </div>
@@ -25,7 +25,7 @@
 
       <!-- No Pagadas - Visible solo cuando showUnpaid es true -->
       <div *ngIf="showUnpaid && unpaidFees.social.length" class="mb-4">
-        <h3>Pendientes de Pago</h3>
+        <h4>Pendientes de Pago</h4>
         <div class="row">
           <div *ngFor="let fee of unpaidFees.social" class="col-md-6 mb-3">
             <div class="card border-danger">
@@ -44,7 +44,7 @@
       
       <!-- Pagadas - Visible solo cuando showPaid es true -->
       <div *ngIf="showPaid && paidFees.social.length">
-        <h3>Pagadas</h3>
+        <h4>Pagadas</h4>
         <div class="row">
           <div *ngFor="let fee of paidFees.social" class="col-md-6 mb-3">
             <div class="card border-success">
@@ -52,7 +52,7 @@
                 <h5 class="card-title">{{ fee.description }}</h5>
                 <p class="card-text">
                   <strong>Monto:</strong> {{ fee.amount | currency }}<br>
-                  <strong>Pagado:</strong> {{ fee.paymentProof.paymentDate | date:'dd/MM/yyyy' }}
+                  <strong>Pagado:</strong> {{ fee.paymentProof.paymentDate}}
                 </p>
               </div>
             </div>
@@ -70,7 +70,7 @@
   <!-- Sección DISCIPLINE -->
   <div class="row">
     <div class="col-12">
-      <h2 class="mb-3">Cuotas de Disciplinas</h2>
+      <h2 class="mb-1">Cuotas de Disciplinas</h2>
       
       <!-- Mensajes para cuotas de disciplinas -->
       <div *ngIf="showUnpaid && !unpaidFees.discipline.length" class="alert alert-info">
@@ -83,7 +83,7 @@
 
       <!-- No Pagadas - Visible solo cuando showUnpaid es true -->
       <div *ngIf="showUnpaid && unpaidFees.discipline.length" class="mb-4">
-        <h3>Pendientes de Pago</h3>
+        <h4>Pendientes de Pago</h4>
         <div class="row">
           <div *ngFor="let fee of unpaidFees.discipline" class="col-md-6 mb-3">
             <div class="card border-danger">
@@ -104,7 +104,7 @@
       
       <!-- Pagadas - Visible solo cuando showPaid es true -->
       <div *ngIf="showPaid && paidFees.discipline.length">
-        <h3>Pagadas</h3>
+        <h4>Pagadas</h4>
         <div class="row">
           <div *ngFor="let fee of paidFees.discipline" class="col-md-6 mb-3">
             <div class="card border-success">

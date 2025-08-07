@@ -3,9 +3,12 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="userFormModalLabel">Editar Usuario</h5>
+        <h5 class="modal-title text-dark" id="userFormModalLabel">
+          <i class="bi bi-person-circle me-2"></i>Mi Usuario
+        </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
+
       <div class="modal-body">
         <!-- formulario -->
         <div class="container">
@@ -13,19 +16,36 @@
               <div class="row">
                 <!-- Columna izquierda -->
                 <div class="col-md-6">
+
                   <div class="mb-3">
-                    <label>Nombre:</label>
-                    <input type="text" formControlName="firstName" class="form-control" />
+                    <label class="form-label">Nombre</label>
+                    <div class="position-relative">                  
+                      <input type="text" formControlName="firstName" class="form-control" />
+                    </div>
+                    <div *ngIf="getFormControl('firstName')?.invalid && (getFormControl('firstName')?.dirty || getFormControl('firstName')?.touched)" class="text-danger">
+                      <small *ngIf="getFormControl('firstName')?.errors?.['required']">El nombre es requerido</small>
+                      <small *ngIf="getFormControl('firstName')?.errors?.['maxlength']">El nombre no puede exceder los 100 caracteres</small>
+                    </div>                    
                   </div>
 
                   <div class="mb-3">
-                    <label>Email:</label>
-                    <input type="email" formControlName="email" class="form-control" readonly/>
+                    <label class="form-label">Email</label>
+                    <div class="position-relative">   
+                      <input type="email" formControlName="email" class="form-control" readonly="readonly" style="background-color: rgb(177, 177, 177);"/>
+                    </div>
+                    <div *ngIf="getFormControl('email')?.invalid && (getFormControl('email')?.dirty || getFormControl('email')?.touched)" class="text-danger">
+                      <small *ngIf="getFormControl('email')?.errors?.['required']">El email es requerido</small>
+                    </div>                           
                   </div>
 
                   <div class="mb-3">
-                    <label>Fecha de nacimiento:</label>
-                    <input type="date" formControlName="birthDate" class="form-control" />
+                    <label class="form-label">Fecha de nacimiento</label>
+                    <div class="position-relative">
+                      <input type="date" formControlName="birthDate" class="form-control" />
+                    </div>
+                    <div *ngIf="getFormControl('birthDate')?.invalid && (getFormControl('birthDate')?.dirty || getFormControl('birthDate')?.touched)" class="text-danger">
+                      <small *ngIf="getFormControl('birthDate')?.errors?.['required']">La fecha de nacimiento es requerida</small>
+                    </div>                           
                   </div>
                   
                 </div>
@@ -33,23 +53,35 @@
                 <!-- Columna derecha -->
                 <div class="col-md-6">
                   <div class="mb-3">
-                    <label>Apellido:</label>
-                    <input type="text" formControlName="lastName" class="form-control" />
+                    <label class="form-label">Apellido</label>
+                    <div class="position-relative">
+                      <input type="text" formControlName="lastName" class="form-control" />
+                    </div>
+                    <div *ngIf="getFormControl('lastName')?.invalid && (getFormControl('lastName')?.dirty || getFormControl('lastName')?.touched)" class="text-danger">
+                      <small *ngIf="getFormControl('lastName')?.errors?.['required']">El apellido es requerido</small>
+                      <small *ngIf="getFormControl('lastName')?.errors?.['maxlength']">El apellido no puede exceder los 100 caracteres</small>
+                    </div>                    
                   </div>                
 
                   <div class="mb-3">
-                    <label>Género:</label>
+                    <label class="form-label">Género</label>
                     <select formControlName="genre" class="form-select">
                       <option *ngFor="let g of genres" [value]="g.value">{{ g.label }}</option>
                     </select>
+                    <div *ngIf="getFormControl('genre')?.invalid && (getFormControl('genre')?.dirty || getFormControl('genre')?.touched)" class="text-danger">
+                      <small *ngIf="getFormControl('genre')?.errors?.['required']">El género es requerido</small>
+                    </div>                          
                   </div>
 
                   @if (currentRole == "SUPER_ADMIN_CUU" || currentRole == "ADMIN_CUU") {
                     <div class="mb-3">
-                        <label>Rol:</label>
+                        <label class="form-label">Rol</label>
                         <select formControlName="role" class="form-select">
                         <option *ngFor="let r of roles" [value]="r.value">{{ r.label }}</option>
                         </select>
+                        <div *ngIf="getFormControl('role')?.invalid && (getFormControl('role')?.dirty || getFormControl('role')?.touched)" class="text-danger">
+                          <small *ngIf="getFormControl('role')?.errors?.['required']">El rol es requerido</small>
+                        </div>           
                     </div>
                     }  
                     
@@ -63,7 +95,7 @@
               
               <div class="d-flex justify-content-between mt-3">
                 <button type="button" class="btn btn-danger" (click)="deleteKeycloakUser()">Eliminar mi Usuario</button>
-                <button type="submit" class="btn btn-primary">Actualizar mi Usuario</button>
+                <button type="submit" class="btn btn-primary" [disabled]="!form.valid">Actualizar mi Usuario</button>
               </div>
             </form>
         </div>

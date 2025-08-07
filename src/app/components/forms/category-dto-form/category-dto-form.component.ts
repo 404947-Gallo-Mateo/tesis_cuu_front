@@ -69,7 +69,7 @@ export class CategoryDtoFormComponent {
     const currentUser = this.backUserService.getCurrentUserSnapshot();
     
     if (!currentUser) {
-      console.error('No hay usuario actual disponible');
+      //console.error('No hay usuario actual disponible');
       Swal.fire('Error', 'No se pudo obtener la información del usuario.', 'error');
       return;
     }
@@ -78,7 +78,7 @@ export class CategoryDtoFormComponent {
     const disciplineId = this.category.disciplineId;
     const categoryId = this.category.id;
     
-    console.log("DELETE deleteInscription params =", studentkeycloakId, disciplineId, categoryId);
+    //console.log("DELETE deleteInscription params =", studentkeycloakId, disciplineId, categoryId);
     
     Swal.fire({
       title: '¿Confirmar desinscripción?',
@@ -99,12 +99,12 @@ export class CategoryDtoFormComponent {
                 // IMPORTANTE: Actualizar la información del usuario después de la operación
                 this.backUserService.refreshCurrentUser().subscribe({
                   next: (updatedUser) => {
-                    console.log("Usuario actualizado después de eliminar inscripción:", updatedUser);
+                    //console.log("Usuario actualizado después de eliminar inscripción:", updatedUser);
                     Swal.fire('Actualizado', 'Se eliminó la inscripción en ' + this.category.name + '.', 'success');
                     this.onClose(); // Cerrar el modal
                   },
                   error: (refreshError) => {
-                    console.error('Error al actualizar información del usuario:', refreshError);
+                    //console.error('Error al actualizar información del usuario:', refreshError);
                     // Mostrar éxito de la eliminación aunque falle la actualización
                     Swal.fire('Actualizado', 'Se eliminó la inscripción en ' + this.category.name + '.', 'success');
                     this.onClose();
@@ -116,7 +116,7 @@ export class CategoryDtoFormComponent {
             },
             error: (err: {message: string, status?: number}) => {
                                 Swal.hideLoading();
-                                console.error('Error completo en componente:', err);
+                                //console.error('Error completo en componente:', err);
                                 
                                 Swal.fire({
                                     title: `Error`,

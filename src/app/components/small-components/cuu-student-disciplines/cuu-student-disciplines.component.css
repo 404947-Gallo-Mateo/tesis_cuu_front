@@ -1,4 +1,29 @@
-.card:hover {
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-  transform: scale(1.02);
+/* Agregar en tu archivo CSS */
+.category-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  background-color: rgb(30, 30, 157);
+  color: white;
+  overflow: hidden;
+  height: 100%;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.category-info {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+
+.text-accent {
+  color: #a3d9ff;
+}
+
+.bg-primary-blue {
+  background-color: #0d3b66;
 }

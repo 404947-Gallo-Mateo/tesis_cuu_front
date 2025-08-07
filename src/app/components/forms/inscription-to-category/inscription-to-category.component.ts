@@ -17,16 +17,26 @@ import { combineLatest, filter, switchMap, tap } from 'rxjs';
   templateUrl: './inscription-to-category.component.html',
   styleUrl: './inscription-to-category.component.css'
 })
-export class InscriptionToCategoryComponent {
+export class InscriptionToCategoryComponent implements OnInit {
+  ngOnInit(): void {
+    
+    this.backUserService.currentRole$.subscribe(role => {
+      this.currentRole = role;
+      //console.log('Rol actualizado:', role);
+    });
+  }
+  
   private backUserService = inject(BackUserService);
   private backStudentInscriptionService = inject(BackStudentInscriptionService);
   private keycloakHelper = inject(KeycloakHelperService);
-  
+
   @Input() category!: CategoryDTO;
   @Input() show: boolean = false;
   @Output() close = new EventEmitter<void>();
 
   isLoggedIn$ = this.keycloakHelper.isLoggedIn$;
+  currentRole$ = this.backUserService.currentRole$;
+  currentRole: string | null = null; 
 
   onClose(): void {
     this.close.emit();
@@ -82,7 +92,7 @@ export class InscriptionToCategoryComponent {
     const currentUser = this.backUserService.getCurrentUserSnapshot();
     
     if (!currentUser) {
-        console.error('No hay usuario actual disponible');
+        //console.error('No hay usuario actual disponible');
         Swal.fire('Error', 'No se pudo obtener la información del usuario.', 'error');
         return;
     }
@@ -91,11 +101,11 @@ export class InscriptionToCategoryComponent {
     const disciplineId: string = this.category.disciplineId;
     const categoryId: string = this.category.id;
 
-    console.log("CREATE studentInscription params:", {
-        studentKeycloakId,
-        disciplineId,
-        categoryId
-    });
+    // console.log("CREATE studentInscription params:", {
+    //     studentKeycloakId,
+    //     disciplineId,
+    //     categoryId
+    // });
 
     //true
     // si es una NUEVA inscripcion a una category de una Discipline donde NO se tiene una inscripcion, se CREA la studentInscription sin consultar
@@ -115,11 +125,11 @@ export class InscriptionToCategoryComponent {
                             }).then(() => {
                                 this.backUserService.refreshCurrentUser().subscribe({
                                     next: (updatedUser) => {
-                                        console.log("Usuario actualizado:", updatedUser);
+                                        //console.log("Usuario actualizado:", updatedUser);
                                         this.onClose();
                                     },
                                     error: (refreshError) => {
-                                        console.error('Error al actualizar usuario:', refreshError);
+                                        //console.error('Error al actualizar usuario:', refreshError);
                                         this.onClose();
                                     }
                                 });
@@ -130,7 +140,7 @@ export class InscriptionToCategoryComponent {
                     },
                 error: (err: {message: string, status?: number}) => {
                     Swal.hideLoading();
-                    console.error('Error completo en componente:', err);
+                    //console.error('Error completo en componente:', err);
                     
                     Swal.fire({
                         title: `Error`,
@@ -170,11 +180,11 @@ export class InscriptionToCategoryComponent {
                             }).then(() => {
                                 this.backUserService.refreshCurrentUser().subscribe({
                                     next: (updatedUser) => {
-                                        console.log("Usuario actualizado:", updatedUser);
+                                        //console.log("Usuario actualizado:", updatedUser);
                                         this.onClose();
                                     },
                                     error: (refreshError) => {
-                                        console.error('Error al actualizar usuario:', refreshError);
+                                        //console.error('Error al actualizar usuario:', refreshError);
                                         this.onClose();
                                     }
                                 });
@@ -185,7 +195,7 @@ export class InscriptionToCategoryComponent {
                     },
                 error: (err: {message: string, status?: number}) => {
                     Swal.hideLoading();
-                    console.error('Error completo en componente:', err);
+                    //console.error('Error completo en componente:', err);
                     
                     Swal.fire({
                         title: `Error`,
