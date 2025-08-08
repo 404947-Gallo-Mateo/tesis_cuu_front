@@ -40,10 +40,10 @@ export class AdminUserDtoFormComponent {
     this.form = this.fb.group({
       keycloakId: [''],
       role: [null, Validators.required],
-      username: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      firstName: ['', [Validators.required, Validators.maxLength(150)]],
-      lastName: ['', [Validators.required, Validators.maxLength(150)]],
+      username: ['', [Validators.required, Validators.maxLength(50)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(250)]],
+      firstName: ['', [Validators.required, Validators.maxLength(50)]],
+      lastName: ['', [Validators.required, Validators.maxLength(50)]],
       birthDate: [null, [Validators.required]],
       genre: [null , [Validators.required]],
     });

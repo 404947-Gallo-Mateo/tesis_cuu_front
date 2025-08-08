@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { KeycloakHelperService } from '../keycloak/keycloak-helper.service';
-import { catchError, delay, firstValueFrom, Observable, retry, take } from 'rxjs';
+import { catchError, delay, firstValueFrom, Observable, retry, take, throwError } from 'rxjs';
 import { throwError as observableThrowError } from 'rxjs';
 import { PostDisciplineDTO, PutDisciplineDTO } from '../../../models/backend/PostDisciplineDTO';
 import { DisciplineDto } from '../../../models/backend/DisciplineDTO';
@@ -26,10 +26,16 @@ postDiscipline(postDisciplineDTO: PostDisciplineDTO): Observable<DisciplineDto> 
           delay: 1000,
           resetOnSuccess: true
         }),
-    catchError(error => {
-      console.error('No se pudo crear la disciplina.');
-      return observableThrowError(() => error);
-    })
+    catchError((error: HttpErrorResponse) => {
+          console.error('Error en inscripción:', error);
+          const errorMessage = typeof error.error === 'string' 
+            ? error.error 
+            : error.error?.message || error.message || 'Error desconocido al crear inscripción';
+          return throwError(() => ({
+            message: errorMessage,
+            status: error.status
+          }));
+        })
   );
 }
 
@@ -41,9 +47,15 @@ putDiscipline(disciplineDTO: PutDisciplineDTO): Observable<DisciplineDto> {
       delay: 1000,
       resetOnSuccess: true
     }),
-    catchError(error => {
-      console.error('No se pudo actualizar la disciplina.');
-      return observableThrowError(() => error);
+    catchError((error: HttpErrorResponse) => {
+      console.error('Error en inscripción:', error);
+      const errorMessage = typeof error.error === 'string' 
+        ? error.error 
+        : error.error?.message || error.message || 'Error desconocido al crear inscripción';
+      return throwError(() => ({
+        message: errorMessage,
+        status: error.status
+      }));
     })
   );
 }

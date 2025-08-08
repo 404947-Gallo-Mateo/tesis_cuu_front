@@ -24,9 +24,23 @@ private kpiService = inject(BackKpiService);
     data: [],
     columns: ['Período', 'Cantidad'],
     options: {
-      title: 'Distribución de Ingresos',
       legend: { position: 'none' },
-      animation: { duration: 500, easing: 'out' }
+      animation: { duration: 500, easing: 'out' },
+      hAxis: {
+        title: 'Período',  // Nombre para el eje X
+        titleTextStyle: {
+          italic: false,
+          bold: true
+        }
+      },
+      vAxis: {
+        title: 'Monto ($)',  // Nombre para el eje Y
+        titleTextStyle: {
+          italic: false,
+          bold: true
+        },
+        format: '$#,##0'  // Opcional: formato de moneda para los valores del eje Y
+      }
     }
   });
 

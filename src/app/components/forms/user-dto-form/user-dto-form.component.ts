@@ -90,10 +90,10 @@ private parseDateString(dateStr: string): string {
     this.form = this.fb.group({
       keycloakId: [''],
       role: [null, Validators.required],
-      username: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      username: ['', [Validators.required, Validators.maxLength(50)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(250)]],
+      firstName: ['', [Validators.required, Validators.maxLength(50)]],
+      lastName: ['', [Validators.required, Validators.maxLength(50)]],
       birthDate: [null], // formatea en el submit como 'dd-MM-yyyy' si hace falta
       genre: [null],
     });

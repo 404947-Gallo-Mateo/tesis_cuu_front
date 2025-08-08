@@ -62,11 +62,11 @@ export class ModalStudentFeesComponent {
   ).subscribe({
     next: (updatedFee) => {
       // Filtrar la cuota actualizada (quitarla de la lista)
-      this.inscriptionFees = this.inscriptionFees.filter(f => 
-        !(f.feeType === updatedFee.feeType &&
-          f.disciplineId === updatedFee.disciplineId &&
-          f.period === updatedFee.period)
-      );
+      // this.inscriptionFees = this.inscriptionFees.filter(f => 
+      //   !(f.feeType === updatedFee.feeType &&
+      //     f.disciplineId === updatedFee.disciplineId &&
+      //     f.period === updatedFee.period)
+      // );
       
       this.feesUpdated.emit(updatedFee);
       this.isLoading = false;

@@ -32,7 +32,7 @@ export class ModalSocialFeesComponent {
 
   get socialFees(): FeeDTO[] {
     return this.user!.userFees.filter(fee => 
-      fee.feeType === FeeType.SOCIAL && !fee.paid 
+      fee.feeType === FeeType.SOCIAL 
     );
   }
 

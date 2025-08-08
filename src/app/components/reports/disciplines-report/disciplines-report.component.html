@@ -170,6 +170,7 @@
                 <th>Fecha último cambio</th>
                 <th>Estudiante</th>
                 <th>Email</th>
+                <th>Rol</th>
                 <th>Edad</th>
                 <th>Género</th>
                 <th>Disciplina</th>
@@ -195,6 +196,7 @@
                     {{ ins.student.firstName }} {{ ins.student.lastName }}                  
                     </td>
                     <td>{{ ins.student.email }}</td>
+                    <td>{{ins.student.role | role}}</td>
                     <td>{{ ins.student.birthDate | age }} años</td>
                     <td>{{ ins.student.genre | genre }}</td>
                     <td>{{ ins.discipline.name }}</td>
