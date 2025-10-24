@@ -49,13 +49,23 @@ export class StudentFeesComponent {
       disciplineId: fee.disciplineId
     }
 
+    if(mpFeeDTO.feeType === FeeType.DISCIPLINE){
+      this.unpaidFees.discipline = this.unpaidFees.discipline.filter(x => x.period != mpFeeDTO.period);
+    }
+    else {
+      this.unpaidFees.social = this.unpaidFees.social.filter(x => x.period != mpFeeDTO.period);
+    }
+    
+
     this.mpService.createPreference(mpFeeDTO).subscribe({
         next: (response) => {
-            //console.log("response: ",response);
+            console.log("response: ",response);
+            this.loadFees();
             window.location.href = response.initPoint;
         },
         error: (err: {message: string, status?: number}) => {
-            // console.error('Error completo:', err);
+            console.error('Error completo:', err);
+            this.loadFees();
             // console.error('Error msj:', err.message);                                      
             //TODO si el msj es q la 'cuota ya fue pagada' mostrar un alert
         }

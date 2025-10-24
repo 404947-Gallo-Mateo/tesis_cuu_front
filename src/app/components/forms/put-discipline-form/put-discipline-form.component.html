@@ -87,7 +87,7 @@
 
                   <div class="col-md-8">
                     <label class="form-label">Descripción</label>
-                    <input type="text" placeholder="Ingrese el nombre..." class="form-control" maxlength="1000" formControlName="description" required>
+                    <input type="text" placeholder="Ingrese la descripción..." class="form-control" maxlength="1000" formControlName="description" required>
                     <div *ngIf="getCategoryControl(i, 'description')?.invalid && (getCategoryControl(i, 'description')?.dirty || getCategoryControl(i, 'description')?.touched)" class="text-danger">
                       <small *ngIf="getCategoryControl(i, 'description')?.errors?.['required']">La descripción es requerida</small>
                       <small *ngIf="getCategoryControl(i, 'description')?.errors?.['maxlength']">La descripción no puede exceder los 1000 caracteres</small>

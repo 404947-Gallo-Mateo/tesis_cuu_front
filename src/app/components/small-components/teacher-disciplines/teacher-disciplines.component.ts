@@ -132,18 +132,18 @@ closeDisciplineModal(): void {
 
 onDisciplineUpdated(updatedDiscipline: DisciplineDto): void {
   // Encuentra el índice de la disciplina actualizada en el array
-  const index = this.currentUserDisciplines.findIndex(d => d.id === updatedDiscipline.id);
+  // const index = this.currentUserDisciplines.findIndex(d => d.id === updatedDiscipline.id);
   
-  if (index !== -1) {
-    // Actualiza la disciplina en el array
-    this.currentUserDisciplines[index] = updatedDiscipline;
+  // if (index !== -1) {
+  //   // Actualiza la disciplina en el array
+  //   this.currentUserDisciplines[index] = updatedDiscipline;
     
-    // Opcional: Forzar una nueva referencia del array para detectar cambios
-    this.currentUserDisciplines = [...this.currentUserDisciplines];
-  } else {
-    console.warn('Disciplina actualizada no encontrada en la lista actual');
-  }
-  
+  //   // Opcional: Forzar una nueva referencia del array para detectar cambios
+  //   this.currentUserDisciplines = [...this.currentUserDisciplines];
+  // } else {
+  //   console.warn('Disciplina actualizada no encontrada en la lista actual');
+  // }
+  this.loadInitialData();
   // Cierra el modal
   this.closeDisciplineModal();
 }
