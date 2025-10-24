@@ -6,6 +6,7 @@ import { DatePipe, registerLocaleData } from '@angular/common';
 import localeEsExtra from '@angular/common/locales/extra/es';
 import localeEs from '@angular/common/locales/es';
 import { provideGoogleCharts } from 'angular-google-charts';
+import { RoleGuard } from './guards/role.guard';
 
 registerLocaleData(localeEs, 'es', localeEsExtra);
 
@@ -17,7 +18,8 @@ export const appConfig: ApplicationConfig = {
     DatePipe,
     { provide: LOCALE_ID, useValue: 'es' },
     provideGoogleCharts({
-      //mapsApiKey: '' // Solo si usas mapas, sino déjalo vacío
-    })
+      //mapsApiKey: '' // solo si se usan mapas, sino dejar vacio
+    }),
+    RoleGuard
   ]
 };

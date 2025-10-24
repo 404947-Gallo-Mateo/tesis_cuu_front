@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { KeycloakHelperService } from '../../../services/backend-helpers/keycloak/keycloak-helper.service';
-import { BehaviorSubject, Observable, of, throwError as observableThrowError } from 'rxjs';
-import { delay, take, catchError, switchMap, tap, filter, retry } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, throwError as observableThrowError, EMPTY } from 'rxjs';
+import { delay, take, catchError, switchMap, tap, filter, retry, map } from 'rxjs/operators';
 import { UserDTO, ExpandedUserDTO } from '../../../models/backend/ExpandedUserDTO';
 import { Role } from '../../../models/backend/embeddables/Role';
 import { UserWithFeesDTO } from '../../../models/backend/UserWithFeesDTO';
@@ -15,22 +15,40 @@ export class BackUserService {
   private keycloakHelper = inject(KeycloakHelperService);
   private readonly API_URL = 'http://localhost:8090/user';
 
+  //verifica si keycloak fue iniciado (si el usuario intento loguearse)
+  isLoggedIn$ = this.keycloakHelper.isLoggedIn$;
+
   // BehaviorSubject para manejar el estado reactivo del usuario
   private currentUserSubject = new BehaviorSubject<ExpandedUserDTO | null>(null);
   private currentRoleSubject = new BehaviorSubject<string | null>(null);
 
-  // Observable público para que los componentes se suscriban
+  // Observable publico para que los components se suscriban
   public currentUser$ = this.currentUserSubject.asObservable();
   public currentRole$ = this.currentRoleSubject.asObservable();
 
-  // Observable filtrado que solo emite cuando hay un usuario válido
+  // Observable filtrado, solo emite cuando hay un user valido
   public currentUserValid$ = this.currentUser$.pipe(
     filter(user => user !== null)
   ) as Observable<ExpandedUserDTO>;
 
-   public currentRoleValid$ = this.currentRole$.pipe(
-    filter(user => user !== null)
-  ) as Observable<string>;
+  public currentRoleValid$ = this.currentRole$.pipe(
+    switchMap(role => {
+      if (role) {
+        return of(role);
+      } else {
+        return this.getUpdatedInfoOfCurrentUser().pipe(
+          map(user => user?.role),
+          catchError(() => EMPTY)
+        );
+      }
+    })
+  );
+
+  // obtiene el rol actual (de forma sincronica)
+  getCurrentRole(): string | null {
+    console.log("backUserService -> currentRole.value: ", this.currentRoleSubject.value);
+    return this.currentRoleSubject.value;
+  }
 
   constructor() { }
 
@@ -39,12 +57,10 @@ export class BackUserService {
    * Retorna un Observable que siempre estará actualizado
    */
   getCurrentUser(): Observable<ExpandedUserDTO> {
-    // Si ya tenemos un usuario cacheado, lo retornamos
     if (this.currentUserSubject.value) {
       return of(this.currentUserSubject.value);
     }
     
-    // Si no, obtenemos la información actualizada
     return this.getUpdatedInfoOfCurrentUser();
   }
 
@@ -53,37 +69,40 @@ export class BackUserService {
    * y actualiza el BehaviorSubject para notificar a todos los suscriptores
    */
   getUpdatedInfoOfCurrentUser(): Observable<ExpandedUserDTO> {
-    return this.keycloakHelper.getToken().pipe(
-      switchMap(token => {
-        const headers = { Authorization: `Bearer ${token}` };
-        return this.http.get<ExpandedUserDTO>(`${this.API_URL}/get-current-user-info`, { headers }).pipe(
-          retry({
-                count: 3,
-                delay: 1000,
-                resetOnSuccess: true
-              }),
-          tap(user => {
-            //console.log("Usuario actualizado desde servidor: ", user);
-            // IMPORTANTE: Actualizar el BehaviorSubject para notificar a todos los suscriptores
-            this.currentUserSubject.next(user);
-            this.currentRoleSubject.next(user.role);
-          }),
-          catchError(error => {
-            console.error('No se pudo obtener la información del usuario luego de 3 intentos.');
-            return observableThrowError(() => error);
-          })
-        );
-      })    
-    );
+    console.log("this.isLoggedIn$: ", this.isLoggedIn$);
+    if(this.isLoggedIn$){
+      return this.keycloakHelper.getToken().pipe(
+        switchMap(token => {
+          const headers = { Authorization: `Bearer ${token}` };
+          return this.http.get<ExpandedUserDTO>(`${this.API_URL}/get-current-user-info`, { headers }).pipe(
+            retry({
+                  count: 3,
+                  delay: 1000,
+                  resetOnSuccess: true
+                }),
+            tap(user => {
+              this.currentUserSubject.next(user);
+              this.currentRoleSubject.next(user.role);
+            }),
+            catchError(error => {
+              console.error('No se pudo obtener la información del usuario luego de 3 intentos.');
+              return observableThrowError(() => error);
+            })
+          );
+        })    
+      ); 
+    }    
+    else {
+      console.log("no se inicio sesion");
+      return EMPTY;
+    }
   }
 
   /**
    * Establece manualmente el usuario actual
-   * Útil cuando se obtiene información del usuario desde otras fuentes
    */
   setCurrentUser(newCurrentUser: ExpandedUserDTO): void {
     this.currentUserSubject.next(newCurrentUser);
-    //console.log("Usuario establecido manualmente:", newCurrentUser);
   }
 
   /**
@@ -91,15 +110,12 @@ export class BackUserService {
    */
   clearCachedUser(): void {
     this.currentUserSubject.next(null);
-    //console.log("Cache de usuario limpiado");
   }
 
   /**
    * Fuerza la actualización del usuario desde el servidor
-   * Útil después de operaciones que modifican el estado del usuario
    */
   refreshCurrentUser(): Observable<ExpandedUserDTO> {
-    //console.log("Forzando actualización del usuario...");
     return this.getUpdatedInfoOfCurrentUser();
   }
 
@@ -135,8 +151,6 @@ export class BackUserService {
       resetOnSuccess: true
     }),
       tap(updatedUser => {
-        // Actualizar automáticamente el usuario en cache cuando se actualiza
-        //console.log("Usuario actualizado via API:", updatedUser);
         this.currentUserSubject.next(updatedUser);
       }),
       catchError(error => {
@@ -154,9 +168,7 @@ export class BackUserService {
       resetOnSuccess: true
     }),
       tap(updatedUser => {
-        // Actualizar automáticamente el usuario en cache cuando se actualiza
         //console.log("Usuario actualizado via API:", updatedUser);
-        //this.currentUserSubject.next(updatedUser);
       }),
       catchError(error => {
         console.error('No se pudo actualizar la información del usuario luego de 3 intentos.');
@@ -208,4 +220,5 @@ export class BackUserService {
       })
     );
   }
+
 }

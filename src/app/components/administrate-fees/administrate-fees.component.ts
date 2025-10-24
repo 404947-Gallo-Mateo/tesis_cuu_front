@@ -53,7 +53,7 @@ disciplineInscriptions: {
     expanded: boolean;
     loading: boolean;
     page: number;
-    searchTerm: string; // Nueva propiedad
+    searchTerm: string; 
   }
 } = {};
   
@@ -93,7 +93,7 @@ disciplineInscriptions: {
   }
 
 initializeDisciplineData(): void {
-  let startexpanded:boolean = this.disciplines.length <= 2;
+  let startexpanded:boolean = false;
 
   this.disciplines.forEach(discipline => {
     this.disciplineInscriptions[discipline.id] = {
@@ -101,7 +101,7 @@ initializeDisciplineData(): void {
       expanded: startexpanded,
       loading: false,
       page: 1,
-      searchTerm: '' // Inicializado aquí
+      searchTerm: '' 
     };
   });
 
@@ -177,7 +177,7 @@ loadDebtorInscriptions(): void {
   selectedInscriptionFees: FeeDTO[] = [];
 
    openFeesModal(fees: FeeDTO[]): void {
-    this.selectedInscriptionFees = [...fees]; // Copia para no modificar original
+    this.selectedInscriptionFees = [...fees]; 
     this.showFeesModal = true;
   }
 

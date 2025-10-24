@@ -9,7 +9,7 @@
           <input type="text" formControlName="firstName" class="form-control" />
             <div *ngIf="getFormControl('firstName')?.invalid && (getFormControl('firstName')?.dirty || getFormControl('firstName')?.touched)" class="text-danger">
               <small *ngIf="getFormControl('firstName')?.errors?.['required']">El nombre es requerido</small>
-              <small *ngIf="getFormControl('firstName')?.errors?.['maxlength']">El nombre no puede exceder los 100 caracteres</small>
+              <small *ngIf="getFormControl('firstName')?.errors?.['maxlength']">El nombre no puede exceder los 50 caracteres</small>
             </div>
         </div>
 
@@ -18,6 +18,7 @@
           <input type="email" formControlName="email" class="form-control" readonly="readonly" style="background-color: rgb(177, 177, 177);"/>          
             <div *ngIf="getFormControl('email')?.invalid && (getFormControl('email')?.dirty || getFormControl('email')?.touched)" class="text-danger">
               <small *ngIf="getFormControl('email')?.errors?.['required']">El email es requerido</small>
+              <small *ngIf="getFormControl('email')?.errors?.['maxlength']">El email no puede exceder los 250 caracteres</small>
             </div>            
         </div>
 
@@ -37,7 +38,7 @@
           <input type="text" formControlName="lastName" class="form-control" />
             <div *ngIf="getFormControl('lastName')?.invalid && (getFormControl('lastName')?.dirty || getFormControl('lastName')?.touched)" class="text-danger">
               <small *ngIf="getFormControl('lastName')?.errors?.['required']">El apellido es requerido</small>
-              <small *ngIf="getFormControl('lastName')?.errors?.['maxlength']">El apellido no puede exceder los 100 caracteres</small>
+              <small *ngIf="getFormControl('lastName')?.errors?.['maxlength']">El apellido no puede exceder los 50 caracteres</small>
             </div>
         </div>                
 

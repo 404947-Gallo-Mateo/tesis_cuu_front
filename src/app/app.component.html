@@ -1,17 +1,24 @@
-<app-cuu-navbar></app-cuu-navbar>
-<div class="container-fluid text-light" style="background-color: rgb(23, 23, 117);">
+<div class="d-flex flex-column min-vh-100">
+  <app-cuu-navbar></app-cuu-navbar>
+  
+  <div class="container-fluid text-light flex-grow-1" style="background-color: rgb(23, 23, 117);">
     <router-outlet></router-outlet>
-</div>
-<footer class="text-center" style="color: white;background-color: rgb(15, 15, 66);">
+  </div>
+  
+  <footer class="text-center mt-auto" style="color: white; background-color: rgb(15, 15, 66);">
     <div class="py-1">
-        <a href="#" data-bs-toggle="modal" data-bs-target="#faqModal" style="color: white; text-decoration: underline;">
+      <a href="#" data-bs-toggle="modal" data-bs-target="#faqModal" 
+         style="color: white; text-decoration: underline;">
         Preguntas Frecuentes
       </a>
       <span>-</span>
-        <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal" style="color: white; text-decoration: underline;">
+      <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal" 
+         style="color: white; text-decoration: underline;">
         Términos y Condiciones
       </a>
-    </div>            
-</footer>
+    </div>
+  </footer>
+</div>
+
 <app-terms-modal></app-terms-modal>
 <app-faq-modal></app-faq-modal>
