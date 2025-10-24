@@ -24,7 +24,7 @@
         </li>
 
         @if (isLoggedIn$ | async) {
-          @if (currentRole == "STUDENT") { 
+          @if (currentRole == "STUDENT" && currentUser.studentCategories.length > 0) { 
             <li class="nav-item">
               <a class="nav-link" [routerLink]="['/mis-inscripciones']" 
                  routerLinkActive="active-link"

@@ -25,9 +25,22 @@ private kpiService = inject(BackKpiService);
     data: [],
     columns: ['Edad', 'Cantidad'],
     options: {
-      title: 'Distribución por Edades',
       legend: { position: 'none' },
-      animation: { duration: 500, easing: 'out' }
+      animation: { duration: 500, easing: 'out' },
+      hAxis: {
+        title: 'Edad',  // Nombre para el eje X
+        titleTextStyle: {
+          italic: false,
+          bold: true
+        }
+      },
+      vAxis: {
+        title: 'Cantidad',  // Nombre para el eje Y
+        titleTextStyle: {
+          italic: false,
+          bold: true
+        }
+      }
     }
   });
 

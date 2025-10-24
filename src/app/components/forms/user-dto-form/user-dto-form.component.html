@@ -6,7 +6,7 @@
         <h5 class="modal-title text-dark" id="userFormModalLabel">
           <i class="bi bi-person-circle me-2"></i>Mi Usuario
         </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <button type="button" class="btn-close btn bg-secondary" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
 
       <div class="modal-body">
@@ -24,7 +24,7 @@
                     </div>
                     <div *ngIf="getFormControl('firstName')?.invalid && (getFormControl('firstName')?.dirty || getFormControl('firstName')?.touched)" class="text-danger">
                       <small *ngIf="getFormControl('firstName')?.errors?.['required']">El nombre es requerido</small>
-                      <small *ngIf="getFormControl('firstName')?.errors?.['maxlength']">El nombre no puede exceder los 100 caracteres</small>
+                      <small *ngIf="getFormControl('firstName')?.errors?.['maxlength']">El nombre no puede exceder los 50 caracteres</small>
                     </div>                    
                   </div>
 
@@ -35,6 +35,8 @@
                     </div>
                     <div *ngIf="getFormControl('email')?.invalid && (getFormControl('email')?.dirty || getFormControl('email')?.touched)" class="text-danger">
                       <small *ngIf="getFormControl('email')?.errors?.['required']">El email es requerido</small>
+                      <small *ngIf="getFormControl('email')?.errors?.['maxlength']">El email no puede exceder los 250 caracteres</small>
+
                     </div>                           
                   </div>
 
@@ -59,7 +61,7 @@
                     </div>
                     <div *ngIf="getFormControl('lastName')?.invalid && (getFormControl('lastName')?.dirty || getFormControl('lastName')?.touched)" class="text-danger">
                       <small *ngIf="getFormControl('lastName')?.errors?.['required']">El apellido es requerido</small>
-                      <small *ngIf="getFormControl('lastName')?.errors?.['maxlength']">El apellido no puede exceder los 100 caracteres</small>
+                      <small *ngIf="getFormControl('lastName')?.errors?.['maxlength']">El apellido no puede exceder los 50 caracteres</small>
                     </div>                    
                   </div>                
 

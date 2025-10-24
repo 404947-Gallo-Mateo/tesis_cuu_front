@@ -16,10 +16,11 @@ import { catchError, filter, finalize, of, Subject, switchMap, takeUntil, tap } 
 import { DisciplineSummaryDTO } from '../../../models/backend/DisciplineSummaryDTO';
 import { BackDisciplineService } from '../../../services/backend-helpers/discipline/back-discipline.service';
 import { DisciplinesDashboardComponent } from '../kpis/disciplines-dashboard/disciplines-dashboard.component';
+import { RolePipe } from '../../../CustomPipes/role.pipe';
 
 @Component({
   selector: 'app-disciplines-report',
-  imports: [DisciplinesDashboardComponent, CommonModule, NgxPaginationModule, FormsModule, AgePipe, GenrePipe],
+  imports: [DisciplinesDashboardComponent, CommonModule, NgxPaginationModule, FormsModule, AgePipe, GenrePipe, RolePipe],
   templateUrl: './disciplines-report.component.html',
   styleUrl: './disciplines-report.component.css'
 })

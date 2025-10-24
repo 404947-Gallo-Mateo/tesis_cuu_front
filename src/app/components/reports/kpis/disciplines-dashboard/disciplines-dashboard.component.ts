@@ -29,7 +29,21 @@ export class DisciplinesDashboardComponent {
     columns: ['Edad', 'Cantidad'],
     options: {
       legend: { position: 'none' },
-      animation: { duration: 500, easing: 'out' }
+      animation: { duration: 500, easing: 'out' },
+      hAxis: {
+        title: 'Edad',  // Nombre para el eje X
+        titleTextStyle: {
+          italic: false,
+          bold: true
+        }
+      },
+      vAxis: {
+        title: 'Cantidad',  // Nombre para el eje Y
+        titleTextStyle: {
+          italic: false,
+          bold: true
+        }
+      }
     }
   });
 
