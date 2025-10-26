@@ -14,33 +14,37 @@ pago de Cuotas.
 - Gestión del proyecto - Jira con tablero Scrum
 
 ## Objetivo
-Implementar y desplegar una plataforma web integral para el Club Unión Unquillo antes
-de Diciembre 2025, que digitalice el 100% de sus procesos administrativos, y contribuya a
-eliminar el uso de papel en las gestiones principales, automatizar el 90% de los pagos
-mediante la integración con Mercado Pago, centralizar la información en dashboards
-personalizados por rol, reducir en un 80% el tiempo de gestión administrativa en papel. Para
-demostrar el exito de la implementación, se espera que el 80% de la comunidad utilice la
-plataforma en los primeros 4 meses.
-Se busca garantizar la sostenibilidad, al eliminar el uso de miles de hojas de papel
-anuales, transparencia, al dar acceso en tiempo real a datos financieros y operativos del
-Club y eficiencia, al digitalizar sus gestiones.
+    Implementar y desplegar una plataforma web integral para el Club Unión Unquillo antes
+    de Diciembre 2025, que digitalice el 100% de sus procesos administrativos, y contribuya a
+    eliminar el uso de papel en las gestiones principales, automatizar el 90% de los pagos
+    mediante la integración con Mercado Pago, centralizar la información en dashboards
+    personalizados por rol, reducir en un 80% el tiempo de gestión administrativa en papel. 
+    
+    Para demostrar el exito de la implementación, se espera que el 80% de la comunidad utilice la
+    plataforma en los primeros 4 meses.
+    Se busca garantizar la sostenibilidad, al eliminar el uso de miles de hojas de papel
+    anuales, transparencia, al dar acceso en tiempo real a datos financieros y operativos del
+    Club y eficiencia, al digitalizar sus gestiones.
 
 ## Conclusión
-En fin, la página web del CUU es esencial para el funcionamiento eficiente del Club,
-una solución integral que le dará el salto hacia una gestión ágil y moderna para los
-Administradores; toda la información necesaria para los interesados en unirse al club;
-el control de sus inscripciones y pago de cuotas online para los Alumnos y la gestión
-de sus Disciplinas y respectivas cuotas e inscriptos para los Profesores.
-La integración con Keycloak provee un servicio de Autenticacion y Autorizacion
-seguro y confiable que cumple los estándares de seguridad actuales, garantizando
-así la seguridad de los datos y un gran control sobre permisos y roles, ya sean de
-otros servicios que utilice el Club o servicios que hagan uso del Club, cómo también
-sobre los permisos y roles asignados a cada tipo de usuario.
-La integración con Mercado Pago Checkout Pro para el pago de Cuotas, ya sean
-del Club o de una Disciplina, agrega transparencia y confianza en el proceso de pago
-y recaudación del Club.
-Esto da cómo resultado una página web segura y confiable para llevar a cabo todos
-los procesos del Club, de forma eficiente y sin uso innecesario de papel.
+    En fin, la página web del CUU es esencial para el funcionamiento eficiente del Club,
+    una solución integral que le dará el salto hacia una gestión ágil y moderna para los
+    Administradores; toda la información necesaria para los interesados en unirse al club;
+    el control de sus inscripciones y pago de cuotas online para los Alumnos y la gestión
+    de sus Disciplinas y respectivas cuotas e inscriptos para los Profesores.
+    
+    La integración con Keycloak provee un servicio de Autenticacion y Autorizacion
+    seguro y confiable que cumple los estándares de seguridad actuales, garantizando
+    así la seguridad de los datos y un gran control sobre permisos y roles, ya sean de
+    otros servicios que utilice el Club o servicios que hagan uso del Club, cómo también
+    sobre los permisos y roles asignados a cada tipo de usuario.
+
+    La integración con Mercado Pago Checkout Pro para el pago de Cuotas, ya sean
+    del Club o de una Disciplina, agrega transparencia y confianza en el proceso de pago
+    y recaudación del Club.
+    
+    Esto da cómo resultado una página web segura y confiable para llevar a cabo todos
+    los procesos del Club, de forma eficiente y sin uso innecesario de papel.
 
 ## Users Stories - Extraídas del tablero del proyecto en Jira
 ### US 1 - Pantalla Inicio/Login
